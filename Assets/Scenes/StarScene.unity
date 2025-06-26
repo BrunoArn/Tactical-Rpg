@@ -1628,16 +1628,6 @@ Tilemap:
   m_GameObject: {fileID: 1186133239}
   m_Enabled: 1
   m_Tiles:
-  - first: {x: -10, y: -5, z: 0}
-    second:
-      serializedVersion: 2
-      m_TileIndex: 13
-      m_TileSpriteIndex: 18
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 14
-      m_TileObjectToInstantiateIndex: 65535
-      dummyAlignment: 0
-      m_AllTileFlags: 1073741825
   - first: {x: -9, y: -5, z: 0}
     second:
       serializedVersion: 2
@@ -3466,7 +3456,7 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: 0e807cbc0219c084c9d36a9cb1ae121b, type: 2}
   - m_RefCount: 5
     m_Data: {fileID: 11400000, guid: 197e1a72ffdafbd4e99cf49ccc649c62, type: 2}
-  - m_RefCount: 158
+  - m_RefCount: 157
     m_Data: {fileID: 11400000, guid: e6db740e2f5b4fd4c8d6d0883cd2e77e, type: 2}
   m_TileSpriteArray:
   - m_RefCount: 0
@@ -3505,10 +3495,10 @@ Tilemap:
     m_Data: {fileID: -494542740, guid: a577c24b8d2c3634d88fb5701c1cc1a8, type: 3}
   - m_RefCount: 5
     m_Data: {fileID: -1057856854, guid: a577c24b8d2c3634d88fb5701c1cc1a8, type: 3}
-  - m_RefCount: 158
+  - m_RefCount: 157
     m_Data: {fileID: 1085127498, guid: a577c24b8d2c3634d88fb5701c1cc1a8, type: 3}
   m_TileMatrixArray:
-  - m_RefCount: 181
+  - m_RefCount: 180
     m_Data:
       e00: 1
       e01: 0
@@ -3555,7 +3545,7 @@ Tilemap:
     m_Data: {r: -9.521279e-19, g: -9.521279e-19, b: -9.521279e-19, a: -9.521279e-19}
   - m_RefCount: 0
     m_Data: {r: -1.0122342e-18, g: -1.0122342e-18, b: -1.0122342e-18, a: -1.0122342e-18}
-  - m_RefCount: 181
+  - m_RefCount: 180
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
@@ -3678,6 +3668,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1887802307}
   - component: {fileID: 1887802306}
+  - component: {fileID: 1887802308}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -3714,6 +3705,22 @@ Transform:
   - {fileID: 1186133240}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1887802308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1887802305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6b7abea83285f9488402cc0fa5089a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tacticalTilemap: {fileID: 120141879}
+  gridSize: {x: 20, y: 20}
+  gridOrigin: {x: 0, y: 0, z: 0}
+  debugColor: {r: 0.41509432, g: 0.17426129, b: 0.17907691, a: 1}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
