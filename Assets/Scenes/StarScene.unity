@@ -1457,6 +1457,7 @@ GameObject:
   m_Component:
   - component: {fileID: 955823348}
   - component: {fileID: 955823347}
+  - component: {fileID: 955823349}
   m_Layer: 0
   m_Name: Hero
   m_TagString: Untagged
@@ -1528,12 +1529,26 @@ Transform:
   m_GameObject: {fileID: 955823346}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.5, y: 2.5, z: 0}
+  m_LocalPosition: {x: 0.83, y: -3.59, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &955823349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 955823346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 565c26c1732676647985fa9651fdfce1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridBuilder: {fileID: 1337252594}
+  currentGridPos: {x: 0, y: 0}
 --- !u!1 &1186133239
 GameObject:
   m_ObjectHideFlags: 0
@@ -3571,6 +3586,70 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &1337252593
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1337252595}
+  - component: {fileID: 1337252594}
+  - component: {fileID: 1337252596}
+  m_Layer: 0
+  m_Name: Combat Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1337252594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337252593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6b7abea83285f9488402cc0fa5089a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tacticalTilemap: {fileID: 120141879}
+  gridSize: {x: 15, y: 15}
+  gridOrigin: {x: 0, y: 0, z: 0}
+  debugColor: {r: 0.41509432, g: 0.17426129, b: 0.17907691, a: 1}
+--- !u!4 &1337252595
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337252593}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1337252596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337252593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4aec2efbc5beca1448e12c850aa8344a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridBuilder: {fileID: 1337252594}
+  allUnits:
+  - {fileID: 955823349}
 --- !u!1 &1353267786
 GameObject:
   m_ObjectHideFlags: 0
@@ -3668,7 +3747,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1887802307}
   - component: {fileID: 1887802306}
-  - component: {fileID: 1887802308}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -3705,22 +3783,6 @@ Transform:
   - {fileID: 1186133240}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1887802308
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1887802305}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6b7abea83285f9488402cc0fa5089a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tacticalTilemap: {fileID: 120141879}
-  gridSize: {x: 20, y: 20}
-  gridOrigin: {x: 0, y: 0, z: 0}
-  debugColor: {r: 0.41509432, g: 0.17426129, b: 0.17907691, a: 1}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -3730,3 +3792,4 @@ SceneRoots:
   - {fileID: 1887802307}
   - {fileID: 955823348}
   - {fileID: 1353267788}
+  - {fileID: 1337252595}

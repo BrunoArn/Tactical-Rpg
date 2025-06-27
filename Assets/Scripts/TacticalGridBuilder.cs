@@ -26,15 +26,10 @@ public class TacticalGridBuilder : MonoBehaviour
     private float cellSize = 1f;
 
     //the actual logic tilemap;
-    private Dictionary<Vector2Int, TileData> tacticalGrid = new();
-
-    private void Start()
-    {
-        GenerateTacticalGrid();
-    }
+    public Dictionary<Vector2Int, TileData> tacticalGrid = new();
 
     //gera o grid lógico
-    void GenerateTacticalGrid()
+    public void GenerateTacticalGrid()
     {
         //reseta o grid antigo
         tacticalGrid.Clear();
