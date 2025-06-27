@@ -62,6 +62,14 @@ public class TacticalGridBuilder : MonoBehaviour
         }
     }
 
+    // give me the grind bounderies
+    public Bounds GetGridBounds()
+    {
+        Vector3 size = new Vector3(gridSize.x, gridSize.y, 1);
+        Vector3 center = gridOrigin;
+        return new Bounds(center, size);
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = debugColor;
