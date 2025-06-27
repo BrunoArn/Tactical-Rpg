@@ -1457,8 +1457,9 @@ GameObject:
   m_Component:
   - component: {fileID: 955823348}
   - component: {fileID: 955823347}
-  - component: {fileID: 955823349}
   - component: {fileID: 955823350}
+  - component: {fileID: 955823349}
+  - component: {fileID: 955823351}
   m_Layer: 3
   m_Name: Hero
   m_TagString: Untagged
@@ -1596,6 +1597,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.75124264, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &955823351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 955823346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d216e134a38be841852af507f7fa764, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HighlightPrefab: {fileID: 0}
 --- !u!1 &1186133239
 GameObject:
   m_ObjectHideFlags: 0
@@ -3695,9 +3709,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridBuilder: {fileID: 1337252594}
-  allUnits:
-  - {fileID: 955823349}
-  - {fileID: 1353267789}
+  allUnits: []
+  unitLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1 &1353267786
 GameObject:
   m_ObjectHideFlags: 0
