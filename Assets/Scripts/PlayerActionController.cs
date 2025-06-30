@@ -16,14 +16,18 @@ public class PlayerActionController : MonoBehaviour
     //os controles e tal
     private CombatControls controls;
 
-    //ação executada
-    [SerializeField] PlayerCombatMovement testingAction;
+    //ação executada, ta hardcodedzada por enquantos
+    [SerializeField] MonoBehaviour testingAction;
+    private IUnitAction action;
 
     void Awake()
     {
         //pega o componente do grid Unit e pega os controles
         gridUnit = GetComponent<GridUnit>();
         controls = new CombatControls();
+        action = testingAction as IUnitAction;
+
+        //agora vem os inputs
 
         //ctx é contexto
         //aqui ele pega os input e só executa em determinados contextos
@@ -62,15 +66,17 @@ public class PlayerActionController : MonoBehaviour
             if (!hasPlayed && direction != Vector2Int.zero)
             {
                 //sempre envia a direção
-                testingAction.ExecuteAction(gridUnit.currentGridPos + direction);
-                //tira highlight
+                action.ExecuteAction(gridUnit.currentGridPos + direction);
+                // hasPlayed = true;
                 ShowPreview();
             }
         };
     }
+
     //se associando a leitura dos controles
     void OnEnable() => controls.Combat.Enable();
     void OnDisable() => controls.Combat.Disable();
+
     //mostra um quadrado pra direção selecionada
     void ShowPreview()
     {

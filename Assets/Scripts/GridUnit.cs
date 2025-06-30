@@ -3,8 +3,10 @@ using UnityEngine;
 public class GridUnit : MonoBehaviour
 {
     // referencia ao grid... vamos ver como pegar essa informação melhor.
-    // por enquanto só quer saber do dicionário
+    // caso precise e nao tenha o combatManager injetado
     public TacticalGridBuilder gridBuilder;
+    // é injetado pelo próprio combatManager;
+    [HideInInspector] public CombatManager combatManager;
 
     // posição lógica dentro do grid
     public Vector2Int currentGridPos;
@@ -23,7 +25,7 @@ public class GridUnit : MonoBehaviour
         {
             float dist = Vector3.Distance(currentPos, tileEntry.Value.worldPos);
 
-            if(dist < closestDist)
+            if (dist < closestDist)
             {
                 closestDist = dist;
                 closestKey = tileEntry.Key;
@@ -35,5 +37,17 @@ public class GridUnit : MonoBehaviour
             transform.position = tileData.worldPos;
             currentGridPos = closestKey;
         }
+    }
+
+    public void UpdateGridPosition(Vector2Int newPos)
+    {
+        if (combatManager == null) return;
+
+        combatManager.unitPosition.Remove(currentGridPos);
+        combatManager.unitPosition[newPos] = this;
+        currentGridPos = newPos;
+
+        combatManager.DebugUnitPositions();
+
     }
 }
