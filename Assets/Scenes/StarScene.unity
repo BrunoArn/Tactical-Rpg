@@ -1459,6 +1459,7 @@ GameObject:
   - component: {fileID: 955823347}
   - component: {fileID: 955823350}
   - component: {fileID: 955823349}
+  - component: {fileID: 955823352}
   - component: {fileID: 955823351}
   m_Layer: 3
   m_Name: Hero
@@ -1531,7 +1532,7 @@ Transform:
   m_GameObject: {fileID: 955823346}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.744, y: -3.271, z: 0}
+  m_LocalPosition: {x: 2.42, y: -1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1609,7 +1610,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d216e134a38be841852af507f7fa764, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HighlightPrefab: {fileID: 0}
+--- !u!114 &955823352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 955823346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e1cf938828fbb548827ef450f4326b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HighlightPrefab: {fileID: 6032587995237989846, guid: 46f3d37fcc2cf4146b427fceb81eff0d, type: 3}
+  testingAction: {fileID: 955823351}
 --- !u!1 &1186133239
 GameObject:
   m_ObjectHideFlags: 0
