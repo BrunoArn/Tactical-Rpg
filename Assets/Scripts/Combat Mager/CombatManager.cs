@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CombatManager : MonoBehaviour
@@ -13,7 +14,20 @@ public class CombatManager : MonoBehaviour
     //dicionário de posição das unidades
     public Dictionary<Vector2Int, GridUnit> unitPosition = new();
 
+
+    //turn things
+    public List<TurnSlot> currentRound = new();
+    private int turnIndex = 0;
+
+    [SerializeField] int totalActionsPerRound = 5;
+
+
     void Start()
+    {
+        StartGame();
+    }
+
+    void StartGame()
     {
         //pede pro builder gerar o grid
         gridBuilder.GenerateTacticalGrid();
@@ -28,9 +42,60 @@ public class CombatManager : MonoBehaviour
         CreatePositionDictionary();
         //printa as posiçoes
         DebugUnitPositions();
+
+        GenerateRound();
     }
 
     #region turn Logic
+
+    void GenerateRound()
+    {
+        currentRound.Clear();
+        turnIndex = 0;
+
+        //cria o dicionario para saber quantas vezes vagabundo vai bater
+        Dictionary<GridUnit, float> fillMeters = new();
+        //zera o fillmeter de geral
+        foreach (GridUnit unit in allUnits) { fillMeters[unit] = 0f; }
+
+        int orderCounter = 0;
+
+        while (currentRound.Count < totalActionsPerRound)
+        {
+            foreach (GridUnit unit in allUnits)
+            {
+                fillMeters[unit] += unit.stats.speed;
+
+                if (fillMeters[unit] >= 100f)
+                {
+                    currentRound.Add(new TurnSlot(unit, orderCounter++));
+                    fillMeters[unit] -= 100f;
+
+                    if (currentRound.Count >= totalActionsPerRound) break;
+                }
+            }
+        }
+
+
+
+        //agora organiza o negocio
+        currentRound = currentRound.OrderBy(t => t.order).ToList();
+        DebugRoundOrder();
+    }
+
+    //debug opara ver os round
+    void DebugRoundOrder()
+    {
+        Debug.Log("=== Current Round Order ===");
+
+        for (int i = 0; i < currentRound.Count; i++)
+        {
+            TurnSlot slot = currentRound[i];
+            Debug.Log($"[{i}] {slot.unit.name}");
+        }
+
+        Debug.Log("===========================");
+    }
 
     #endregion
 
