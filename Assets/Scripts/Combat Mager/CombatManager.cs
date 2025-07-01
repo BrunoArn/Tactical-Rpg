@@ -40,8 +40,6 @@ public class CombatManager : MonoBehaviour
         }
         //popula os personagens em suas posições
         CreatePositionDictionary();
-        //printa as posiçoes
-        DebugUnitPositions();
 
         GenerateRound();
     }
@@ -132,8 +130,10 @@ public class CombatManager : MonoBehaviour
     }
 
     //debug pra ver quem ta ond 
+    [ContextMenu("Unit position")]
     public void DebugUnitPositions()
     {
+        Debug.Log(unitPosition.Count);
         foreach (var kvp in unitPosition)
         {
             Vector2Int pos = kvp.Key;

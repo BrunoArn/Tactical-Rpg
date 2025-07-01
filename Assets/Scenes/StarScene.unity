@@ -1459,6 +1459,7 @@ GameObject:
   - component: {fileID: 955823347}
   - component: {fileID: 955823350}
   - component: {fileID: 955823349}
+  - component: {fileID: 955823353}
   - component: {fileID: 955823352}
   - component: {fileID: 955823351}
   m_Layer: 3
@@ -1553,6 +1554,7 @@ MonoBehaviour:
   gridBuilder: {fileID: 1337252594}
   combatManager: {fileID: 0}
   currentGridPos: {x: 0, y: 0}
+  stats: {fileID: 955823353}
 --- !u!61 &955823350
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1625,6 +1627,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HighlightPrefab: {fileID: 6032587995237989846, guid: 46f3d37fcc2cf4146b427fceb81eff0d, type: 3}
   testingAction: {fileID: 955823351}
+--- !u!114 &955823353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 955823346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df571c224a6b5624495e63f3fdd9fc65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 10
+  currentHp: 10
+  speed: 40
+  attack: 1
+  defense: 1
 --- !u!1 &1186133239
 GameObject:
   m_ObjectHideFlags: 0
@@ -3728,6 +3747,7 @@ MonoBehaviour:
   unitLayer:
     serializedVersion: 2
     m_Bits: 8
+  totalActionsPerRound: 6
 --- !u!1 &1353267786
 GameObject:
   m_ObjectHideFlags: 0
@@ -3739,6 +3759,7 @@ GameObject:
   - component: {fileID: 1353267788}
   - component: {fileID: 1353267787}
   - component: {fileID: 1353267789}
+  - component: {fileID: 1353267791}
   - component: {fileID: 1353267790}
   m_Layer: 3
   m_Name: Enemy
@@ -3832,6 +3853,7 @@ MonoBehaviour:
   gridBuilder: {fileID: 1337252594}
   combatManager: {fileID: 0}
   currentGridPos: {x: 0, y: 0}
+  stats: {fileID: 1353267791}
 --- !u!61 &1353267790
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3878,6 +3900,23 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &1353267791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1353267786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df571c224a6b5624495e63f3fdd9fc65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 10
+  currentHp: 10
+  speed: 20
+  attack: 1
+  defense: 1
 --- !u!1 &1887802305
 GameObject:
   m_ObjectHideFlags: 0

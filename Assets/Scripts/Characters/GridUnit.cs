@@ -48,7 +48,5 @@ public class GridUnit : MonoBehaviour
         combatManager.unitPosition[newPos] = this;
         currentGridPos = newPos;
 
-        combatManager.DebugUnitPositions();
-
     }
 }
