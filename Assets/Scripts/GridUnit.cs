@@ -10,6 +10,7 @@ public class GridUnit : MonoBehaviour
 
     // posição lógica dentro do grid
     public Vector2Int currentGridPos;
+    public UnitStats stats;
 
     public void SnapToClosestTile()
     {

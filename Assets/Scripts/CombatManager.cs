@@ -8,23 +8,33 @@ public class CombatManager : MonoBehaviour
     [SerializeField] TacticalGridBuilder gridBuilder;
     //vetor the unidades presentes no grid
     [SerializeField] List<GridUnit> allUnits = new();
-    //dicionário de posição das unidades
-    public Dictionary<Vector2Int, GridUnit> unitPosition = new();
     //o layer das units para procurar direitinho
     [SerializeField] LayerMask unitLayer;
+    //dicionário de posição das unidades
+    public Dictionary<Vector2Int, GridUnit> unitPosition = new();
 
     void Start()
     {
+        //pede pro builder gerar o grid
         gridBuilder.GenerateTacticalGrid();
+        //detecta quem ta dentro do grid e joga pra lista
         DetectUnitsInGrid();
+        //faz geral que ta na fight, entrar na fight se posicionando no grid
         foreach (var unit in allUnits)
         {
             unit.SnapToClosestTile();
         }
+        //popula os personagens em suas posições
         CreatePositionDictionary();
+        //printa as posiçoes
         DebugUnitPositions();
     }
 
+    #region turn Logic
+
+    #endregion
+
+    #region Detection Logic
     //detecta as unidades dentro do grid para adicionar a lista de unidades.
     void DetectUnitsInGrid()
     {
@@ -64,7 +74,8 @@ public class CombatManager : MonoBehaviour
             Vector2Int pos = kvp.Key;
             GridUnit unit = kvp.Value;
 
-            Debug.Log($"Tile {pos} is occupied by unit: {unit.name}");
+            Debug.Log($"O {unit.name} está em: {pos}");
         }
     }
+    #endregion
 }

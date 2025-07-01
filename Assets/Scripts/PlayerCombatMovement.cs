@@ -19,10 +19,10 @@ public class PlayerCombatMovement : MonoBehaviour, IUnitAction
         {
             //joga a posição para a posição mundial do tile
             transform.position = tile.worldPos;
-            //atualiza o dicionário de posição
-            gridUnit.UpdateGridPosition(target);
             //e bota a posição do grid lógico como a definição também
             gridUnit.currentGridPos = target;
+            //atualiza o dicionário de posição
+            gridUnit.UpdateGridPosition(gridUnit.currentGridPos);
         }
     }
 }
