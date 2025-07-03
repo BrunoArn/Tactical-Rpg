@@ -5,7 +5,7 @@ public class PlayerCombatMovement : MonoBehaviour, IUnitAction
     //referencia para a classe gridUnit
     private GridUnit gridUnit;
     //direção que vai ser feito o movimento
-    //private Vector2Int direction = Vector2Int.zero;
+    private Vector2Int direction = Vector2Int.zero;
 
     void Awake()
     {
@@ -14,6 +14,11 @@ public class PlayerCombatMovement : MonoBehaviour, IUnitAction
 
     //executa a ação, neste caso é se mover.
     public void ExecuteAction(Vector2Int target)
+    {
+        MoveCharacter(target);   
+    }
+
+    private void MoveCharacter(Vector2Int target)
     {
         if (gridUnit.gridBuilder.tacticalGrid.TryGetValue(target, out var tile) && tile.isWalkable)
         {

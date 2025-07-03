@@ -5,21 +5,29 @@ using UnityEngine;
 
 public class CombatManager : MonoBehaviour
 {
+    [Header("Grid info")]
+    [Space]
     //referencia ao grid
-    [SerializeField] TacticalGridBuilder gridBuilder;
+    public TacticalGridBuilder gridBuilder;
     //vetor the unidades presentes no grid
+    //serialized para ver no inspector de caozada
     [SerializeField] List<GridUnit> allUnits = new();
     //o layer das units para procurar direitinho
+    [Tooltip("layer dos personagens para encontrar e por no grid")]
     [SerializeField] LayerMask unitLayer;
     //dicionário de posição das unidades
     public Dictionary<Vector2Int, GridUnit> unitPosition = new();
 
-
-    //turn things
+    [Header("turn info")]
+    [Space]
+    //lista de turnos
     public List<TurnSlot> currentRound = new();
+    //index to turno
     private int turnIndex = 0;
+    //unidade atual no turno
     private GridUnit currentUnit;
-
+    //ações totais por round
+    [Tooltip("numero maximo de turnos por round")]
     [SerializeField] int totalActionsPerRound = 5;
 
 
@@ -41,8 +49,9 @@ public class CombatManager : MonoBehaviour
         }
         //popula os personagens em suas posições
         CreatePositionDictionary();
-
+        //gera o round e turnos
         GenerateRound();
+        //começa os round e delega o primeiro a jogar
         startNextTurn();
     }
 
@@ -52,25 +61,28 @@ public class CombatManager : MonoBehaviour
     {
         currentRound.Clear();
         turnIndex = 0;
-
         //cria o dicionario para saber quantas vezes vagabundo vai bater
         Dictionary<GridUnit, float> fillMeters = new();
         //zera o fillmeter de geral
         foreach (GridUnit unit in allUnits) { fillMeters[unit] = 0f; }
-
+        //inicia uma contagem da ordem
         int orderCounter = 0;
-
+        //enquanto for menor que o limite de round, vai populando
         while (currentRound.Count < totalActionsPerRound)
         {
+            //para cada unidade
             foreach (GridUnit unit in allUnits)
             {
+                //vai enchendo o meters para meter ronca
                 fillMeters[unit] += unit.stats.speed;
-
+                // se passar ou chegar a 100, adiciona um turno
                 if (fillMeters[unit] >= 100f)
                 {
+                    //adiciona o round com a ordem e soma a propria ordem tbm
                     currentRound.Add(new TurnSlot(unit, orderCounter++));
+                    //diminui os 100
                     fillMeters[unit] -= 100f;
-
+                    //sai se chegar no limite de rounds
                     if (currentRound.Count >= totalActionsPerRound) break;
                 }
             }

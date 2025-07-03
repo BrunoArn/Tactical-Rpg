@@ -4,29 +4,34 @@ using UnityEngine;
 
 public class PlayerActionController : MonoBehaviour, ICombatUnit
 {
+    
     //referencia para a classe gridUnit
     private GridUnit gridUnit;
+    //os controles e tal
+    private CombatControls controls;
     //direção do input do personagem
     private Vector2Int direction = Vector2Int.zero;
     //flag para ver se ja fez alguma ação ou não.
     private bool hasPlayed = true;
 
+    [Header("Highlight")]
+    [Space]
     //meter um highlight de ond vai sair a ação
     [SerializeField] private GameObject HighlightPrefab;
     [SerializeField] private Sprite tileOn;
     [SerializeField] private Sprite tileOff;
     private GameObject highlightInstance;
 
-    //os controles e tal
-    private CombatControls controls;
-
+    [Header("Action")]
     //ação executada, ta hardcodedzada por enquantos
     [SerializeField] MonoBehaviour testingAction;
     private IUnitAction action;
 
+    //callback to manager
     private System.Action onTurnEnd;
 
     #region Setup
+
     void Awake()
     {
         //pega o componente do grid Unit e pega os controles
