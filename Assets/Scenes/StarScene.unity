@@ -1462,6 +1462,7 @@ GameObject:
   - component: {fileID: 955823353}
   - component: {fileID: 955823352}
   - component: {fileID: 955823351}
+  - component: {fileID: 955823354}
   m_Layer: 3
   m_Name: Hero
   m_TagString: Untagged
@@ -1626,7 +1627,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HighlightPrefab: {fileID: 6032587995237989846, guid: 46f3d37fcc2cf4146b427fceb81eff0d, type: 3}
-  testingAction: {fileID: 955823351}
+  tileOn: {fileID: 3098526634475018109, guid: 909ec1df091d2ce49bbf3a2160309348, type: 3}
+  tileOff: {fileID: 3081079791555589152, guid: 1ec1990d122f82b4f86effaa25379e12, type: 3}
+  MoveAction: {fileID: 955823351}
+  AttackAction: {fileID: 955823354}
 --- !u!114 &955823353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1644,6 +1648,18 @@ MonoBehaviour:
   speed: 40
   attack: 1
   defense: 1
+--- !u!114 &955823354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 955823346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64e50951761629f46b0b6208e4297498, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1186133239
 GameObject:
   m_ObjectHideFlags: 0
@@ -3760,6 +3776,7 @@ GameObject:
   - component: {fileID: 1353267787}
   - component: {fileID: 1353267789}
   - component: {fileID: 1353267791}
+  - component: {fileID: 1353267792}
   - component: {fileID: 1353267790}
   m_Layer: 3
   m_Name: Enemy
@@ -3917,6 +3934,19 @@ MonoBehaviour:
   speed: 20
   attack: 1
   defense: 1
+--- !u!114 &1353267792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1353267786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf7caf6c16dd7fd4cba5da79b1a93417, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  secondToSKip: 1
 --- !u!1 &1887802305
 GameObject:
   m_ObjectHideFlags: 0

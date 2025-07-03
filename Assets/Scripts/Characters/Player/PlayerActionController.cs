@@ -75,16 +75,18 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
         {
             if (!hasPlayed && direction != Vector2Int.zero)
             {
-                Vector2Int target = gridUnit.currentGridPos + direction;
-                bool hasTile = gridUnit.gridBuilder.tacticalGrid.TryGetValue(target, out var tile);
+                Vector2Int targetPos = gridUnit.currentGridPos + direction;
+                bool hasTile = gridUnit.gridBuilder.tacticalGrid.TryGetValue(targetPos, out var tile);
+                GridUnit targetUnit = null;
                 //Caso do Move
                 if (hasTile && tile.isWalkable)
                 {
                     action = MoveAction as IUnitAction;
                 }
                 //pro ataque
-                else if (hasTile && !tile.isWalkable && gridUnit.combatManager.unitPosition.TryGetValue(target, out var enemy))
+                else if (hasTile && !tile.isWalkable && gridUnit.combatManager.unitPosition.TryGetValue(targetPos, out var enemy))
                 {
+                    targetUnit = enemy;
                     action = AttackAction as IUnitAction;
                 }
 
@@ -92,7 +94,8 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
                 {
                     Debug.Log("açao!");
                     //executa enviando a direção
-                    action.ExecuteAction(target);
+                    action.ExecuteAction(targetPos, this.gridUnit, targetUnit);
+                    targetUnit = null;
                     EndTurn();
                 }
             }

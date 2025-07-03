@@ -13,9 +13,9 @@ public class PlayerCombatMovement : MonoBehaviour, IUnitAction
     }
 
     //executa a ação, neste caso é se mover.
-    public void ExecuteAction(Vector2Int target)
+    public void ExecuteAction(Vector2Int targetPos, GridUnit actor, GridUnit targetUnit)
     {
-        MoveCharacter(target);
+        MoveCharacter(targetPos);
     }
 
     private void MoveCharacter(Vector2Int target)
