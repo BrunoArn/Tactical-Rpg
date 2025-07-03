@@ -18,6 +18,7 @@ public class CombatManager : MonoBehaviour
     //turn things
     public List<TurnSlot> currentRound = new();
     private int turnIndex = 0;
+    private GridUnit currentUnit;
 
     [SerializeField] int totalActionsPerRound = 5;
 
@@ -42,6 +43,7 @@ public class CombatManager : MonoBehaviour
         CreatePositionDictionary();
 
         GenerateRound();
+        startNextTurn();
     }
 
     #region turn Logic
@@ -73,15 +75,35 @@ public class CombatManager : MonoBehaviour
                 }
             }
         }
-
-
-
         //agora organiza o negocio
         currentRound = currentRound.OrderBy(t => t.order).ToList();
-        DebugRoundOrder();
+    }
+
+    // começa setando quem tem que fazer oq e dps adiciona no index
+    void startNextTurn()
+    {
+        if (turnIndex >= currentRound.Count)
+        {
+            GenerateRound(); // generates a new round
+            turnIndex = 0;
+        }
+
+        currentUnit = currentRound[turnIndex].unit;
+        Debug.Log($"{turnIndex+1}rd turno é do {currentUnit.name}");
+        turnIndex++;
+
+        //faz o proximo saber que tem que entrar
+        // e da pra ele a funçao de terminar o turno por aqui tbm
+        currentUnit.GetComponent<ICombatUnit>()?.StartTurn(EndCurrentTurn);
+    }
+
+    private void EndCurrentTurn()
+    {
+        startNextTurn();
     }
 
     //debug opara ver os round
+    [ContextMenu("RoundOrder")]
     void DebugRoundOrder()
     {
         Debug.Log("=== Current Round Order ===");

@@ -5,7 +5,7 @@ public class PlayerCombatMovement : MonoBehaviour, IUnitAction
     //referencia para a classe gridUnit
     private GridUnit gridUnit;
     //direção que vai ser feito o movimento
-    private Vector2Int direction = Vector2Int.zero;
+    //private Vector2Int direction = Vector2Int.zero;
 
     void Awake()
     {
