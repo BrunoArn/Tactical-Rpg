@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CombatManager : MonoBehaviour
@@ -49,6 +50,8 @@ public class CombatManager : MonoBehaviour
         }
         //popula os personagens em suas posições
         CreatePositionDictionary();
+        //ai da update no bag pra walk
+        UpdateTileWalkability();
         //gera o round e turnos
         GenerateRound();
         //começa os round e delega o primeiro a jogar
@@ -101,7 +104,7 @@ public class CombatManager : MonoBehaviour
         }
 
         currentUnit = currentRound[turnIndex].unit;
-        Debug.Log($"{turnIndex+1}rd turno é do {currentUnit.name}");
+        //Debug.Log($"{turnIndex+1}rd turno é do {currentUnit.name}");
         turnIndex++;
 
         //faz o proximo saber que tem que entrar
@@ -160,6 +163,26 @@ public class CombatManager : MonoBehaviour
             unit.combatManager = this;
             //adiciona no dicionario a unidade com sua possição no grid
             unitPosition[unit.currentGridPos] = unit;
+        }
+    }
+
+    //update na walkaility dos manos
+    public void UpdateTileWalkability()
+    {
+        //reset the whole grid
+        foreach (var tile in gridBuilder.tacticalGrid.Values)
+        {
+            tile.isWalkable = true;
+        }
+        //marca os ocupados dnv
+        foreach (var kvp in unitPosition)
+        {
+            Vector2Int pos = kvp.Key;
+
+            if (gridBuilder.tacticalGrid.TryGetValue(pos, out TileData tile))
+            {
+                tile.isWalkable = false;
+            }
         }
     }
 

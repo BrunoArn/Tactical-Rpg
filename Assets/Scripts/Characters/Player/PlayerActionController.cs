@@ -1,10 +1,11 @@
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class PlayerActionController : MonoBehaviour, ICombatUnit
 {
-    
+
     //referencia para a classe gridUnit
     private GridUnit gridUnit;
     //os controles e tal
@@ -24,7 +25,8 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
 
     [Header("Action")]
     //ação executada, ta hardcodedzada por enquantos
-    [SerializeField] MonoBehaviour testingAction;
+    [SerializeField] MonoBehaviour MoveAction;
+    [SerializeField] MonoBehaviour AttackAction;
     private IUnitAction action;
 
     //callback to manager
@@ -37,7 +39,6 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
         //pega o componente do grid Unit e pega os controles
         gridUnit = GetComponent<GridUnit>();
         controls = new CombatControls();
-        action = testingAction as IUnitAction;
 
         //agora vem os inputs
 
@@ -74,12 +75,26 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
         {
             if (!hasPlayed && direction != Vector2Int.zero)
             {
-                //sempre envia a direção
-                action.ExecuteAction(gridUnit.currentGridPos + direction);
-                //nao mexe mais
-                hasPlayed = true;
-                ShowPreview();
-                EndTurn();
+                Vector2Int target = gridUnit.currentGridPos + direction;
+                bool hasTile = gridUnit.gridBuilder.tacticalGrid.TryGetValue(target, out var tile);
+                //Caso do Move
+                if (hasTile && tile.isWalkable)
+                {
+                    action = MoveAction as IUnitAction;
+                }
+                //pro ataque
+                else if (hasTile && !tile.isWalkable && gridUnit.combatManager.unitPosition.TryGetValue(target, out var enemy))
+                {
+                    action = AttackAction as IUnitAction;
+                }
+
+                if (action != null)
+                {
+                    Debug.Log("açao!");
+                    //executa enviando a direção
+                    action.ExecuteAction(target);
+                    EndTurn();
+                }
             }
         };
     }
@@ -105,6 +120,9 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
     //termina o turno dele por aqui e por la também
     public void EndTurn()
     {
+        hasPlayed = true;
+        ShowPreview();
+        action = null;
         onTurnEnd?.Invoke(); // manda pro manager que ta tudo bem
     }
 
