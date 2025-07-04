@@ -27,6 +27,12 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
     //ação executada, ta hardcodedzada por enquantos
     [SerializeField] MonoBehaviour MoveAction;
     [SerializeField] MonoBehaviour AttackAction;
+
+    //meterdoidao
+    [SerializeField] int meterMax = 100;
+    private int meter = 0;
+
+
     private IUnitAction action;
 
     //callback to manager
@@ -109,12 +115,30 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
 
     #region ICombatUnit Interface
 
+    public void BeforeStart(System.Action onTurnEndCallBack)
+    {
+        onTurnEnd = onTurnEndCallBack;
+        meter += gridUnit.stats.speed;
+        Debug.Log(meter);
+        if (meter >= meterMax)
+        {
+            Debug.Log("joga fi");
+            meter -= meterMax;
+            StartTurn();
+        }
+        else
+        {
+            Debug.Log("da ainda nao");
+            EndTurn();
+        }
+        //fill meter
+    }
 
     //starta o turno do boneco, libera ele pra açao
     //recebe do manager a info que é a vez dele
-    public void StartTurn(Action onTurnEndCallBack)
+    public void StartTurn()
     {
-        onTurnEnd = onTurnEndCallBack;
+
         hasPlayed = false; // reseta a flag
         //volta a cor da UI
         UpdatePreviewPrefab();

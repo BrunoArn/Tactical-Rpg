@@ -12,6 +12,14 @@ public class GridUnit : MonoBehaviour
     public Vector2Int currentGridPos;
     public UnitStats stats;
 
+    [SerializeField] MonoBehaviour actionController;
+    private ICombatUnit action;
+
+    void Awake()
+    {
+        action = actionController as ICombatUnit;
+    }
+
     public void SnapToClosestTile()
     {
         // posição atual da unidade, pode estar fora do grid
@@ -47,6 +55,12 @@ public class GridUnit : MonoBehaviour
         combatManager.unitPosition.Remove(currentGridPos);
         combatManager.unitPosition[newPos] = this;
         currentGridPos = newPos;
+        combatManager.UpdateTileWalkability();
 
+    }
+
+    public void StartAction(System.Action onTurnEndCallBack)
+    {
+        action.BeforeStart(onTurnEndCallBack);
     }
 }
