@@ -138,19 +138,21 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
     //recebe do manager a info que é a vez dele
     public void StartTurn()
     {
-
         hasPlayed = false; // reseta a flag
         //volta a cor da UI
         UpdatePreviewPrefab();
-
     }
     //termina o turno dele por aqui e por la também
     public void EndTurn()
     {
         hasPlayed = true;
-        ShowPreview();
         action = null;
         onTurnEnd?.Invoke(); // manda pro manager que ta tudo bem
+        if (controls.Combat.Direction.IsPressed())
+        {
+            UpdatePreviewPrefab();
+            ShowPreview();
+        }
     }
 
     #endregion

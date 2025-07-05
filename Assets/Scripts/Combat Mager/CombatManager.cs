@@ -21,17 +21,12 @@ public class CombatManager : MonoBehaviour
 
     [Header("turn info")]
     [Space]
-    //lista de turnos
-    public List<TurnSlot> currentRound = new();
     //cada um com a speed e tal
     [SerializeField] List<GridUnit> turnOrder;
     //index to turno
     private int turnIndex = 0;
     //unidade atual no turno
     private GridUnit currentUnit;
-    //ações totais por round
-    [Tooltip("numero maximo de turnos por round")]
-    [SerializeField] int totalActionsPerRound = 5;
 
 
     void Start()
@@ -69,82 +64,27 @@ public class CombatManager : MonoBehaviour
         turnOrder = allUnits;
         //ordena pelo speed
         turnOrder = turnOrder.OrderByDescending(unit => unit.stats.speed).ToList();
+        //começa do zero
         turnIndex = 0;
-
-        // currentRound.Clear();
-        // turnIndex = 0;
-        // //cria o dicionario para saber quantas vezes vagabundo vai bater
-        // Dictionary<GridUnit, float> fillMeters = new();
-        // //zera o fillmeter de geral
-        // foreach (GridUnit unit in allUnits) { fillMeters[unit] = 0f; }
-        // //inicia uma contagem da ordem
-        // int orderCounter = 0;
-        // //enquanto for menor que o limite de round, vai populando
-        // while (currentRound.Count < totalActionsPerRound)
-        // {
-        //     //para cada unidade
-        //     foreach (GridUnit unit in allUnits)
-        //     {
-        //         //vai enchendo o meters para meter ronca
-        //         fillMeters[unit] += unit.stats.speed;
-        //         // se passar ou chegar a 100, adiciona um turno
-        //         if (fillMeters[unit] >= 100f)
-        //         {
-        //             //adiciona o round com a ordem e soma a propria ordem tbm
-        //             currentRound.Add(new TurnSlot(unit, orderCounter++));
-        //             //diminui os 100
-        //             fillMeters[unit] -= 100f;
-        //             //sai se chegar no limite de rounds
-        //             if (currentRound.Count >= totalActionsPerRound) break;
-        //         }
-        //     }
-        // }
-        // //agora organiza o negocio
-        // currentRound = currentRound.OrderBy(t => t.order).ToList();
     }
 
     // começa setando quem tem que fazer oq e dps adiciona no index
     void startNextTurn()
     {
+        //confere se terminou ou não
         if (turnIndex >= turnOrder.Count)
         {
+            //zera se terminou
             turnIndex = 0;
         }
+        //manda o cria startar a ação
         turnOrder[turnIndex].StartAction(EndCurrentTurn);
-        // if (turnIndex >= currentRound.Count)
-        // {
-        //     GenerateRound(); // generates a new round
-        //     turnIndex = 0;
-        // }
-
-        // currentUnit = currentRound[turnIndex].unit;
-        // //Debug.Log($"{turnIndex+1}rd turno é do {currentUnit.name}");
-        // turnIndex++;
-
-        // //faz o proximo saber que tem que entrar
-        // // e da pra ele a funçao de terminar o turno por aqui tbm
-        // currentUnit.GetComponent<ICombatUnit>()?.StartTurn(EndCurrentTurn);
     }
 
     private void EndCurrentTurn()
     {
         turnIndex ++;
         startNextTurn();
-    }
-
-    //debug opara ver os round
-    [ContextMenu("RoundOrder")]
-    void DebugRoundOrder()
-    {
-        Debug.Log("=== Current Round Order ===");
-
-        for (int i = 0; i < currentRound.Count; i++)
-        {
-            TurnSlot slot = currentRound[i];
-            Debug.Log($"[{i}] {slot.unit.name}");
-        }
-
-        Debug.Log("===========================");
     }
 
     #endregion
