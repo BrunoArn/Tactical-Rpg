@@ -8,9 +8,6 @@ public class EnemyActionController : MonoBehaviour, ICombatUnit
     [SerializeField] int secondToSKip = 3;
     private GridUnit gridUnit;
 
-    [SerializeField] int meterMax = 100;
-    private int meter = 0;
-
     void Awake()
     {
         gridUnit = GetComponent<GridUnit>();
@@ -19,12 +16,12 @@ public class EnemyActionController : MonoBehaviour, ICombatUnit
     public void BeforeStart(System.Action onTurnEndCallBack)
     {
         onTurnEnd = onTurnEndCallBack;
-        meter += gridUnit.stats.speed;
-        Debug.Log($"o {this.name} ta com {meter} de meter");
-        if (meter >= meterMax)
+        gridUnit.stats.meter += gridUnit.stats.speed;
+        Debug.Log($"o {this.name} ta com {gridUnit.stats.meter} de meter");
+        if (gridUnit.stats.meter >= gridUnit.stats.meterMax)
         {
             Debug.Log($"o {this.name} agiu");
-            meter -= meterMax;
+            gridUnit.stats.meter -= gridUnit.stats.meterMax;
             StartTurn();
         }
         else

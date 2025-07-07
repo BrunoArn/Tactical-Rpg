@@ -28,10 +28,6 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
     [SerializeField] MonoBehaviour MoveAction;
     [SerializeField] MonoBehaviour AttackAction;
 
-    //meterdoidao
-    [SerializeField] int meterMax = 100;
-    private int meter = 0;
-
 
     private IUnitAction action;
 
@@ -118,12 +114,12 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
     public void BeforeStart(System.Action onTurnEndCallBack)
     {
         onTurnEnd = onTurnEndCallBack;
-        meter += gridUnit.stats.speed;
-        Debug.Log(meter);
-        if (meter >= meterMax)
+        gridUnit.stats.meter += gridUnit.stats.speed;
+        Debug.Log(gridUnit.stats.meter);
+        if (gridUnit.stats.meter >= gridUnit.stats.meterMax)
         {
             Debug.Log("joga fi");
-            meter -= meterMax;
+            gridUnit.stats.meter -= gridUnit.stats.meterMax;
             StartTurn();
         }
         else

@@ -9,5 +9,7 @@ public class UnitStats : MonoBehaviour
     public int speed = 10;
     public int attack = 1;
     public int defense = 1;
+    public int meter = 0;
+    public int meterMax = 100;
 
 }
