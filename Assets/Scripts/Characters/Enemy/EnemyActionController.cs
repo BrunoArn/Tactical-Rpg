@@ -15,18 +15,16 @@ public class EnemyActionController : MonoBehaviour, ICombatUnit
 
     public void BeforeStart(System.Action onTurnEndCallBack)
     {
+        //manda pro endturn a funcao do comatmanager
         onTurnEnd = onTurnEndCallBack;
-        gridUnit.stats.meter += gridUnit.stats.speed;
-        Debug.Log($"o {this.name} ta com {gridUnit.stats.meter} de meter");
-        if (gridUnit.stats.meter >= gridUnit.stats.meterMax)
+        //adiciona o meter e avisa que aumentou
+        gridUnit.stats.AddMeter(gridUnit.stats.speed);
+        if (gridUnit.stats.Meter >= gridUnit.stats.MeterMax)
         {
-            Debug.Log($"o {this.name} agiu");
-            gridUnit.stats.meter -= gridUnit.stats.meterMax;
             StartTurn();
         }
         else
         {
-            Debug.Log($"o {this.name} nao deu");
             EndTurn();
         }
     }
@@ -34,6 +32,13 @@ public class EnemyActionController : MonoBehaviour, ICombatUnit
     public void StartTurn()
     {
         StartCoroutine(SkipTurnRoutine());
+    }
+
+    public void BeforeEndTurn()
+    {
+        gridUnit.stats.AddMeter(-gridUnit.stats.MeterMax);
+        EndTurn();
+        
     }
     
     public void EndTurn()
@@ -45,7 +50,7 @@ public class EnemyActionController : MonoBehaviour, ICombatUnit
     {
         Debug.Log($"o {this.name} passou o turno");
         yield return new WaitForSeconds(secondToSKip);
-        EndTurn();
+        BeforeEndTurn();
         
     }
 

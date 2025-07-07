@@ -98,7 +98,7 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
                     //executa enviando a direção
                     action.ExecuteAction(targetPos, this.gridUnit, targetUnit);
                     targetUnit = null;
-                    EndTurn();
+                    BeforeEndTurn();
                 }
             }
         };
@@ -114,17 +114,14 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
     public void BeforeStart(System.Action onTurnEndCallBack)
     {
         onTurnEnd = onTurnEndCallBack;
-        gridUnit.stats.meter += gridUnit.stats.speed;
-        Debug.Log(gridUnit.stats.meter);
-        if (gridUnit.stats.meter >= gridUnit.stats.meterMax)
+        gridUnit.stats.AddMeter(gridUnit.stats.speed);
+        if (gridUnit.stats.Meter >= gridUnit.stats.MeterMax)
         {
-            Debug.Log("joga fi");
-            gridUnit.stats.meter -= gridUnit.stats.meterMax;
+            Debug.Log("============== joga fi ==============");
             StartTurn();
         }
         else
         {
-            Debug.Log("da ainda nao");
             EndTurn();
         }
         //fill meter
@@ -138,9 +135,16 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
         //volta a cor da UI
         UpdatePreviewPrefab();
     }
+    public void BeforeEndTurn()
+    {
+        gridUnit.stats.AddMeter(-gridUnit.stats.MeterMax);
+        EndTurn();
+    }
     //termina o turno dele por aqui e por la também
+
     public void EndTurn()
     {
+        gridUnit.stats.AddMeter(0);
         hasPlayed = true;
         action = null;
         onTurnEnd?.Invoke(); // manda pro manager que ta tudo bem
