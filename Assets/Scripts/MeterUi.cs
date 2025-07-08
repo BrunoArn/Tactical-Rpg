@@ -26,6 +26,5 @@ public class MeterUi : MonoBehaviour
         float t = (float)current / (float)max ;
         t = Mathf.Clamp01(t);
         fillBar.localScale = new Vector3(1f, t, 1f);
-        Debug.Log("refresh Bar updated");
     }
 }
