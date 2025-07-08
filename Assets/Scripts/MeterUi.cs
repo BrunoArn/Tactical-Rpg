@@ -4,11 +4,10 @@ public class MeterUi : MonoBehaviour
 {
     [SerializeField] private Transform fillBar;
 
-    private UnitStats stats;
+    [SerializeField] private UnitStats stats;
 
     void Awake()
     {
-        stats = GetComponent<UnitStats>();
         if (fillBar == null)
             Debug.Log($"MeterUI on {name} needs a fill Transform assigned");
         stats.OnMeterChanged += RefreshBar;

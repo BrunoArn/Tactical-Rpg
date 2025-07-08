@@ -1475,6 +1475,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1353267788}
     m_Modifications:
+    - target: {fileID: -8742577345095820251, guid: bd9e37b12aaaf4745a7504fe3a2fc79b, type: 3}
+      propertyPath: stats
+      value: 
+      objectReference: {fileID: 1353267791}
+    - target: {fileID: -8742577345095820251, guid: bd9e37b12aaaf4745a7504fe3a2fc79b, type: 3}
+      propertyPath: fillBar
+      value: 
+      objectReference: {fileID: 807524328}
     - target: {fileID: 145889794556268918, guid: bd9e37b12aaaf4745a7504fe3a2fc79b, type: 3}
       propertyPath: m_Name
       value: Fill Meter
@@ -1532,6 +1540,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 919508656}
     m_Modifications:
+    - target: {fileID: -8742577345095820251, guid: bd9e37b12aaaf4745a7504fe3a2fc79b, type: 3}
+      propertyPath: stats
+      value: 
+      objectReference: {fileID: 919508653}
+    - target: {fileID: -8742577345095820251, guid: bd9e37b12aaaf4745a7504fe3a2fc79b, type: 3}
+      propertyPath: fillBar
+      value: 
+      objectReference: {fileID: 309657231}
     - target: {fileID: 145889794556268918, guid: bd9e37b12aaaf4745a7504fe3a2fc79b, type: 3}
       propertyPath: m_Name
       value: Fill Meter
@@ -1610,7 +1626,6 @@ GameObject:
   - component: {fileID: 919508653}
   - component: {fileID: 919508652}
   - component: {fileID: 919508651}
-  - component: {fileID: 919508657}
   m_Layer: 3
   m_Name: Rapidinho
   m_TagString: Untagged
@@ -1782,19 +1797,6 @@ Transform:
   - {fileID: 802609115}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &919508657
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 919508650}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4df2f1ea2441ff4ba014a09aaa40368, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fillBar: {fileID: 309657231}
 --- !u!1 &955823346
 GameObject:
   m_ObjectHideFlags: 0
@@ -1811,7 +1813,6 @@ GameObject:
   - component: {fileID: 955823352}
   - component: {fileID: 955823351}
   - component: {fileID: 955823354}
-  - component: {fileID: 955823355}
   m_Layer: 3
   m_Name: Hero
   m_TagString: Untagged
@@ -2011,19 +2012,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64e50951761629f46b0b6208e4297498, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &955823355
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 955823346}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4df2f1ea2441ff4ba014a09aaa40368, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fillBar: {fileID: 1729585350}
 --- !u!1 &1186133239
 GameObject:
   m_ObjectHideFlags: 0
@@ -4141,7 +4129,6 @@ GameObject:
   - component: {fileID: 1353267789}
   - component: {fileID: 1353267791}
   - component: {fileID: 1353267792}
-  - component: {fileID: 1353267793}
   - component: {fileID: 1353267790}
   m_Layer: 3
   m_Name: Enemy
@@ -4314,19 +4301,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   secondToSKip: 1
---- !u!114 &1353267793
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1353267786}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4df2f1ea2441ff4ba014a09aaa40368, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fillBar: {fileID: 807524328}
 --- !u!4 &1729585350 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4413162801454525945, guid: bd9e37b12aaaf4745a7504fe3a2fc79b, type: 3}
@@ -4386,6 +4360,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 955823348}
     m_Modifications:
+    - target: {fileID: -8742577345095820251, guid: bd9e37b12aaaf4745a7504fe3a2fc79b, type: 3}
+      propertyPath: stats
+      value: 
+      objectReference: {fileID: 955823353}
+    - target: {fileID: -8742577345095820251, guid: bd9e37b12aaaf4745a7504fe3a2fc79b, type: 3}
+      propertyPath: fillBar
+      value: 
+      objectReference: {fileID: 1729585350}
     - target: {fileID: 145889794556268918, guid: bd9e37b12aaaf4745a7504fe3a2fc79b, type: 3}
       propertyPath: m_Name
       value: Fill Meter

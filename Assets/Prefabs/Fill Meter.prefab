@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7018789758091130785}
   - component: {fileID: 4391610414368063150}
+  - component: {fileID: -8742577345095820251}
   m_Layer: 0
   m_Name: Fill Meter
   m_TagString: Untagged
@@ -47,6 +48,19 @@ SortingGroup:
   m_SortingLayer: 0
   m_SortingOrder: 5
   m_SortAtRoot: 0
+--- !u!114 &-8742577345095820251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 145889794556268918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4df2f1ea2441ff4ba014a09aaa40368, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fillBar: {fileID: 0}
 --- !u!1 &282686149843483431
 GameObject:
   m_ObjectHideFlags: 0
