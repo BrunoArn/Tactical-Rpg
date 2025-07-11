@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class PlayerCombatAttack : MonoBehaviour, IUnitAction
 {
-    public void ExecuteAction(Vector2Int targetPos, GridUnit actor, GridUnit targetUnit)
+    public void ExecuteAction(TileData targetTile, GridUnit actor)
     {
-        Debug.Log($"attacked o {targetUnit.name}");
+        Debug.Log($"attacked o {targetTile.OccupyingUnit.name}");
     }
 }

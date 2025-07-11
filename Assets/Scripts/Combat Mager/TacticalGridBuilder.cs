@@ -28,8 +28,14 @@ public class TacticalGridBuilder : MonoBehaviour
     //the actual logic tilemap;
     public Dictionary<Vector2Int, TileData> tacticalGrid = new();
 
+    public void StartGrid()
+    {
+        GenerateTacticalGrid();
+        AssignTilesNeighors();
+    }
+
     //gera o grid lógico
-    public void GenerateTacticalGrid()
+    private void GenerateTacticalGrid()
     {
         //reseta o grid antigo
         tacticalGrid.Clear();
@@ -59,6 +65,14 @@ public class TacticalGridBuilder : MonoBehaviour
                     tacticalGrid[gridKey] = new TileData(gridKey, worldPos, true);
                 }
             }
+        }
+    }
+
+    private void AssignTilesNeighors()
+    {
+        foreach (TileData tile in tacticalGrid.Values)
+        {
+            tile.AssignNeighbors(tacticalGrid);
         }
     }
 

@@ -77,18 +77,19 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
         {
             if (!hasPlayed && direction != Vector2Int.zero)
             {
-                Vector2Int targetPos = gridUnit.currentGridPos + direction;
-                bool hasTile = gridUnit.gridBuilder.tacticalGrid.TryGetValue(targetPos, out var tile);
+                TileData targetTile = gridUnit.currentTile.GetNeighbors(direction);
+                //oe LUTAR SÓ
                 GridUnit targetUnit = null;
+                
                 //Caso do Move
-                if (hasTile && tile.isWalkable)
+                if (targetTile != null && targetTile.isWalkable)
                 {
                     action = MoveAction as IUnitAction;
                 }
                 //pro ataque
-                else if (hasTile && !tile.isWalkable && gridUnit.combatManager.unitPosition.TryGetValue(targetPos, out var enemy))
+                else if (targetTile != null && !targetTile.isWalkable && targetTile.OccupyingUnit)
                 {
-                    targetUnit = enemy;
+                    targetUnit = targetTile.OccupyingUnit;
                     action = AttackAction as IUnitAction;
                 }
 
@@ -96,7 +97,7 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
                 {
                     Debug.Log("açao!");
                     //executa enviando a direção
-                    action.ExecuteAction(targetPos, this.gridUnit, targetUnit);
+                    action.ExecuteAction(targetTile, this.gridUnit);
                     targetUnit = null;
                     BeforeEndTurn();
                 }
@@ -162,8 +163,9 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
     //mostra um quadrado pra direção selecionada
     void ShowPreview()
     {
-        Vector2Int target = gridUnit.currentGridPos + direction;
-        if (gridUnit.gridBuilder.tacticalGrid.TryGetValue(target, out var tile))
+        //Vector2Int target = gridUnit.currentTile.gridPos + direction;
+        TileData targetTile = gridUnit.currentTile.GetNeighbors(direction);
+        if (targetTile!=null)
         {
             if (highlightInstance == null)
             {
@@ -171,7 +173,7 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
             }
 
             //checar qual é
-            highlightInstance.transform.position = tile.worldPos;
+            highlightInstance.transform.position = targetTile.worldPos;
             UpdatePreviewPrefab();
         }
         else if (highlightInstance)

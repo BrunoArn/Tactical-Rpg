@@ -2,17 +2,16 @@ using UnityEngine;
 
 public class GridUnit : MonoBehaviour
 {
-    // referencia ao grid... vamos ver como pegar essa informação melhor.
-    // caso precise e nao tenha o combatManager injetado
-    public TacticalGridBuilder gridBuilder;
-    // é injetado pelo próprio combatManager;
-    [HideInInspector] public CombatManager combatManager;
 
-    // posição lógica dentro do grid
-    public Vector2Int currentGridPos;
+    // é injetado pelo próprio combatManager;
+    public TileData currentTile;
+
+    // status
     public UnitStats stats;
 
+    //receeb a controller do cara, para poder startar pelo comat manager
     [SerializeField] MonoBehaviour actionController;
+    //fazer ser a interface
     private ICombatUnit action;
 
     void Awake()
@@ -20,47 +19,24 @@ public class GridUnit : MonoBehaviour
         action = actionController as ICombatUnit;
     }
 
-    public void SnapToClosestTile()
+    public void UpdateGridPosition(TileData newTile)
     {
-        // posição atual da unidade, pode estar fora do grid
-        Vector3 currentPos = transform.position;
-        //montar a comparação de distancia
-        // começa com infinito para que a primeira seja sempre suave
-        float closestDist = Mathf.Infinity;
-        Vector2Int closestKey = Vector2Int.zero;
-
-        //verifica todos os tiles do grid e descobre qual o mais perto
-        foreach (var tileEntry in gridBuilder.tacticalGrid)
+        if (currentTile == null)
         {
-            float dist = Vector3.Distance(currentPos, tileEntry.Value.worldPos);
-
-            if (dist < closestDist)
-            {
-                closestDist = dist;
-                closestKey = tileEntry.Key;
-            }
+            currentTile = newTile;
+            currentTile.OccupyingUnit = this;
         }
-        // se achou um tile, snap
-        if (gridBuilder.tacticalGrid.TryGetValue(closestKey, out var tileData))
+        else
         {
-            transform.position = tileData.worldPos;
-            currentGridPos = closestKey;
+            currentTile.ClearTile();
+            currentTile = newTile;
+            currentTile.OccupyingUnit = this;
         }
-    }
-
-    public void UpdateGridPosition(Vector2Int newPos)
-    {
-        if (combatManager == null) return;
-
-        combatManager.unitPosition.Remove(currentGridPos);
-        combatManager.unitPosition[newPos] = this;
-        currentGridPos = newPos;
-        combatManager.UpdateTileWalkability();
-
     }
 
     public void StartAction(System.Action onTurnEndCallBack)
     {
+        //primeira call do actionController pro turno
         action.BeforeStart(onTurnEndCallBack);
     }
 }

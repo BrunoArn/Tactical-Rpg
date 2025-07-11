@@ -17,7 +17,7 @@ public class CombatManager : MonoBehaviour
     [Tooltip("layer dos personagens para encontrar e por no grid")]
     [SerializeField] LayerMask unitLayer;
     //dicionário de posição das unidades
-    public Dictionary<Vector2Int, GridUnit> unitPosition = new();
+    //public Dictionary<Vector2Int, GridUnit> unitPosition = new();
 
     [Header("turn info")]
     [Space]
@@ -26,7 +26,7 @@ public class CombatManager : MonoBehaviour
     //index to turno
     private int turnIndex = 0;
     //unidade atual no turno
-    private GridUnit currentUnit;
+    //private GridUnit currentUnit;
 
 
     void Start()
@@ -37,18 +37,15 @@ public class CombatManager : MonoBehaviour
     void StartGame()
     {
         //pede pro builder gerar o grid
-        gridBuilder.GenerateTacticalGrid();
+        gridBuilder.StartGrid();
         //detecta quem ta dentro do grid e joga pra lista
         DetectUnitsInGrid();
-        //faz geral que ta na fight, entrar na fight se posicionando no grid
-        foreach (var unit in allUnits)
-        {
-            unit.SnapToClosestTile();
-        }
-        //popula os personagens em suas posições
-        CreatePositionDictionary();
-        //ai da update no bag pra walk
-        UpdateTileWalkability();
+        //faz geral que ta na fight, entrar na fight se posicionando no grid e da a grid pra eles
+        PositionUnitsInGrid();
+
+
+
+
         //gera o round e turnos
         GenerateRound();
         //começa os round e delega o primeiro a jogar
@@ -83,7 +80,7 @@ public class CombatManager : MonoBehaviour
 
     private void EndCurrentTurn()
     {
-        turnIndex ++;
+        turnIndex++;
         startNextTurn();
     }
 
@@ -95,8 +92,6 @@ public class CombatManager : MonoBehaviour
     {
         //limpa a lista
         allUnits.Clear();
-        //limpa lista de posições
-        unitPosition.Clear();
         //pegar o tamanho do grid la na classe
         Bounds gridBounds = gridBuilder.GetGridBounds();
         //usa physics 2D para detectar collisao com as unidades no grid
@@ -105,38 +100,42 @@ public class CombatManager : MonoBehaviour
         foreach (var hit in hits)
         {
             if (hit.TryGetComponent<GridUnit>(out var unit))
+            {
                 allUnits.Add(unit);
+            }
+
         }
     }
 
-    private void CreatePositionDictionary()
+    private void PositionUnitsInGrid()
     {
-        //enche o dicionario de unidades
         foreach (GridUnit unit in allUnits)
         {
-            //injeta o combatManager
-            unit.combatManager = this;
-            //adiciona no dicionario a unidade com sua possição no grid
-            unitPosition[unit.currentGridPos] = unit;
-        }
-    }
+            // posição atual da unidade, pode estar fora do grid
+            Vector3 currentPos = unit.transform.position;
+            //montar a comparação de distancia
+            // começa com infinito para que a primeira seja sempre suave
+            float closestDist = Mathf.Infinity;
+            Vector2Int closestKey = Vector2Int.zero;
 
-    //update na walkaility dos manos
-    public void UpdateTileWalkability()
-    {
-        //reset the whole grid
-        foreach (var tile in gridBuilder.tacticalGrid.Values)
-        {
-            tile.isWalkable = true;
-        }
-        //marca os ocupados dnv
-        foreach (var kvp in unitPosition)
-        {
-            Vector2Int pos = kvp.Key;
-
-            if (gridBuilder.tacticalGrid.TryGetValue(pos, out TileData tile))
+            //verifica todos os tiles do grid e descobre qual o mais perto
+            foreach (var tileEntry in gridBuilder.tacticalGrid)
             {
-                tile.isWalkable = false;
+                float dist = Vector3.Distance(currentPos, tileEntry.Value.worldPos);
+
+                if (dist < closestDist)
+                {
+                    closestDist = dist;
+                    closestKey = tileEntry.Key;
+                }
+            }
+            // se achou um tile, snap
+            if (gridBuilder.tacticalGrid.TryGetValue(closestKey, out var tileData))
+            {
+                unit.transform.position = tileData.worldPos;
+
+                ///// ================== isso aqui pdoe ser o TIle direto ==================
+                unit.UpdateGridPosition(tileData);
             }
         }
     }
@@ -145,13 +144,11 @@ public class CombatManager : MonoBehaviour
     [ContextMenu("Unit position")]
     public void DebugUnitPositions()
     {
-        Debug.Log(unitPosition.Count);
-        foreach (var kvp in unitPosition)
+        Debug.Log(allUnits.Count);
+        foreach (var kvp in allUnits)
         {
-            Vector2Int pos = kvp.Key;
-            GridUnit unit = kvp.Value;
 
-            Debug.Log($"O {unit.name} está em: {pos}");
+            Debug.Log($"O {kvp.name} está em: {kvp.currentTile.gridPos}");
         }
     }
     #endregion

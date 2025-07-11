@@ -13,15 +13,15 @@ public class PlayerCombatMovement : MonoBehaviour, IUnitAction
     }
 
     //executa a ação, neste caso é se mover.
-    public void ExecuteAction(Vector2Int targetPos, GridUnit actor, GridUnit targetUnit)
+    public void ExecuteAction(TileData targetTile, GridUnit actor)
     {
-        MoveCharacter(targetPos);
+        MoveCharacter(targetTile);
     }
 
-    private void MoveCharacter(Vector2Int target)
+    private void MoveCharacter(TileData target)
     {
         //joga a posição para a posição mundial do tile
-        transform.position = gridUnit.gridBuilder.tacticalGrid[target].worldPos;
+        transform.position = target.worldPos;
         //atualiza o dicionário de posição
         gridUnit.UpdateGridPosition(target);
     }
