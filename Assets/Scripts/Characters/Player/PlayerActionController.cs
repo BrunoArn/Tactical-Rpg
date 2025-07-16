@@ -95,7 +95,6 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
 
                 if (action != null)
                 {
-                    Debug.Log("açao!");
                     //executa enviando a direção
                     action.ExecuteAction(targetTile, this.gridUnit);
                     targetUnit = null;
@@ -114,11 +113,12 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
 
     public void BeforeStart(System.Action onTurnEndCallBack)
     {
+        //seta o final que o combat manager tem
         onTurnEnd = onTurnEndCallBack;
+
         gridUnit.stats.AddMeter(gridUnit.stats.speed);
         if (gridUnit.stats.Meter >= gridUnit.stats.MeterMax)
         {
-            Debug.Log("============== joga fi ==============");
             StartTurn();
         }
         else

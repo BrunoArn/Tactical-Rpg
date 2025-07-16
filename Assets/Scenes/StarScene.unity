@@ -1624,6 +1624,7 @@ GameObject:
   - component: {fileID: 919508655}
   - component: {fileID: 919508654}
   - component: {fileID: 919508653}
+  - component: {fileID: 919508657}
   - component: {fileID: 919508652}
   - component: {fileID: 919508651}
   m_Layer: 3
@@ -1691,7 +1692,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7caf6c16dd7fd4cba5da79b1a93417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  secondToSKip: 1
+  secondToSKip: 0
 --- !u!114 &919508653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1704,8 +1705,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df571c224a6b5624495e63f3fdd9fc65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 10
-  currentHp: 10
   speed: 30
   attack: 1
   defense: 1
@@ -1721,10 +1720,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 565c26c1732676647985fa9651fdfce1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridBuilder: {fileID: 1337252594}
-  combatManager: {fileID: 0}
-  currentGridPos: {x: 0, y: 0}
   stats: {fileID: 919508653}
+  health: {fileID: 919508657}
   actionController: {fileID: 919508652}
 --- !u!212 &919508655
 SpriteRenderer:
@@ -1797,6 +1794,20 @@ Transform:
   - {fileID: 802609115}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &919508657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919508650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b73aea4fab8486459aa4c1d1d133a30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentHealth: 10
+  maxHealth: 10
 --- !u!1 &955823346
 GameObject:
   m_ObjectHideFlags: 0
@@ -1810,6 +1821,7 @@ GameObject:
   - component: {fileID: 955823350}
   - component: {fileID: 955823349}
   - component: {fileID: 955823353}
+  - component: {fileID: 955823355}
   - component: {fileID: 955823352}
   - component: {fileID: 955823351}
   - component: {fileID: 955823354}
@@ -1903,10 +1915,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 565c26c1732676647985fa9651fdfce1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridBuilder: {fileID: 1337252594}
-  combatManager: {fileID: 0}
-  currentGridPos: {x: 0, y: 0}
   stats: {fileID: 955823353}
+  health: {fileID: 955823355}
   actionController: {fileID: 955823352}
 --- !u!61 &955823350
 BoxCollider2D:
@@ -1995,8 +2005,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df571c224a6b5624495e63f3fdd9fc65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 10
-  currentHp: 10
   speed: 40
   attack: 1
   defense: 1
@@ -2012,6 +2020,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64e50951761629f46b0b6208e4297498, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &955823355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 955823346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b73aea4fab8486459aa4c1d1d133a30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentHealth: 10
+  maxHealth: 10
 --- !u!1 &1186133239
 GameObject:
   m_ObjectHideFlags: 0
@@ -4128,6 +4150,7 @@ GameObject:
   - component: {fileID: 1353267787}
   - component: {fileID: 1353267789}
   - component: {fileID: 1353267791}
+  - component: {fileID: 1353267793}
   - component: {fileID: 1353267792}
   - component: {fileID: 1353267790}
   m_Layer: 3
@@ -4220,10 +4243,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 565c26c1732676647985fa9651fdfce1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridBuilder: {fileID: 1337252594}
-  combatManager: {fileID: 0}
-  currentGridPos: {x: 0, y: 0}
   stats: {fileID: 1353267791}
+  health: {fileID: 1353267793}
   actionController: {fileID: 1353267792}
 --- !u!61 &1353267790
 BoxCollider2D:
@@ -4283,8 +4304,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df571c224a6b5624495e63f3fdd9fc65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 10
-  currentHp: 10
   speed: 20
   attack: 1
   defense: 1
@@ -4300,7 +4319,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7caf6c16dd7fd4cba5da79b1a93417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  secondToSKip: 1
+  secondToSKip: 0
+--- !u!114 &1353267793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1353267786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b73aea4fab8486459aa4c1d1d133a30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentHealth: 10
+  maxHealth: 10
 --- !u!4 &1729585350 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4413162801454525945, guid: bd9e37b12aaaf4745a7504fe3a2fc79b, type: 3}

@@ -43,7 +43,7 @@ public class TileData
          var neighborPos = gridPos + dir;
          if (grid.TryGetValue(neighborPos, out var neighbor))
          {
-            Debug.Log(neighbor.gridPos);
+            //Debug.Log(neighbor.gridPos);
             neighbors.Add(neighbor);
          }
       }

@@ -48,7 +48,7 @@ public class EnemyActionController : MonoBehaviour, ICombatUnit
 
     IEnumerator SkipTurnRoutine()
     {
-        Debug.Log($"o {this.name} passou o turno");
+       // Debug.Log($"o [{this.name}] passou o turno");
         yield return new WaitForSeconds(secondToSKip);
         BeforeEndTurn();
         

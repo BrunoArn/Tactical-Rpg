@@ -5,6 +5,7 @@ public class PlayerCombatAttack : MonoBehaviour, IUnitAction
 {
     public void ExecuteAction(TileData targetTile, GridUnit actor)
     {
-        Debug.Log($"attacked o {targetTile.OccupyingUnit.name}");
+        Debug.Log($"Ataquei o [{targetTile.OccupyingUnit.name}]");
+        targetTile.OccupyingUnit.health.TakeDamage(5);
     }
 }

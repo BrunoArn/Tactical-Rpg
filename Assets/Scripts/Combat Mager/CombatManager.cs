@@ -49,7 +49,7 @@ public class CombatManager : MonoBehaviour
         //gera o round e turnos
         GenerateRound();
         //começa os round e delega o primeiro a jogar
-        startNextTurn();
+        StartNextTurn();
     }
 
     #region turn Logic
@@ -66,7 +66,7 @@ public class CombatManager : MonoBehaviour
     }
 
     // começa setando quem tem que fazer oq e dps adiciona no index
-    void startNextTurn()
+    void StartNextTurn()
     {
         //confere se terminou ou não
         if (turnIndex >= turnOrder.Count)
@@ -76,12 +76,19 @@ public class CombatManager : MonoBehaviour
         }
         //manda o cria startar a ação
         turnOrder[turnIndex].StartAction(EndCurrentTurn);
+
     }
 
     private void EndCurrentTurn()
     {
         turnIndex++;
-        startNextTurn();
+        StartNextTurn();
+    }
+
+    private void RemoveUnit(GridUnit deadUnit)
+    {
+        allUnits.Remove(deadUnit);
+        turnOrder.Remove(deadUnit);
     }
 
     #endregion
@@ -102,10 +109,12 @@ public class CombatManager : MonoBehaviour
             if (hit.TryGetComponent<GridUnit>(out var unit))
             {
                 allUnits.Add(unit);
+                unit.OnUnitDeath += RemoveUnit;
             }
 
         }
     }
+
 
     private void PositionUnitsInGrid()
     {
