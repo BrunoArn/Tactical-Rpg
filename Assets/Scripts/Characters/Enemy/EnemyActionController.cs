@@ -1,16 +1,25 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class EnemyActionController : MonoBehaviour, ICombatUnit
 {
     private System.Action onTurnEnd;
-    [SerializeField] int secondToSKip = 3;
+
     private GridUnit gridUnit;
+
+    [Header("actions")]
+    [SerializeField] MonoBehaviour MoveAction;
+    [SerializeField] MonoBehaviour AttackAction;
+    private IUnitAction moveAction;
+    private IUnitAction attackAction;
 
     void Awake()
     {
         gridUnit = GetComponent<GridUnit>();
+        moveAction = MoveAction as IUnitAction;
+        attackAction = AttackAction as IUnitAction;
     }
 
     public void BeforeStart(System.Action onTurnEndCallBack)
@@ -31,27 +40,44 @@ public class EnemyActionController : MonoBehaviour, ICombatUnit
 
     public void StartTurn()
     {
-        StartCoroutine(SkipTurnRoutine());
+        if (gridUnit.currentTile.distanceToHero <= gridUnit.stats.range)
+        {
+            //attack
+            var heroTile = gridUnit.currentTile.neighbors.FirstOrDefault(t => t.distanceToHero == 0 && t.OccupyingUnit != null);
+            if (heroTile != null && attackAction != null)
+            {
+                attackAction.ExecuteAction(heroTile, gridUnit);
+            }
+        }
+        else
+        {
+            TryToMoveAlongPath();
+        }
+        BeforeEndTurn();
     }
 
     public void BeforeEndTurn()
     {
         gridUnit.stats.AddMeter(-gridUnit.stats.MeterMax);
         EndTurn();
-        
+
     }
-    
+
     public void EndTurn()
     {
         onTurnEnd?.Invoke(); // manda pro manager que ta tudo bem
     }
 
-    IEnumerator SkipTurnRoutine()
+    private void TryToMoveAlongPath()
     {
-       // Debug.Log($"o [{this.name}] passou o turno");
-        yield return new WaitForSeconds(secondToSKip);
-        BeforeEndTurn();
-        
+        var direction = gridUnit.currentTile.preferredDirection;
+        if (direction == Vector2Int.zero) return;
+
+        var nextTile = gridUnit.currentTile.neighbors.FirstOrDefault(t => t.gridPos == gridUnit.currentTile.gridPos + direction);
+        if (nextTile != null && nextTile.isWalkable && nextTile.OccupyingUnit == null && moveAction != null)
+        {
+            moveAction.ExecuteAction(nextTile, gridUnit);
+        }
     }
 
 }

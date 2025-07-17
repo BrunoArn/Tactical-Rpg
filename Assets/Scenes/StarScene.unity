@@ -1785,6 +1785,8 @@ GameObject:
   - component: {fileID: 919508657}
   - component: {fileID: 919508652}
   - component: {fileID: 919508651}
+  - component: {fileID: 919508659}
+  - component: {fileID: 919508658}
   m_Layer: 3
   m_Name: Rapidinho
   m_TagString: Untagged
@@ -1850,7 +1852,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7caf6c16dd7fd4cba5da79b1a93417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  secondToSKip: 0
+  MoveAction: {fileID: 919508658}
+  AttackAction: {fileID: 919508659}
 --- !u!114 &919508653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1865,6 +1868,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 30
   attack: 1
+  range: 1
   defense: 1
 --- !u!114 &919508654
 MonoBehaviour:
@@ -1969,6 +1973,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHealth: 10
   maxHealth: 10
+--- !u!114 &919508658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919508650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 120ff00afa58c924481ae9a13ed365b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &919508659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919508650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f49fa6c28c913943a77367f03a7877a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &955823346
 GameObject:
   m_ObjectHideFlags: 0
@@ -2172,6 +2200,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 40
   attack: 1
+  range: 1
   defense: 1
 --- !u!114 &955823354
 MonoBehaviour:
@@ -4330,6 +4359,8 @@ GameObject:
   - component: {fileID: 1353267791}
   - component: {fileID: 1353267793}
   - component: {fileID: 1353267792}
+  - component: {fileID: 1353267795}
+  - component: {fileID: 1353267794}
   - component: {fileID: 1353267790}
   m_Layer: 3
   m_Name: Enemy
@@ -4487,6 +4518,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 20
   attack: 1
+  range: 1
   defense: 1
 --- !u!114 &1353267792
 MonoBehaviour:
@@ -4500,7 +4532,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf7caf6c16dd7fd4cba5da79b1a93417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  secondToSKip: 0
+  MoveAction: {fileID: 1353267794}
+  AttackAction: {fileID: 1353267795}
 --- !u!114 &1353267793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4515,6 +4548,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHealth: 10
   maxHealth: 10
+--- !u!114 &1353267794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1353267786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 120ff00afa58c924481ae9a13ed365b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1353267795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1353267786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f49fa6c28c913943a77367f03a7877a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1569889746 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1321747578549692540, guid: 4c23b7cb1dbfed849960f7239de866e5, type: 3}

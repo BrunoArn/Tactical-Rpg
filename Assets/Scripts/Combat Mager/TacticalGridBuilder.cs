@@ -158,9 +158,10 @@ public class TacticalGridBuilder : MonoBehaviour
             TileData tile = kvp.Value;
             Debug.Log($"GridPos: {key} | WorldPos: {tile.worldPos} | Walkable: {tile.isWalkable}");
         }
+        Debug.Log("==== Tactical Grid Contents ====");
     }
 
-     private void ShowPathDistanceNumber()
+    private void ShowPathDistanceNumber()
     {
         DestroyPathDistanceNumber();
 
@@ -169,9 +170,9 @@ public class TacticalGridBuilder : MonoBehaviour
             var go = new GameObject("DistLabel");
             go.transform.position = tile.worldPos + Vector3.up * 0.1f;
             var tm = go.AddComponent<TextMesh>();
-            tm.text           = tile.distanceToHero == int.MaxValue ? "∞" : tile.distanceToHero.ToString();
-            tm.anchor         = TextAnchor.MiddleCenter;
-            tm.characterSize  = 0.2f;
+            tm.text = tile.distanceToHero == int.MaxValue ? "∞" : tile.distanceToHero.ToString();
+            tm.anchor = TextAnchor.MiddleCenter;
+            tm.characterSize = 0.2f;
 
             var mr = go.GetComponent<MeshRenderer>();
             mr.sortingOrder = 10;

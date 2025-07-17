@@ -7,6 +7,7 @@ public class UnitStats : MonoBehaviour
 {
     public int speed = 10;
     public int attack = 1;
+    public int range = 1;
     public int defense = 1;
 
     private int meter = 0;
