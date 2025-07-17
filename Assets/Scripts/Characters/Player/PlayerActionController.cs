@@ -37,7 +37,7 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
     void Awake()
     {
         //pega o componente do grid Unit e pega os controles
-        //gridUnit = GetComponent<GridUnit>();
+        gridUnit = GetComponent<GridUnit>();
         controls = new CombatControls();
 
         //agora vem os inputs

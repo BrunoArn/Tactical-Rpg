@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class TileData
 {
+   //normal data
    public Vector2Int gridPos;
    public Vector3 worldPos;
    public bool isWalkable;
+
+   //Flow-Field data
+   public int distanceToHero = int.MaxValue;
+   public Vector2Int preferredDirection = Vector2Int.zero;
 
    //neighbors
    public List<TileData> neighbors = new();

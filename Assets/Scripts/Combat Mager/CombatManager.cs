@@ -13,6 +13,7 @@ public class CombatManager : MonoBehaviour
     //vetor the unidades presentes no grid
     //serialized para ver no inspector de caozada
     [SerializeField] List<GridUnit> allUnits = new();
+    private GridUnit hero;
     //o layer das units para procurar direitinho
     [Tooltip("layer dos personagens para encontrar e por no grid")]
     [SerializeField] LayerMask unitLayer;
@@ -42,9 +43,10 @@ public class CombatManager : MonoBehaviour
         DetectUnitsInGrid();
         //faz geral que ta na fight, entrar na fight se posicionando no grid e da a grid pra eles
         PositionUnitsInGrid();
-
-
-
+        //create o pathfinding la Flow-field
+        gridBuilder.BuildFlowField(hero.currentTile.gridPos);
+        //teste caraaai
+        hero.OnUnitMove += UpdatePathFinding;
 
         //gera o round e turnos
         GenerateRound();
@@ -91,6 +93,11 @@ public class CombatManager : MonoBehaviour
         turnOrder.Remove(deadUnit);
     }
 
+    private void UpdatePathFinding()
+    {
+        gridBuilder.BuildFlowField(hero.currentTile.gridPos);
+    }
+
     #endregion
 
     #region Detection Logic
@@ -108,6 +115,9 @@ public class CombatManager : MonoBehaviour
         {
             if (hit.TryGetComponent<GridUnit>(out var unit))
             {
+                //Procurando por Tag o hero, meio dark
+                if (unit.CompareTag("Player")) hero = unit;
+
                 allUnits.Add(unit);
                 unit.OnUnitDeath += RemoveUnit;
             }

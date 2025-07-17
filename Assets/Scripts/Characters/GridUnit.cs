@@ -21,6 +21,7 @@ public class GridUnit : MonoBehaviour
 
     //esse é o evento para o comatManager receber que o cara morreu
     public event Action<GridUnit> OnUnitDeath;
+    public event Action OnUnitMove;
 
     void Awake()
     {
@@ -46,6 +47,7 @@ public class GridUnit : MonoBehaviour
             currentTile = newTile;
             currentTile.OccupyingUnit = this;
         }
+        OnUnitMove?.Invoke();
     }
 
     //startt unit action
