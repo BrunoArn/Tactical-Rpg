@@ -24,11 +24,9 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
     private GameObject highlightInstance;
 
     [Header("Action")]
-    //ação executada, ta hardcodedzada por enquantos
     [SerializeField] MonoBehaviour MoveAction;
     [SerializeField] MonoBehaviour AttackAction;
-
-
+    //interface das actions para executar
     private IUnitAction action;
 
     //callback to manager
@@ -39,7 +37,7 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
     void Awake()
     {
         //pega o componente do grid Unit e pega os controles
-        gridUnit = GetComponent<GridUnit>();
+        //gridUnit = GetComponent<GridUnit>();
         controls = new CombatControls();
 
         //agora vem os inputs
@@ -158,7 +156,7 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
     #endregion
 
 
-    #region Preview
+    #region Highlight Preview
     //mostra um quadrado pra direção selecionada
     void ShowPreview()
     {

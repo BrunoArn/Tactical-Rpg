@@ -17,7 +17,7 @@ public class GridUnit : MonoBehaviour
     //receeb a controller do cara, para poder startar pelo comat manager
     [SerializeField] MonoBehaviour actionController;
     //fazer ser a interface
-    private ICombatUnit action;
+    private ICombatUnit genericActionController;
 
     //esse é o evento para o comatManager receber que o cara morreu
     public event Action<GridUnit> OnUnitDeath;
@@ -25,7 +25,7 @@ public class GridUnit : MonoBehaviour
     void Awake()
     {
         //setando o controller que receer independentemente
-        action = actionController as ICombatUnit;
+        genericActionController = actionController as ICombatUnit;
 
         //me relacionando ao eventos de Health
         health.OnDeath += HandleDeath;
@@ -52,7 +52,7 @@ public class GridUnit : MonoBehaviour
     public void StartAction(System.Action onTurnEndCallBack)
     {
         //primeira call do actionController pro turno
-        action.BeforeStart(onTurnEndCallBack);
+        genericActionController.BeforeStart(onTurnEndCallBack);
     }
 
     private void HandleDeath()
