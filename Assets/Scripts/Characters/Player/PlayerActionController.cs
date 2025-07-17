@@ -125,7 +125,6 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
         {
             EndTurn();
         }
-        //fill meter
     }
 
     //starta o turno do boneco, libera ele pra açao

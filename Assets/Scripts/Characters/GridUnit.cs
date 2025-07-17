@@ -7,16 +7,19 @@ public class GridUnit : MonoBehaviour
     // é injetado pelo próprio combatManager;
     public TileData currentTile;
 
-    // status
+    [Header("Status")]
     public UnitStats stats;
     public Health health;
+    [SerializeField] HealthUi healthBar;
+    public Equipment equips;
 
+    [Header("Actions")]
     //receeb a controller do cara, para poder startar pelo comat manager
     [SerializeField] MonoBehaviour actionController;
     //fazer ser a interface
     private ICombatUnit action;
 
-    //esse é o evento para o comatManager receber
+    //esse é o evento para o comatManager receber que o cara morreu
     public event Action<GridUnit> OnUnitDeath;
 
     void Awake()
@@ -24,8 +27,9 @@ public class GridUnit : MonoBehaviour
         //setando o controller que receer independentemente
         action = actionController as ICombatUnit;
 
-        //me relacionando ao evento da morte do health
+        //me relacionando ao eventos de Health
         health.OnDeath += HandleDeath;
+        health.OnTakeDamage += UpdateHealthBar;
     }
 
     //update grid position
@@ -56,5 +60,11 @@ public class GridUnit : MonoBehaviour
         OnUnitDeath?.Invoke(this);
         currentTile.ClearTile();
         Destroy(this.gameObject);
+    }
+
+    private void UpdateHealthBar(int current, int max)
+    {
+        healthBar.ShowHealthBar();
+        healthBar.SetHealthValue(current, max);
     }
 }
