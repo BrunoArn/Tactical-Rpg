@@ -70,13 +70,21 @@ public class EnemyActionController : MonoBehaviour, ICombatUnit
 
     private void TryToMoveAlongPath()
     {
-        var direction = gridUnit.currentTile.preferredDirection;
-        if (direction == Vector2Int.zero) return;
+        // var direction = gridUnit.currentTile.preferredDirection;
+        // if (direction == Vector2Int.zero) return;
 
-        var nextTile = gridUnit.currentTile.neighbors.FirstOrDefault(t => t.gridPos == gridUnit.currentTile.gridPos + direction);
-        if (nextTile != null && nextTile.isWalkable && nextTile.OccupyingUnit == null && moveAction != null)
+        // var nextTile = gridUnit.currentTile.neighbors.FirstOrDefault(t => t.gridPos == gridUnit.currentTile.gridPos + direction);
+        // if (nextTile != null && nextTile.isWalkable && nextTile.OccupyingUnit == null && moveAction != null)
+        // {
+        //     moveAction.ExecuteAction(nextTile, gridUnit);
+        // }
+
+        var sorted = gridUnit.currentTile.neighbors.OrderBy(tile => tile.distanceToHero);
+        var fallback = sorted.FirstOrDefault(tile => tile.isWalkable && tile.OccupyingUnit == null);
+
+        if (fallback != null)
         {
-            moveAction.ExecuteAction(nextTile, gridUnit);
+            moveAction.ExecuteAction(fallback, gridUnit);
         }
     }
 
