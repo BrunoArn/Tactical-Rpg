@@ -80,12 +80,12 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
                 GridUnit targetUnit = null;
                 
                 //Caso do Move
-                if (targetTile != null && targetTile.isWalkable)
+                if (targetTile != null && targetTile.isWalkable && !targetTile.OccupyingUnit)
                 {
                     action = MoveAction as IUnitAction;
                 }
                 //pro ataque
-                else if (targetTile != null && !targetTile.isWalkable && targetTile.OccupyingUnit)
+                else if (targetTile != null && targetTile.OccupyingUnit)
                 {
                     targetUnit = targetTile.OccupyingUnit;
                     action = AttackAction as IUnitAction;

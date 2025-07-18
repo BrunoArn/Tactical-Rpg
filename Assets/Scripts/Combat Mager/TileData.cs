@@ -27,7 +27,7 @@ public class TileData
       set
       {
          _occupyingUnit = value;
-         isWalkable = false;
+         //isWalkable = false;
       }
    }
 

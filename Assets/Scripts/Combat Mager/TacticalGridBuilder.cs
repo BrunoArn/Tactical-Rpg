@@ -97,7 +97,7 @@ public class TacticalGridBuilder : MonoBehaviour
             TileData current = tileQueue.Dequeue();
             foreach (var neighbor in current.neighbors)
             {
-                if (!neighbor.isWalkable || neighbor.OccupyingUnit != null) continue;
+                if (!neighbor.isWalkable) continue;
                 if (neighbor.distanceToHero <= current.distanceToHero + 1) continue;
 
                 neighbor.distanceToHero = current.distanceToHero + 1;
