@@ -14,8 +14,16 @@ public class GameStateManager : MonoBehaviour
     void OnDisable()
     {
         gameState.OnValueChanged.RemoveListener(OnGameStateChanged);
+        //teste absurdo de noia, so pra nao bugat muito
+        gameState.SetValue(GameState.Pause);
     }
-    
+
+    void Awake()
+    {
+        //starta de caozada, para teste somente
+        gameState.SetValue(GameState.Exploration);
+    }
+
     //essa porra é para abg gloabl somente, vamos ver se vai precisar
     private void OnGameStateChanged(GameState oldState, GameState newState)
     {

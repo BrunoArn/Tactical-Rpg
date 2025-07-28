@@ -114,6 +114,78 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Exploration"",
+            ""id"": ""998803ec-0455-4352-8e3b-33aa17d45756"",
+            ""actions"": [
+                {
+                    ""name"": ""Move"",
+                    ""type"": ""Value"",
+                    ""id"": ""4dff463a-dc77-42b9-bab5-68aae23f3bb9"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""8706c827-aaea-4917-b464-728743d1bc09"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""bb715665-adc8-4844-bd2c-8170e36510d6"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""593c4380-5722-4a5c-bc52-608cbc7670d5"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""12f9e07e-d091-48c4-9c1e-39955f14f9ce"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""797cd0ad-2fc7-4020-bbdb-98e63a5f4809"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -122,11 +194,15 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
         m_Combat = asset.FindActionMap("Combat", throwIfNotFound: true);
         m_Combat_Direction = m_Combat.FindAction("Direction", throwIfNotFound: true);
         m_Combat_Confirm = m_Combat.FindAction("Confirm", throwIfNotFound: true);
+        // Exploration
+        m_Exploration = asset.FindActionMap("Exploration", throwIfNotFound: true);
+        m_Exploration_Move = m_Exploration.FindAction("Move", throwIfNotFound: true);
     }
 
     ~@CombatControls()
     {
         UnityEngine.Debug.Assert(!m_Combat.enabled, "This will cause a leak and performance issues, CombatControls.Combat.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Exploration.enabled, "This will cause a leak and performance issues, CombatControls.Exploration.Disable() has not been called.");
     }
 
     public void Dispose()
@@ -238,9 +314,59 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
         }
     }
     public CombatActions @Combat => new CombatActions(this);
+
+    // Exploration
+    private readonly InputActionMap m_Exploration;
+    private List<IExplorationActions> m_ExplorationActionsCallbackInterfaces = new List<IExplorationActions>();
+    private readonly InputAction m_Exploration_Move;
+    public struct ExplorationActions
+    {
+        private @CombatControls m_Wrapper;
+        public ExplorationActions(@CombatControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Move => m_Wrapper.m_Exploration_Move;
+        public InputActionMap Get() { return m_Wrapper.m_Exploration; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(ExplorationActions set) { return set.Get(); }
+        public void AddCallbacks(IExplorationActions instance)
+        {
+            if (instance == null || m_Wrapper.m_ExplorationActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_ExplorationActionsCallbackInterfaces.Add(instance);
+            @Move.started += instance.OnMove;
+            @Move.performed += instance.OnMove;
+            @Move.canceled += instance.OnMove;
+        }
+
+        private void UnregisterCallbacks(IExplorationActions instance)
+        {
+            @Move.started -= instance.OnMove;
+            @Move.performed -= instance.OnMove;
+            @Move.canceled -= instance.OnMove;
+        }
+
+        public void RemoveCallbacks(IExplorationActions instance)
+        {
+            if (m_Wrapper.m_ExplorationActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IExplorationActions instance)
+        {
+            foreach (var item in m_Wrapper.m_ExplorationActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_ExplorationActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public ExplorationActions @Exploration => new ExplorationActions(this);
     public interface ICombatActions
     {
         void OnDirection(InputAction.CallbackContext context);
         void OnConfirm(InputAction.CallbackContext context);
+    }
+    public interface IExplorationActions
+    {
+        void OnMove(InputAction.CallbackContext context);
     }
 }
