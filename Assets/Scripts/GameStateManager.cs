@@ -15,10 +15,10 @@ public class GameStateManager : MonoBehaviour
     {
         gameState.OnValueChanged.RemoveListener(OnGameStateChanged);
     }
-
+    
+    //essa porra é para abg gloabl somente, vamos ver se vai precisar
     private void OnGameStateChanged(GameState oldState, GameState newState)
     {
-        Debug.Log("entrei na troca e vamos resolver");
         //to do change the state
         switch (oldState)
         {
