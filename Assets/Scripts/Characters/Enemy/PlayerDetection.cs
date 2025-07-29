@@ -7,6 +7,7 @@ public class PlayerDetection : MonoBehaviour
     [SerializeField] GameEvent combatRequest;
     [Header("Detection Settings")]
     [SerializeField] float detectionRadius = 10f;
+    [SerializeField] GridOriginVariable gridOrigin;
 
     private CircleCollider2D circleCollider;
     private LineRenderer lineRenderer;
@@ -48,6 +49,11 @@ public class PlayerDetection : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            Vector3 position = transform.position;
+            Debug.Log(position);
+            Vector2Int positionInt = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y));
+            Debug.Log(positionInt);
+            gridOrigin.SetValue(positionInt);
             combatRequest?.Raise();
         }
     }

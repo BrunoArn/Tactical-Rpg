@@ -14,7 +14,7 @@ public class TacticalGridBuilder : MonoBehaviour
 
     [Tooltip("where the grid will bet set up")]
     //change origin later on with enemy location or player.
-    [SerializeField] Vector3Int gridOrigin = new(0, 0, 0);
+    [SerializeField] GridOriginVariable gridOrigin;
 
     [Header("Highlight")]
     [Space]
@@ -52,7 +52,7 @@ public class TacticalGridBuilder : MonoBehaviour
             for (int y = -halfHeight; y < gridSize.y - halfHeight; y++)
             {
                 //converte a posição local e joga pra cell position
-                Vector3Int cell = new Vector3Int(gridOrigin.x + x, gridOrigin.y + y, 0);
+                Vector3Int cell = new Vector3Int(gridOrigin.Value.x + x, gridOrigin.Value.y + y, 0);
                 //pega a celular no tilemap de sprites, se nao tiver, retornar null;
                 TileBase tile = tacticalTilemap.GetTile(cell);
 
@@ -72,7 +72,7 @@ public class TacticalGridBuilder : MonoBehaviour
     public Bounds GetGridBounds()
     {
         Vector3 size = new Vector3(gridSize.x, gridSize.y, 1);
-        Vector3 center = gridOrigin;
+        Vector2 center = gridOrigin.Value;
         return new Bounds(center, size);
     }
 

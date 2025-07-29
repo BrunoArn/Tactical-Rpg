@@ -32164,7 +32164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tacticalTilemap: {fileID: 120141879}
   gridSize: {x: 15, y: 15}
-  gridOrigin: {x: 0, y: 0, z: 0}
+  gridOrigin: {fileID: 11400000, guid: 39a4e69a28424784ab66eaf343934b46, type: 2}
   debugColor: {r: 0.41509432, g: 0.17426129, b: 0.17907691, a: 1}
 --- !u!4 &1337252595
 Transform:
@@ -32767,6 +32767,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   combatRequest: {fileID: 11400000, guid: 9355db6d4c5545c4f8f359908b0607e4, type: 2}
   detectionRadius: 3
+  gridOrigin: {fileID: 11400000, guid: 39a4e69a28424784ab66eaf343934b46, type: 2}
 --- !u!120 &1487148473
 LineRenderer:
   serializedVersion: 2
