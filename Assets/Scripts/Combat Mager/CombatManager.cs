@@ -28,6 +28,8 @@ public class CombatManager : MonoBehaviour
     private int turnIndex = 0;
     //unidade atual no turno
     //private GridUnit currentUnit;
+    [Header("Game Events")]
+    [SerializeField] GameEvent explorationRequest;
 
 
     void Start()
@@ -91,6 +93,10 @@ public class CombatManager : MonoBehaviour
     {
         allUnits.Remove(deadUnit);
         turnOrder.Remove(deadUnit);
+        if (allUnits.Count == 1 && allUnits[0].CompareTag("Player"))
+        {
+            explorationRequest.Raise();
+        }
     }
 
     private void UpdatePathFinding()

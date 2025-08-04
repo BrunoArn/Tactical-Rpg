@@ -133,6 +133,7 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
         //volta a cor da UI
         UpdatePreviewPrefab();
     }
+
     public void BeforeEndTurn()
     {
         gridUnit.stats.AddMeter(-gridUnit.stats.MeterMax);
@@ -142,11 +143,11 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
 
     public void EndTurn()
     {
-        gridUnit.stats.AddMeter(0);
+        gridUnit.stats.AddMeter(0); //pra atualizar o UI do meter, somente pra isso
         hasPlayed = true;
         action = null;
         onTurnEnd?.Invoke(); // manda pro manager que ta tudo bem
-        if (controls.Combat.Direction.IsPressed())
+        if (controls.Combat.Direction.IsPressed()) // pra manter o preview se vagabundo nao solta a tecla
         {
             UpdatePreviewPrefab();
             ShowPreview();

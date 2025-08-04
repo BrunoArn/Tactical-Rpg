@@ -6141,7 +6141,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 955823346}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ad0d573ab2637e24d996d0c6a11ee3e9, type: 3}
   m_Name: 
@@ -31751,6 +31751,10 @@ MonoBehaviour:
   gridSize: {x: 15, y: 15}
   gridOrigin: {fileID: 11400000, guid: 39a4e69a28424784ab66eaf343934b46, type: 2}
   debugColor: {r: 0.41509432, g: 0.17426129, b: 0.17907691, a: 1}
+  maxGridX: -2147483648
+  maxGridY: -2147483648
+  minGridX: 2147483647
+  minGridY: 2147483647
 --- !u!4 &1337252595
 Transform:
   m_ObjectHideFlags: 0
@@ -32397,7 +32401,7 @@ LineRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_Positions:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 1}

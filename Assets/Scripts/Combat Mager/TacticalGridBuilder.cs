@@ -20,11 +20,16 @@ public class TacticalGridBuilder : MonoBehaviour
     [Space]
     [Tooltip("Highlight color")]
     [SerializeField] Color debugColor = new Color(0, 1, 0, 0.25f);
+
     //deafault unity cellsize
     private float cellSize = 1f;
 
     //the actual logic tilemap;
     public Dictionary<Vector2Int, TileData> tacticalGrid = new();
+    public int maxGridX = int.MinValue;
+    public int maxGridY = int.MinValue;
+    public int minGridX = int.MaxValue;
+    public int minGridY = int.MaxValue;
 
     //TESTEEEEEE
     private readonly List<GameObject> _distLabels = new List<GameObject>();
@@ -33,6 +38,7 @@ public class TacticalGridBuilder : MonoBehaviour
     {
         GenerateTacticalGrid();
         AssignTilesNeighors();
+        FindGridBorders();
 
     }
 
@@ -119,12 +125,9 @@ public class TacticalGridBuilder : MonoBehaviour
             }
             tile.preferredDirection = bestDirection;
         }
-
         //teste bull shit
         ShowPathDistanceNumber();
-
     }
-
 
     private void AssignTilesNeighors()
     {
@@ -132,6 +135,19 @@ public class TacticalGridBuilder : MonoBehaviour
         {
             tile.AssignNeighbors(tacticalGrid);
 
+        }
+    }
+
+    private void FindGridBorders()
+    {
+        foreach (var keyValue in tacticalGrid)
+        {
+            Vector2Int keyPosition = keyValue.Key;
+
+            if (keyPosition.x < minGridX) minGridX = keyPosition.x;
+            if (keyPosition.x > maxGridX) maxGridX = keyPosition.x;
+            if (keyPosition.y < minGridY) minGridY = keyPosition.y;
+            if (keyPosition.y > maxGridY) maxGridY = keyPosition.y;
         }
     }
 

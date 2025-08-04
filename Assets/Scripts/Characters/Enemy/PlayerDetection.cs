@@ -50,9 +50,7 @@ public class PlayerDetection : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             Vector3 position = transform.position;
-            Debug.Log(position);
             Vector2Int positionInt = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y));
-            Debug.Log(positionInt);
             gridOrigin.SetValue(positionInt);
             combatRequest?.Raise();
         }
