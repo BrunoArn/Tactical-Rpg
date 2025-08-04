@@ -5928,6 +5928,7 @@ MonoBehaviour:
   tileOff: {fileID: 3081079791555589152, guid: 1ec1990d122f82b4f86effaa25379e12, type: 3}
   MoveAction: {fileID: 955823351}
   AttackAction: {fileID: 955823354}
+  explorationRequest: {fileID: 11400000, guid: 10ac21febb5a51b44bf257a178f7c827, type: 2}
 --- !u!114 &955823353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31788,6 +31789,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   turnOrder: []
+  explorationRequest: {fileID: 11400000, guid: 10ac21febb5a51b44bf257a178f7c827, type: 2}
 --- !u!114 &1337252597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31822,6 +31824,18 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
           m_MethodName: set_enabled
           m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 1337252596}
+          m_TargetAssemblyTypeName: CombatManager, Assembly-CSharp
+          m_MethodName: StartGame
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

@@ -9,6 +9,8 @@ public class TileData
    public Vector3 worldPos;
    public bool isWalkable;
 
+   public bool isBorder = false;
+
    //Flow-Field data
    public int distanceToHero = int.MaxValue;
    public Vector2Int preferredDirection = Vector2Int.zero;

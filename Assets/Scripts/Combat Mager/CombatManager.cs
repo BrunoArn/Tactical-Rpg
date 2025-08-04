@@ -37,7 +37,7 @@ public class CombatManager : MonoBehaviour
         StartGame();
     }
 
-    void StartGame()
+    public void StartGame()
     {
         //pede pro builder gerar o grid
         gridBuilder.StartGrid();
@@ -93,7 +93,7 @@ public class CombatManager : MonoBehaviour
     {
         allUnits.Remove(deadUnit);
         turnOrder.Remove(deadUnit);
-        if (allUnits.Count == 1 && allUnits[0].CompareTag("Player"))
+        if (allUnits.Count == 1 && allUnits[0] == hero)
         {
             explorationRequest.Raise();
         }

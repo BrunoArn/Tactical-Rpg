@@ -149,6 +149,30 @@ public class TacticalGridBuilder : MonoBehaviour
             if (keyPosition.y < minGridY) minGridY = keyPosition.y;
             if (keyPosition.y > maxGridY) maxGridY = keyPosition.y;
         }
+
+        foreach (var KeyValue in tacticalGrid)
+        {
+            if (KeyValue.Key.x == minGridX)
+            {
+                TileData tile = KeyValue.Value;
+                tile.isBorder = true;
+            }
+            if (KeyValue.Key.x == maxGridX)
+            {
+                TileData tile = KeyValue.Value;
+                tile.isBorder = true;
+            }
+            if (KeyValue.Key.y == maxGridY)
+            {
+                TileData tile = KeyValue.Value;
+                tile.isBorder = true;
+            }
+            if (KeyValue.Key.y == minGridY)
+            {
+                TileData tile = KeyValue.Value;
+                tile.isBorder = true;
+            }
+        }
     }
 
     #region Test things

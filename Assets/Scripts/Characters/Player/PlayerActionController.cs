@@ -32,6 +32,9 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
     //callback to manager
     private System.Action onTurnEnd;
 
+    [Header("Game Events")]
+    [SerializeField] private GameEvent explorationRequest;
+
     #region Setup
 
     void Awake()
@@ -42,14 +45,12 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
 
         //agora vem os inputs
 
-        //ctx é contexto
         //aqui ele pega os input e só executa em determinados contextos
         //esse no caso é da direção da ação
-        controls.Combat.Direction.performed += ctx =>
+        controls.Combat.Direction.performed += context =>
         {
             //está lendo o valor para vector2, pois é um input de cima, baixao , esquerda e direita
-            Vector2 input = ctx.ReadValue<Vector2>();
-            //aplica na direção desejada
+            Vector2 input = context.ReadValue<Vector2>();
             //Filtra somenete para algo como (1,0) (0,-1) e tal. meio forçado demais, mas ta valendo
             if (Mathf.Abs(input.x) > Mathf.Abs(input.y))
                 direction = new Vector2Int((int)Mathf.Sign(input.x), 0);
@@ -60,25 +61,21 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
                 ShowPreview();
         };
         // esse é quando soltar o botao
-        //ctx é o contexto, como sempre
-        controls.Combat.Direction.canceled += ctx =>
+        controls.Combat.Direction.canceled += context =>
         {
-            //bota zero a direção
             direction = Vector2Int.zero;
-            //destroy highlights
             DestroyPreview();
         };
-        //ctx é contexto
         //aqui ele pega os input e só executa em determinados contextos
         //esse no caso é da confirmação da ação
-        controls.Combat.Confirm.performed += ctx =>
+        controls.Combat.Confirm.performed += context =>
         {
             if (!hasPlayed && direction != Vector2Int.zero)
             {
                 TileData targetTile = gridUnit.currentTile.GetNeighbors(direction);
                 //oe LUTAR SÓ
                 GridUnit targetUnit = null;
-                
+
                 //Caso do Move
                 if (targetTile != null && targetTile.isWalkable && !targetTile.OccupyingUnit)
                 {
@@ -90,14 +87,20 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
                     targetUnit = targetTile.OccupyingUnit;
                     action = AttackAction as IUnitAction;
                 }
-
-                if (action != null)
+                // pro flee
+                else if (gridUnit.currentTile.isBorder && targetTile == null)
                 {
-                    //executa enviando a direção
-                    action.ExecuteAction(targetTile, this.gridUnit);
-                    targetUnit = null;
-                    BeforeEndTurn();
+                    explorationRequest?.Raise();
                 }
+
+                //executas
+                    if (action != null)
+                    {
+                        //executa enviando a direção
+                        action.ExecuteAction(targetTile, this.gridUnit);
+                        targetUnit = null;
+                        BeforeEndTurn();
+                    }
             }
         };
     }
@@ -108,7 +111,6 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
     #endregion
 
     #region ICombatUnit Interface
-
     public void BeforeStart(System.Action onTurnEndCallBack)
     {
         //seta o final que o combat manager tem
@@ -153,9 +155,7 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
             ShowPreview();
         }
     }
-
     #endregion
-
 
     #region Highlight Preview
     //mostra um quadrado pra direção selecionada
@@ -195,8 +195,6 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
             //nao jogou fica vermelho
             else HighlightPrefab.GetComponent<SpriteRenderer>().sprite = tileOn;
         }
-
-
     }
 
     void DestroyPreview()
