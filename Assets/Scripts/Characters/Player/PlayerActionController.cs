@@ -15,6 +15,8 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
     //flag para ver se ja fez alguma ação ou não.
     private bool hasPlayed = true;
 
+    [SerializeField] LayerMask gridLayer;
+
     [Header("Highlight")]
     [Space]
     //meter um highlight de ond vai sair a ação
@@ -90,7 +92,13 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
                 // pro flee
                 else if (gridUnit.currentTile.isBorder && targetTile == null)
                 {
-                    explorationRequest?.Raise();
+                    //raycast pra ver se tem grid pra la, se bater é edge e n da pra sair
+                    RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, 1, gridLayer); 
+                    if (hit.collider == null)
+                    {
+                        explorationRequest?.Raise();
+                    } 
+                    
                 }
 
                 //executas

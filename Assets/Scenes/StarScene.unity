@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 120141882}
   - component: {fileID: 120141880}
   - component: {fileID: 120141881}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GroundLayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5923,6 +5923,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e1cf938828fbb548827ef450f4326b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gridLayer:
+    serializedVersion: 2
+    m_Bits: 64
   HighlightPrefab: {fileID: 6032587995237989846, guid: 46f3d37fcc2cf4146b427fceb81eff0d, type: 3}
   tileOn: {fileID: 3098526634475018109, guid: 909ec1df091d2ce49bbf3a2160309348, type: 3}
   tileOff: {fileID: 3081079791555589152, guid: 1ec1990d122f82b4f86effaa25379e12, type: 3}
@@ -6291,7 +6294,7 @@ GameObject:
   - component: {fileID: 1186133240}
   - component: {fileID: 1186133242}
   - component: {fileID: 1186133241}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WaterLayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
