@@ -8,10 +8,15 @@ public class MeterUi : MonoBehaviour
 
     void Awake()
     {
+        AssignMethod();
+
+    }
+
+    public void AssignMethod()
+    {
         if (fillBar == null)
             Debug.Log($"MeterUI on {name} needs a fill Transform assigned");
         stats.OnMeterChanged += RefreshBar;
-
     }
 
     void OnDestroy()
