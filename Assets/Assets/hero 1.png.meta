@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 449d8cbd29b7483449846aff27b70362
+guid: e4bbf1a468d6aed42b6d44dc3f0fd4a6
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6983202077367773121
-    second: hero_0
+      213: 6761142288038996542
+    second: hero 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -49,8 +49,8 @@ TextureImporter:
   spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 9
-  spritePivot: {x: 0.5, y: 0.09}
+  alignment: 7
+  spritePivot: {x: 0.5, y: 0}
   spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 2
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -113,12 +113,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: hero_0
+      name: hero 1_0
       rect:
         serializedVersion: 2
-        x: 3
+        x: 5
         y: 0
-        width: 25
+        width: 26
         height: 32
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1c7a6407a4159e060800000000000000
-      internalID: 6983202077367773121
+      spriteID: e3aaf62c61764dd50800000000000000
+      internalID: 6761142288038996542
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      hero_0: 6983202077367773121
+      hero 1_0: 6761142288038996542
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
