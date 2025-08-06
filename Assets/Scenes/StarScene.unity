@@ -5808,7 +5808,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 899955357}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82b71542142c55145ae8fcfad26d847a, type: 3}
+  m_Script: {fileID: 11500000, guid: 163a70c6c8cc2f548b0cc31fc94725ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   myAnimator: {fileID: 899955359}
@@ -32275,6 +32275,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 120ff00afa58c924481ae9a13ed365b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myAnimator: {fileID: 899955359}
+  walkAnimation: {fileID: 7400000, guid: d818dddec3837bc4eaebffdf48d333d6, type: 2}
 --- !u!114 &1353267795
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -17,7 +17,7 @@ public class GridUnit : MonoBehaviour
     //receeb a controller do cara, para poder startar pelo comat manager
     [SerializeField] MonoBehaviour actionController;
     //fazer ser a interface
-    private ICombatUnit genericActionController;
+    public ICombatUnit genericActionController;
 
     //esse é o evento para o comatManager receber que o cara morreu
     public event Action<GridUnit> OnUnitDeath;

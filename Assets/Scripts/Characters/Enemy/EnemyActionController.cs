@@ -27,6 +27,7 @@ public class EnemyActionController : MonoBehaviour, ICombatUnit
         onTurnEnd = onTurnEndCallBack;
         //adiciona o meter e avisa que aumentou
         gridUnit.stats.AddMeter(gridUnit.stats.speed);
+        //ta pra agir?
         if (gridUnit.stats.Meter >= gridUnit.stats.MeterMax)
         {
             StartTurn();
@@ -46,13 +47,14 @@ public class EnemyActionController : MonoBehaviour, ICombatUnit
             if (heroTile != null && attackAction != null)
             {
                 attackAction.ExecuteAction(heroTile, gridUnit);
+                BeforeEndTurn();
             }
         }
         else
         {
             TryToMoveAlongPath();
         }
-        BeforeEndTurn();
+        
     }
 
     public void BeforeEndTurn()

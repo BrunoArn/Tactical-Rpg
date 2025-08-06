@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class RandomIdleAnimation : MonoBehaviour
+public class AnimatorHandler : MonoBehaviour
 {
-    [SerializeField] Animator myAnimator;
 
+    [SerializeField] Animator myAnimator;
     private void Awake()
     {
         myAnimator = GetComponent<Animator>();
