@@ -221,7 +221,7 @@ public class TacticalGridBuilder : MonoBehaviour
         }
     }
 
-    private void DestroyPathDistanceNumber()
+    public void DestroyPathDistanceNumber()
     {
         // destroy all the ones we created last time
         foreach (var go in _distLabels)

@@ -95,6 +95,7 @@ public class CombatManager : MonoBehaviour
         turnOrder.Remove(deadUnit);
         if (allUnits.Count == 1 && allUnits[0] == hero)
         {
+            gridBuilder.DestroyPathDistanceNumber();
             explorationRequest.Raise();
         }
     }

@@ -30,7 +30,6 @@ public class GridUnit : MonoBehaviour
 
         //me relacionando ao eventos de Health
         health.OnDeath += HandleDeath;
-        health.OnTakeDamage += UpdateHealthBar;
     }
 
     //update grid position
@@ -62,11 +61,5 @@ public class GridUnit : MonoBehaviour
         OnUnitDeath?.Invoke(this);
         currentTile.ClearTile();
         Destroy(this.gameObject);
-    }
-
-    private void UpdateHealthBar(int current, int max)
-    {
-        healthBar.ShowHealthBar();
-        healthBar.SetHealthValue(current, max);
     }
 }
