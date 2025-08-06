@@ -60,6 +60,5 @@ public class GridUnit : MonoBehaviour
     {
         OnUnitDeath?.Invoke(this);
         currentTile.ClearTile();
-        Destroy(this.gameObject);
     }
 }

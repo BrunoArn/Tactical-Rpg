@@ -6,6 +6,9 @@ public class Health : MonoBehaviour
     [SerializeField] private int currentHealth = 10;
     [SerializeField] private int maxHealth = 10;
 
+    public int CurrentHealth => currentHealth;
+    public int MaxHealth => maxHealth;
+
     //events to people handle
     public event Action<int, int> OnTakeDamage;
     public event Action OnDeath;

@@ -93,6 +93,16 @@ public class CombatManager : MonoBehaviour
     {
         allUnits.Remove(deadUnit);
         turnOrder.Remove(deadUnit);
+
+        deadUnit.OnUnitDeath -= RemoveUnit;
+        if (deadUnit == hero)
+        {
+            Debug.Log("Game over otario");
+            return;
+        }
+        
+        Destroy(deadUnit.gameObject);
+
         if (allUnits.Count == 1 && allUnits[0] == hero)
         {
             gridBuilder.DestroyPathDistanceNumber();
