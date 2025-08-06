@@ -5,14 +5,15 @@ public class EnemyMoveAction : MonoBehaviour, IUnitAction
 {
     //referencia para a classe gridUnit
     private GridUnit gridUnit;
+    [Header("Animação")]
     [SerializeField] private Animator myAnimator;
     [SerializeField] private AnimationClip walkAnimation;
+    private ICombatUnit actionController;
+    private float moveDuration;
+    
     //direção que vai ser feito o movimento
     private Vector2Int direction = Vector2Int.zero;
 
-    private ICombatUnit actionController;
-
-    private float moveDuration;
 
     void Awake()
     {

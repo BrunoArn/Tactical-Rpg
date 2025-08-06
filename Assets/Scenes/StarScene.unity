@@ -32261,8 +32261,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b73aea4fab8486459aa4c1d1d133a30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentHealth: 10
-  maxHealth: 10
+  currentHealth: 4
+  maxHealth: 4
 --- !u!114 &1353267794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32289,6 +32289,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f49fa6c28c913943a77367f03a7877a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myAnimator: {fileID: 899955359}
+  attackAnimation: {fileID: 7400000, guid: 7e6a5e8afe7653543b82cf7d47aa0e99, type: 2}
 --- !u!114 &1353267796
 MonoBehaviour:
   m_ObjectHideFlags: 0

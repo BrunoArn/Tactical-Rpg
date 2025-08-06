@@ -47,7 +47,6 @@ public class EnemyActionController : MonoBehaviour, ICombatUnit
             if (heroTile != null && attackAction != null)
             {
                 attackAction.ExecuteAction(heroTile, gridUnit);
-                BeforeEndTurn();
             }
         }
         else
