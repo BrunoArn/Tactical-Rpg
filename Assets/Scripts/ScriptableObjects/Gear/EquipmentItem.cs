@@ -2,13 +2,9 @@ using UnityEngine;
 
 public enum EquipmentSlotType { Weapon, Armor, Accessory }
 
-[CreateAssetMenu(fileName = "NewGear", menuName = "Gear/EquipmentItem")]
-public class EquipmentItem : ScriptableObject
+[CreateAssetMenu(fileName = "NewGear", menuName = "Items/NewEquipment")]
+public class EquipmentItem : ItemData
 {
-    [Header("Gear info")]
-    public string itemName;
+    [Header("Equipment Info")]
     public EquipmentSlotType slotType;
-
-    [Header("Gear Visual")]
-    public Sprite icon;
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Weapon", menuName = "Gear/WeaponData")]
+[CreateAssetMenu(fileName = "Weapon", menuName = "Items/newWeapon")]
 public class WeaponData : EquipmentItem
 {
     [Header("Weapon Data")]
