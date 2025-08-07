@@ -127,6 +127,15 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""165a6086-414c-49bc-afe1-48d226ddbde0"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -184,6 +193,17 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c9782ae2-ef68-497b-834f-07a75fed6470"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -197,6 +217,7 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
         // Exploration
         m_Exploration = asset.FindActionMap("Exploration", throwIfNotFound: true);
         m_Exploration_Move = m_Exploration.FindAction("Move", throwIfNotFound: true);
+        m_Exploration_Interact = m_Exploration.FindAction("Interact", throwIfNotFound: true);
     }
 
     ~@CombatControls()
@@ -319,11 +340,13 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Exploration;
     private List<IExplorationActions> m_ExplorationActionsCallbackInterfaces = new List<IExplorationActions>();
     private readonly InputAction m_Exploration_Move;
+    private readonly InputAction m_Exploration_Interact;
     public struct ExplorationActions
     {
         private @CombatControls m_Wrapper;
         public ExplorationActions(@CombatControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Exploration_Move;
+        public InputAction @Interact => m_Wrapper.m_Exploration_Interact;
         public InputActionMap Get() { return m_Wrapper.m_Exploration; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -336,6 +359,9 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
         }
 
         private void UnregisterCallbacks(IExplorationActions instance)
@@ -343,6 +369,9 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
             @Move.canceled -= instance.OnMove;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
         }
 
         public void RemoveCallbacks(IExplorationActions instance)
@@ -368,5 +397,6 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
     public interface IExplorationActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
     }
 }
