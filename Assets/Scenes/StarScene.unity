@@ -5373,17 +5373,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1895248716}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -180}
---- !u!114 &469277136 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1321747578549692540, guid: 4c23b7cb1dbfed849960f7239de866e5, type: 3}
-  m_PrefabInstance: {fileID: 569039105}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4e524aa897ec374594fadf656f25b3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &469277137 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 39730387164804193, guid: 4c23b7cb1dbfed849960f7239de866e5, type: 3}
@@ -6092,7 +6081,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats: {fileID: 955823353}
   health: {fileID: 955823355}
-  healthBar: {fileID: 0}
   equips: {fileID: 955823356}
   actionController: {fileID: 955823352}
 --- !u!61 &955823350
@@ -32244,6 +32232,7 @@ GameObject:
   - component: {fileID: 1353267794}
   - component: {fileID: 1353267796}
   - component: {fileID: 1353267790}
+  - component: {fileID: 1353267797}
   m_Layer: 3
   m_Name: Enemy
   m_TagString: Untagged
@@ -32284,7 +32273,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats: {fileID: 1353267791}
   health: {fileID: 1353267793}
-  healthBar: {fileID: 469277136}
   equips: {fileID: 0}
   actionController: {fileID: 1353267792}
 --- !u!61 &1353267790
@@ -32529,6 +32517,22 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!114 &1353267797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1353267786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b47eca4755c0e8440928c17ac52abd22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemDropPrefab: {fileID: 7743986032258960358, guid: 38a838ae65740f14ab6ad61a8656bde9, type: 3}
+  item: {fileID: 11400000, guid: 675bcd636e073a9408ddc8c7d7bfa85d, type: 2}
+  quantity: 1
+  health: {fileID: 1353267793}
 --- !u!1 &1487148469
 GameObject:
   m_ObjectHideFlags: 0
@@ -32721,17 +32725,50 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!1 &1601083306 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3906372045204476281, guid: 93720ea3885c11c4e8689809c9848f67, type: 3}
+  m_PrefabInstance: {fileID: 1209244335957191429}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1601083310 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1895558672088264541, guid: 93720ea3885c11c4e8689809c9848f67, type: 3}
   m_PrefabInstance: {fileID: 1209244335957191429}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1601083306}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d79b03d5a8ea0734bab9e68ec9173df1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1601083311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1601083306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cd763ddbed6cfa49b944538447789ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: 437880f7b712d1e42ae85b2b54cbbe8f, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1601083310}
+        m_TargetAssemblyTypeName: InventoryUi, Assembly-CSharp
+        m_MethodName: Redraw
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1887802305
 GameObject:
   m_ObjectHideFlags: 0
@@ -32909,7 +32946,7 @@ Transform:
   m_GameObject: {fileID: 1895248713}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.83, y: 5.49, z: 0}
+  m_LocalPosition: {x: -11.5, y: 5.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -32987,11 +33024,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c2de40fc33fa9c47b124794ae7cc416, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionIndicator: {fileID: 348822565}
+  highLight: {fileID: 348822565}
+  itemDropPrefab: {fileID: 7743986032258960358, guid: 38a838ae65740f14ab6ad61a8656bde9, type: 3}
   droppedItem: {fileID: 11400000, guid: 1fcc81a84a745964caa7210577b80a69, type: 2}
   quantityDropped: 3
-  inventory: {fileID: 955823360}
-  inventoruUI: {fileID: 1601083310}
 --- !u!114 &1895248720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33450,7 +33486,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3906372045204476281, guid: 93720ea3885c11c4e8689809c9848f67, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1601083311}
   m_SourcePrefab: {fileID: 100100000, guid: 93720ea3885c11c4e8689809c9848f67, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

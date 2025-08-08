@@ -21,7 +21,6 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnInteract()
     {
-        Debug.Log("estou apertando");
         currentInteraction?.Interact();
     }
 
@@ -30,12 +29,19 @@ public class PlayerInteraction : MonoBehaviour
         if (collision.TryGetComponent(out IInteractable interactable))
         {
             currentInteraction = interactable;
+            currentInteraction.ToggleHighlight(true);
+            
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
         if (other.TryGetComponent(out IInteractable interactable) && interactable == currentInteraction)
+        {
+            currentInteraction.ToggleHighlight(false);
             currentInteraction = null;
+
+
+        }
     }
 }

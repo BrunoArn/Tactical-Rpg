@@ -2,36 +2,31 @@ using UnityEngine;
 
 public class InteractableResource : MonoBehaviour, IInteractable
 {
-    [SerializeField] SpriteRenderer actionIndicator;
+    [SerializeField] SpriteRenderer highLight;
+    [SerializeField] GameObject itemDropPrefab;
     [SerializeField] ItemData droppedItem;
     [SerializeField] int quantityDropped;
 
-    [Header("Super teste somente")]
-    [SerializeField] Inventory inventory;
-    [SerializeField] InventoryUi inventoruUI;
-    
-    void OnTriggerEnter2D(Collider2D collision)
-    {
-        actionIndicator.enabled = true;
-    }
-
-    void OnTriggerExit2D(Collider2D collision)
-    {
-        actionIndicator.enabled = false;
-    }
+    private GameObject player;
 
     public void Interact()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        GameObject newItem = Instantiate(itemDropPrefab, transform.position, Quaternion.identity);
+        newItem.GetComponent<PickUps>().player = player;
+        newItem.GetComponent<PickUps>().UpdateItem(droppedItem, quantityDropped);
+
+        Destroy(gameObject);
+    }
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
         {
-            bool added = inventory.AddItem(droppedItem, quantityDropped);
-            if (added)
-            {
-                inventoruUI.Redraw();
-                Destroy(gameObject);
-            }
-            else
-                Debug.Log(" inventary is full");
+            player = collision.gameObject;
         }
+    }
+
+    public void ToggleHighlight(bool highlightMode)
+    {
+        highLight.enabled = highlightMode;
     }
 }

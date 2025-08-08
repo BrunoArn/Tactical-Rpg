@@ -134,6 +134,7 @@ public class CombatManager : MonoBehaviour
             {
                 //Procurando por Tag o hero, meio dark
                 if (unit.CompareTag("Player")) hero = unit;
+                
 
                 allUnits.Add(unit);
                 unit.OnUnitDeath += RemoveUnit;
@@ -147,6 +148,11 @@ public class CombatManager : MonoBehaviour
     {
         foreach (GridUnit unit in allUnits)
         {
+            //fazendo isso no roleplay total, atenção!!
+            //adicionando o player só no drop loot dos cara, vamos ver como tirar isso depois.
+            if (unit.CompareTag("Enemy")) unit.GetComponent<PickUpSpawner>().player = hero.gameObject;
+
+
             // posição atual da unidade, pode estar fora do grid
             Vector3 currentPos = unit.transform.position;
             //montar a comparação de distancia

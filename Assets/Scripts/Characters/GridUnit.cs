@@ -10,7 +10,6 @@ public class GridUnit : MonoBehaviour
     [Header("Status")]
     public UnitStats stats;
     public Health health;
-    [SerializeField] HealthUi healthBar;
     public Equipment equips;
 
     [Header("Actions")]
