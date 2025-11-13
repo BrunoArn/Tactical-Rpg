@@ -1,22 +1,64 @@
 using UnityEngine;
 
+/*
+ InteractableResource
+ --------------------
+ A simple interactable that spawns an item when the player interacts with it.
+
+ - Assign a highlight <see cref="SpriteRenderer"/> to visually indicate
+   when the object is targetable.
+ - Assign an <c>itemDropPrefab</c> that contains a <c>PickUps</c> component
+   so the spawned object can be picked up by the player.
+ - <c>droppedItem</c> and <c>quantityDropped</c> define the item content.
+*/
+
+/// <summary>
+/// Simple interactable resource that spawns a pickup when interacted with.
+/// </summary>
 public class InteractableResource : MonoBehaviour, IInteractable
 {
-    [SerializeField] SpriteRenderer highLight;
-    [SerializeField] GameObject itemDropPrefab;
-    [SerializeField] ItemData droppedItem;
-    [SerializeField] int quantityDropped;
+    [SerializeField] private SpriteRenderer highLight;
+    [SerializeField] private GameObject itemDropPrefab;
+    [SerializeField] private ItemData droppedItem;
+    [SerializeField] private int quantityDropped;
 
+    // Cached reference to the player GameObject when inside trigger.
     private GameObject player;
 
+    /// <summary>
+    /// Called by other systems (e.g. the player's interaction controller) to
+    /// perform the interaction. Spawns the configured <c>itemDropPrefab</c>
+    /// and initializes its <c>PickUps</c> component, then destroys this
+    /// resource GameObject.
+    /// </summary>
     public void Interact()
     {
-        GameObject newItem = Instantiate(itemDropPrefab, transform.position, Quaternion.identity);
-        newItem.GetComponent<PickUps>().player = player;
-        newItem.GetComponent<PickUps>().UpdateItem(droppedItem, quantityDropped);
+        if (itemDropPrefab == null)
+        {
+            Debug.LogWarning($"{nameof(InteractableResource)} on '{gameObject.name}': itemDropPrefab is not assigned.");
+        }
+        else
+        {
+            var newItem = Instantiate(itemDropPrefab, transform.position, Quaternion.identity);
+            var pickUps = newItem.GetComponent<PickUps>();
+            if (pickUps != null)
+            {
+                pickUps.player = player;
+                pickUps.UpdateItem(droppedItem, quantityDropped);
+            }
+            else
+            {
+                Debug.LogWarning($"Instantiated prefab '{itemDropPrefab.name}' does not contain a PickUps component.");
+            }
+        }
 
         Destroy(gameObject);
     }
+
+    /// <summary>
+    /// Cache the player reference when they enter the trigger so spawned
+    /// pickups can be initialized with the player reference.
+    /// </summary>
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -25,8 +67,25 @@ public class InteractableResource : MonoBehaviour, IInteractable
         }
     }
 
+    /// <summary>
+    /// Clear the cached player reference when they leave the trigger.
+    /// </summary>
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player") && collision.gameObject == player)
+        {
+            player = null;
+        }
+    }
+
+    /// <summary>
+    /// Toggle the highlight sprite renderer used to indicate this object is
+    /// currently selectable/targeted. Safely handles a missing renderer.
+    /// </summary>
+    /// <param name="highlightMode">True to enable highlight, false to disable.</param>
     public void ToggleHighlight(bool highlightMode)
     {
-        highLight.enabled = highlightMode;
+        if (highLight != null)
+            highLight.enabled = highlightMode;
     }
 }
