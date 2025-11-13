@@ -13,16 +13,22 @@ public class PlayerInteraction : MonoBehaviour
     void Awake()
     {
         controls = new CombatControls();
-        myCollider = GetComponent<BoxCollider2D>();
-
-        controls.Exploration.Interact.performed += ContextMenu =>
-        {
-            OnInteract();
-        };
+        myCollider = GetComponent<Collider2D>();
     }
 
-    void OnEnable() => controls.Exploration.Enable();
-    void OnDisable() => controls.Exploration.Disable();
+    private void OnInteractPerformed(InputAction.CallbackContext _) => OnInteract();
+
+    void OnEnable()
+    {
+        controls.Exploration.Interact.performed += OnInteractPerformed;
+        controls.Exploration.Enable();
+    }
+
+    void OnDisable()
+    {
+        controls.Exploration.Interact.performed -= OnInteractPerformed;
+        controls.Exploration.Disable();
+    }
 
     private void OnInteract()
     {
@@ -33,30 +39,45 @@ public class PlayerInteraction : MonoBehaviour
 
     private void TrySetInteractable(Collider2D collision)
     {
-        if(collision == null) return;
+        if (collision == null) return;
 
-        if (collision.TryGetComponent(out IInteractable interactable))
-        {
-            if(interactable == currentInteraction) return; 
+        var interactable = collision.GetComponent<IInteractable>();
+        if (interactable == null) return;
 
-            currentInteraction?.ToggleHighlight(false);
-            currentInteraction = interactable;
-            currentInteraction.ToggleHighlight(true);
-        }
+        if (interactable == currentInteraction) return;
+
+        currentInteraction?.ToggleHighlight(false);
+        currentInteraction = interactable;
+        currentInteraction.ToggleHighlight(true);
     }
 
     private void RefreshTrigger()
     {
         int count = myCollider.Overlap(filterContact, results);
 
+        Collider2D nearest = null;
+        float nearestSqr = float.MaxValue;
+
         for (int i = 0; i < count; i++)
         {
             var col = results[i];
-            if (col == null | col.gameObject == null) continue;
+            if (col == null || col.gameObject == null) continue;
 
-            TrySetInteractable(col);
-            if (currentInteraction != null)
-                break;
+            var interactable = col.GetComponent<IInteractable>();
+            if (interactable == null) continue;
+
+            var dir = (col.transform.position - transform.position);
+            float sqr = dir.sqrMagnitude;
+            if (sqr < nearestSqr)
+            {
+                nearestSqr = sqr;
+                nearest = col;
+            }
+        }
+
+        if (nearest != null)
+        {
+            TrySetInteractable(nearest);
         }
     }
 
@@ -67,10 +88,12 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.TryGetComponent(out IInteractable interactable) && interactable == currentInteraction)
+        var interactable = other.GetComponent<IInteractable>();
+        if (interactable != null && interactable == currentInteraction)
         {
             currentInteraction.ToggleHighlight(false);
             currentInteraction = null;
+            RefreshTrigger();
         }
     }
 
