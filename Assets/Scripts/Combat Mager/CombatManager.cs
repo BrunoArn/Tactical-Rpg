@@ -152,7 +152,7 @@ public class CombatManager : MonoBehaviour
 
 
             // posição atual da unidade, pode estar fora do grid
-            Vector3 currentPos = unit.transform.position;
+            Vector3 currentPos = unit.transform.root.position;
             //montar a comparação de distancia
             // começa com infinito para que a primeira seja sempre suave
             float closestDist = Mathf.Infinity;
@@ -172,7 +172,7 @@ public class CombatManager : MonoBehaviour
             // se achou um tile, snap
             if (gridBuilder.tacticalGrid.TryGetValue(closestKey, out var tileData))
             {
-                unit.transform.position = tileData.worldPos;
+                unit.transform.root.position = tileData.worldPos;
 
                 ///// ================== isso aqui pdoe ser o TIle direto ==================
                 unit.UpdateGridPosition(tileData);
