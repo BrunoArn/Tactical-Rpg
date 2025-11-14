@@ -14,6 +14,7 @@ public class CombatManager : MonoBehaviour
     //serialized para ver no inspector de caozada
     [SerializeField] List<GridUnit> allUnits = new();
     private GridUnit hero;
+    [SerializeField] List<GridObstacle> allObstacles = new();
     //o layer das units para procurar direitinho
     [Tooltip("layer dos personagens para encontrar e por no grid")]
     [SerializeField] LayerMask unitLayer;
@@ -102,12 +103,17 @@ public class CombatManager : MonoBehaviour
         }
         
         Destroy(deadUnit.gameObject);
-
+        //check se acabou
         if (allUnits.Count == 1 && allUnits[0] == hero)
         {
             gridBuilder.DestroyPathDistanceNumber();
             explorationRequest.Raise();
         }
+    }
+
+    private void RemoveObstacle(GridObstacle destroyedObstacle)
+    {
+        //remove os obstaculos do grid
     }
 
     private void UpdatePathFinding()
@@ -123,6 +129,8 @@ public class CombatManager : MonoBehaviour
     {
         //limpa a lista
         allUnits.Clear();
+        // also clear obstacles list to avoid duplicates when re-detecting
+        allObstacles.Clear();
         //pegar o tamanho do grid la na classe
         Bounds gridBounds = gridBuilder.GetGridBounds();
         //usa physics 2D para detectar collisao com as unidades no grid
@@ -137,6 +145,16 @@ public class CombatManager : MonoBehaviour
 
                 allUnits.Add(unit);
                 unit.OnUnitDeath += RemoveUnit;
+            }
+
+            if(hit.transform.root.GetComponentInChildren<GridObstacle>() is GridObstacle obstacle)
+            {
+                // avoid adding the same obstacle multiple times
+                if (!allObstacles.Contains(obstacle))
+                {
+                    allObstacles.Add(obstacle);
+                    obstacle.OnObstacleDestruction += RemoveObstacle;
+                }
             }
         }
     }
