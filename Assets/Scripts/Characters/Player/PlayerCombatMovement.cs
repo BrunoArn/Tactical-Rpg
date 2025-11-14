@@ -21,7 +21,7 @@ public class PlayerCombatMovement : MonoBehaviour, IUnitAction
     private void MoveCharacter(TileData target)
     {
         //joga a posição para a posição mundial do tile
-        transform.position = target.worldPos;
+        transform.root.position = target.worldPos;
         //atualiza o dicionário de posição
         gridUnit.UpdateGridPosition(target);
     }

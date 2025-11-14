@@ -2,37 +2,57 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Handles player movement in exploration mode using the Input System.
+/// Moves the <c>Rigidbody2D</c> according to input and preserves analog
+/// stick magnitude while clamping maximum speed to <see cref="moveSpeed"/>.
+/// </summary>
 public class PlayerExplorationMovement : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 5f;
+    [Min(0f)][SerializeField] private float moveSpeed = 5f;
 
-    private Rigidbody2D rigidBody;
+    [SerializeField] private Rigidbody2D rigidBody;
     private CombatControls controls;
     private InputAction moveAction;
 
+    // Latest cached input vector from the input system callback.
     private Vector2 inputVector;
-
 
     void Awake()
     {
-        rigidBody = GetComponent<Rigidbody2D>();
         controls = new CombatControls();
         moveAction = controls.Exploration.Move;
+
+        // Ensure we have a Rigidbody2D reference; inspector-assigned wins otherwise
+        if (rigidBody == null)
+            rigidBody = transform.root.GetComponentInChildren<Rigidbody2D>();
     }
 
     void OnEnable()
     {
         controls.Exploration.Enable();
-        moveAction.performed += OnMove;
-        moveAction.canceled += OnMove;
+
+        if (moveAction != null)
+        {
+            moveAction.performed += OnMove;
+            moveAction.canceled += OnMove;
+        }
     }
 
     void OnDisable()
     {
-        moveAction.performed -= OnMove;
-        moveAction.canceled -= OnMove;
+        if (moveAction != null)
+        {
+            moveAction.performed -= OnMove;
+            moveAction.canceled -= OnMove;
+        }
+
         controls.Exploration.Disable();
-        rigidBody.linearVelocity = Vector2.zero;
+
+        // Stop movement immediately when disabling exploration
+        inputVector = Vector2.zero;
+        if (rigidBody != null)
+            rigidBody.linearVelocity = Vector2.zero;
     }
 
     private void OnMove(InputAction.CallbackContext context)
@@ -40,7 +60,21 @@ public class PlayerExplorationMovement : MonoBehaviour
         inputVector = context.ReadValue<Vector2>();
     }
 
-    private void FixedUpdate() {
-        rigidBody.linearVelocity = inputVector * moveSpeed;
+    private void FixedUpdate()
+    {
+        if (rigidBody == null) return;
+
+        // Preserve analog magnitude (for gamepad) but clamp keyboard diagonal boosts
+        var move = inputVector;
+        if (move.sqrMagnitude > 1f)
+            move = move.normalized;
+
+        rigidBody.linearVelocity = move * moveSpeed;
+    }
+
+    void OnDestroy()
+    {
+        // Dispose generated input controls if supported
+        try { controls?.Dispose(); } catch { }
     }
 }

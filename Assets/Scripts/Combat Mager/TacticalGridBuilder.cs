@@ -65,8 +65,9 @@ public class TacticalGridBuilder : MonoBehaviour
                 //se existir o tile..
                 if (tile != null)
                 {
-                    //pega a posição do mundo dessa cell, centralizada no tile
-                    Vector3 worldPos = tacticalTilemap.CellToWorld(cell) + new Vector3(cellSize / 2, cellSize / 2, 0);
+                    // compute world position for the cell taking the tilemap's tileAnchor into account
+                    Vector3 anchorOffset = new Vector3(tacticalTilemap.tileAnchor.x * cellSize, tacticalTilemap.tileAnchor.y * cellSize, 0f);
+                    Vector3 worldPos = tacticalTilemap.CellToWorld(cell) + anchorOffset;
                     //pega a posição no grid lógico
                     Vector2Int gridKey = new Vector2Int(x, y);
                     //adiciona no dicionário- e bota que é walkable de graça ja.
@@ -208,7 +209,7 @@ public class TacticalGridBuilder : MonoBehaviour
         foreach (var tile in tacticalGrid.Values)
         {
             var go = new GameObject("DistLabel");
-            go.transform.position = tile.worldPos + Vector3.up * 0.1f;
+            go.transform.position = tile.worldPos;
             var tm = go.AddComponent<TextMesh>();
             tm.text = tile.distanceToHero == int.MaxValue ? "∞" : tile.distanceToHero.ToString();
             tm.anchor = TextAnchor.MiddleCenter;

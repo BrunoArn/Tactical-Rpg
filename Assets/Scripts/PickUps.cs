@@ -61,7 +61,7 @@ public class PickUps : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            inventory = collision.GetComponent<Inventory>();
+            inventory = collision.transform.root.GetComponentInChildren<Inventory>();
             bool added = inventory.AddItem(item, quantityDropped);
             if (added)
             {

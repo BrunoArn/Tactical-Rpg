@@ -1,25 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-/*
- PlayerInteraction
- -----------------
- Manages proximity-based interaction for the player character.
-
- - Scans overlapping colliders using a configured `ContactFilter2D`.
- - Selects the nearest `IInteractable` and toggles its highlight when
-     the player enters or exits interaction range.
- - Handles the input action `Exploration.Interact` from the generated
-     `CombatControls` input asset. The input subscription is enabled in
-     `OnEnable` and removed in `OnDisable`.
-
- Requirements / Notes:
- - The GameObject should have a 2D Collider (trigger) assigned to
- - Interactable objects must implement the `IInteractable` interface
-     and provide `Interact()` and `ToggleHighlight(bool)` methods.
- - `RefreshTrigger()` uses squared-distance comparisons for efficiency.
-*/
-
 /// <summary>
 /// Component that manages player interactions with nearby <c>IInteractable</c> objects.
 /// </summary>
@@ -34,22 +15,16 @@ public class PlayerInteraction : MonoBehaviour
     private IInteractable currentInteraction;
     private CombatControls controls;
 
-    private Collider2D myCollider;
+    [SerializeField] private Collider2D myCollider;
     [SerializeField] private ContactFilter2D filterContact;
     private Collider2D[] results = new Collider2D[10];
 
-    /// <summary>
-    /// Initializes generated input controls and caches the player collider.
-    /// </summary>
-    /// <remarks>
-    /// Keep Awake lightweight; input event subscriptions are handled in
-    /// <see cref="OnEnable"/> so they can be properly unsubscribed in
-    /// <see cref="OnDisable"/>.
-    /// </remarks>
     void Awake()
     {
         controls = new CombatControls();
-        myCollider = GetComponent<Collider2D>();
+
+        if (myCollider == null)
+            myCollider = GetComponent<Collider2D>();
     }
 
     /// <summary>
@@ -63,12 +38,14 @@ public class PlayerInteraction : MonoBehaviour
     {
         controls.Exploration.Interact.performed += OnInteractPerformed;
         controls.Exploration.Enable();
+        myCollider.enabled = true;
     }
 
     void OnDisable()
     {
         controls.Exploration.Interact.performed -= OnInteractPerformed;
         controls.Exploration.Disable();
+        myCollider.enabled = false;
     }
 
     /// <summary>
@@ -77,7 +54,7 @@ public class PlayerInteraction : MonoBehaviour
     /// </summary>
     private void OnInteract()
     {
-        currentInteraction?.Interact();
+        currentInteraction?.Interact(transform.root.gameObject);
         currentInteraction = null;
         RefreshTrigger();
     }

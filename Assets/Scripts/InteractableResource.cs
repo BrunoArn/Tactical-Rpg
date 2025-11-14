@@ -22,16 +22,13 @@ public class InteractableResource : MonoBehaviour, IInteractable
     [SerializeField] private ItemData droppedItem;
     [SerializeField] private int quantityDropped;
 
-    // Cached reference to the player GameObject when inside trigger.
-    private GameObject player;
-
     /// <summary>
     /// Called by other systems (e.g. the player's interaction controller) to
     /// perform the interaction. Spawns the configured <c>itemDropPrefab</c>
     /// and initializes its <c>PickUps</c> component, then destroys this
     /// resource GameObject.
     /// </summary>
-    public void Interact()
+    public void Interact(GameObject player)
     {
         if (itemDropPrefab == null)
         {
@@ -55,27 +52,9 @@ public class InteractableResource : MonoBehaviour, IInteractable
         Destroy(gameObject);
     }
 
-    /// <summary>
-    /// Cache the player reference when they enter the trigger so spawned
-    /// pickups can be initialized with the player reference.
-    /// </summary>
-    void OnTriggerEnter2D(Collider2D collision)
+    public void Interact()
     {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            player = collision.gameObject;
-        }
-    }
-
-    /// <summary>
-    /// Clear the cached player reference when they leave the trigger.
-    /// </summary>
-    void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player") && collision.gameObject == player)
-        {
-            player = null;
-        }
+        throw new System.NotImplementedException();
     }
 
     /// <summary>

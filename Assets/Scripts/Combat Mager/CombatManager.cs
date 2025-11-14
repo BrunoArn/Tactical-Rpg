@@ -130,16 +130,14 @@ public class CombatManager : MonoBehaviour
         //verifica dentro deste array de hits cada coisa que pegou e se tem a classe GridUnit, se tiver, vai jogar
         foreach (var hit in hits)
         {
-            if (hit.TryGetComponent<GridUnit>(out var unit))
+            if (hit.transform.root.GetComponentInChildren<GridUnit>() is GridUnit unit)
             {
                 //Procurando por Tag o hero, meio dark
-                if (unit.CompareTag("Player")) hero = unit;
-                
+                if (unit.CompareTag("Player")) hero = unit;          
 
                 allUnits.Add(unit);
                 unit.OnUnitDeath += RemoveUnit;
             }
-
         }
     }
 
@@ -150,7 +148,7 @@ public class CombatManager : MonoBehaviour
         {
             //fazendo isso no roleplay total, atenção!!
             //adicionando o player só no drop loot dos cara, vamos ver como tirar isso depois.
-            if (unit.CompareTag("Enemy")) unit.GetComponent<PickUpSpawner>().player = hero.gameObject;
+            if (unit.CompareTag("Enemy")) unit.GetComponent<PickUpSpawner>().player = hero.transform.root.gameObject;
 
 
             // posição atual da unidade, pode estar fora do grid
