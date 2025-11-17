@@ -9,4 +9,22 @@ public class GridObstacle : MonoBehaviour
     public Health health;
 
     public event Action<GridObstacle> OnObstacleDestruction;
+
+    void Awake()
+    {
+        if (health != null)
+            health.OnDeath += HandleHealthDeath;
+    }
+
+    private void HandleHealthDeath()
+    {
+        OnObstacleDestruction?.Invoke(this);
+        currentTile.ClearTile();
+    }
+
+    void OnDestroy()
+    {
+        if (health != null)
+            health.OnDeath -= HandleHealthDeath;
+    }
 }

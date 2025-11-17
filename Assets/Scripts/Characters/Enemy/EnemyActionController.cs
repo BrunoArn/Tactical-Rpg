@@ -71,7 +71,7 @@ public class EnemyActionController : MonoBehaviour, ICombatUnit
     private void TryToMoveAlongPath()
     {
         var sorted = gridUnit.currentTile.neighbors.OrderBy(tile => tile.distanceToHero);
-        var fallback = sorted.FirstOrDefault(tile => tile.isWalkable && tile.OccupyingUnit == null);
+        var fallback = sorted.FirstOrDefault(tile => tile.isWalkable && !tile.IsOccupied);
 
         if (fallback != null)
         {

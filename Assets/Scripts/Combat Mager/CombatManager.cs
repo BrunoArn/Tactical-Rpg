@@ -87,6 +87,7 @@ public class CombatManager : MonoBehaviour
     private void EndCurrentTurn()
     {
         turnIndex++;
+        UpdatePathFinding();
         StartNextTurn();
     }
 
@@ -101,7 +102,7 @@ public class CombatManager : MonoBehaviour
             Debug.Log("Game over otario");
             return;
         }
-        
+
         Destroy(deadUnit.gameObject);
         //check se acabou
         if (allUnits.Count == 1 && allUnits[0] == hero)
@@ -113,7 +114,15 @@ public class CombatManager : MonoBehaviour
 
     private void RemoveObstacle(GridObstacle destroyedObstacle)
     {
-        //remove os obstaculos do grid
+        if (destroyedObstacle == null) return;
+        // unsubscribe
+        destroyedObstacle.OnObstacleDestruction -= RemoveObstacle;
+        // remove from list and destroy gameObject
+        allObstacles.Remove(destroyedObstacle);
+        Destroy(destroyedObstacle.gameObject);
+        // rebuild pathfinding
+        if (hero != null)
+            UpdatePathFinding();
     }
 
     private void UpdatePathFinding()
@@ -141,13 +150,13 @@ public class CombatManager : MonoBehaviour
             if (hit.transform.root.GetComponentInChildren<GridUnit>() is GridUnit unit)
             {
                 //Procurando por Tag o hero, meio dark
-                if (unit.CompareTag("Player")) hero = unit;          
+                if (unit.CompareTag("Player")) hero = unit;
 
                 allUnits.Add(unit);
                 unit.OnUnitDeath += RemoveUnit;
             }
 
-            if(hit.transform.root.GetComponentInChildren<GridObstacle>() is GridObstacle obstacle)
+            if (hit.transform.root.GetComponentInChildren<GridObstacle>() is GridObstacle obstacle)
             {
                 // avoid adding the same obstacle multiple times
                 if (!allObstacles.Contains(obstacle))
@@ -167,7 +176,6 @@ public class CombatManager : MonoBehaviour
             //fazendo isso no roleplay total, atenção!!
             //adicionando o player só no drop loot dos cara, vamos ver como tirar isso depois.
             if (unit.CompareTag("Enemy")) unit.GetComponent<PickUpSpawner>().player = hero.transform.root.gameObject;
-
 
             // posição atual da unidade, pode estar fora do grid
             Vector3 currentPos = unit.transform.root.position;
@@ -191,12 +199,40 @@ public class CombatManager : MonoBehaviour
             if (gridBuilder.tacticalGrid.TryGetValue(closestKey, out var tileData))
             {
                 unit.transform.root.position = tileData.worldPos;
-
                 ///// ================== isso aqui pdoe ser o TIle direto ==================
                 unit.UpdateGridPosition(tileData);
             }
         }
+
+        foreach (GridObstacle obstacle in allObstacles)
+        {
+            if (obstacle == null) continue;
+            // find closest tile to obstacle's root position
+            Vector3 obsPos = obstacle.transform.root.position;
+            float closestDist = Mathf.Infinity;
+            Vector2Int closestKey = Vector2Int.zero;
+
+            foreach (var tileEntry in gridBuilder.tacticalGrid)
+            {
+                float dist = Vector3.Distance(obsPos, tileEntry.Value.worldPos);
+                if (dist < closestDist)
+                {
+                    closestDist = dist;
+                    closestKey = tileEntry.Key;
+                }
+            }
+
+            if (gridBuilder.tacticalGrid.TryGetValue(closestKey, out var tileData))
+            {
+                obstacle.currentTile = tileData;
+                tileData.OccupyingObstacle = obstacle;
+                tileData.isWalkable = false;
+                // optionally snap obstacle to tile world pos
+                obstacle.transform.root.position = tileData.worldPos;
+            }
+        }
     }
+
 
     //debug pra ver quem ta ond 
     [ContextMenu("Unit position")]

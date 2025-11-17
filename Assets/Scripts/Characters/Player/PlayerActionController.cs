@@ -75,18 +75,15 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
             if (!hasPlayed && direction != Vector2Int.zero)
             {
                 TileData targetTile = gridUnit.currentTile.GetNeighbors(direction);
-                //oe LUTAR SÓ
-                GridUnit targetUnit = null;
 
                 //Caso do Move
-                if (targetTile != null && targetTile.isWalkable && !targetTile.OccupyingUnit)
+                if (targetTile != null && targetTile.isWalkable && !targetTile.IsOccupied)
                 {
                     action = MoveAction as IUnitAction;
                 }
-                //pro ataque
-                else if (targetTile != null && targetTile.OccupyingUnit)
+                //pro ataque DA PRA VER ISSO AI MELHOR, Ë SÖ DAR A PORRA DO
+                else if (targetTile != null && targetTile.IsOccupied)
                 {
-                    targetUnit = targetTile.OccupyingUnit;
                     action = AttackAction as IUnitAction;
                 }
                 // pro flee
@@ -106,7 +103,6 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
                     {
                         //executa enviando a direção
                         action.ExecuteAction(targetTile, this.gridUnit);
-                        targetUnit = null;
                         BeforeEndTurn();
                     }
             }

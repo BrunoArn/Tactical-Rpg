@@ -20,6 +20,7 @@ public class TileData
 
    //ocuupied info
    private GridUnit _occupyingUnit;
+   private GridObstacle _occupyingObstacle;
    public GridUnit OccupyingUnit
    {
       get
@@ -33,7 +34,16 @@ public class TileData
       }
    }
 
-   public bool IsOccupied => _occupyingUnit != null;
+   public GridObstacle OccupyingObstacle
+   {
+      get => _occupyingObstacle;
+      set
+      {
+         _occupyingObstacle = value;
+      }
+   }
+
+   public bool IsOccupied => _occupyingUnit != null || _occupyingObstacle != null;
 
    public TileData(Vector2Int gridPos, Vector3 worldPos, bool isWalkable)
    {
@@ -72,5 +82,6 @@ public class TileData
    {
       isWalkable = true;
       _occupyingUnit = null;
+      _occupyingObstacle = null;
    }
 }
