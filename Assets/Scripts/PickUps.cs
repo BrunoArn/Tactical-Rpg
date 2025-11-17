@@ -59,7 +59,7 @@ public class PickUps : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") && collision.GetComponent<BoxCollider2D>() != null)
         {
             inventory = collision.transform.root.GetComponentInChildren<Inventory>();
             bool added = inventory.AddItem(item, quantityDropped);
