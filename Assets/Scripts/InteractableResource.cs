@@ -18,9 +18,7 @@ using UnityEngine;
 public class InteractableResource : MonoBehaviour, IInteractable
 {
     [SerializeField] private SpriteRenderer highLight;
-    [SerializeField] private GameObject itemDropPrefab;
-    [SerializeField] private ItemData droppedItem;
-    [SerializeField] private int quantityDropped;
+    [SerializeField] private PickUpSpawner pickupSpawner;
 
     /// <summary>
     /// Called by other systems (e.g. the player's interaction controller) to
@@ -30,25 +28,8 @@ public class InteractableResource : MonoBehaviour, IInteractable
     /// </summary>
     public void Interact(GameObject player)
     {
-        if (itemDropPrefab == null)
-        {
-            Debug.LogWarning($"{nameof(InteractableResource)} on '{gameObject.name}': itemDropPrefab is not assigned.");
-        }
-        else
-        {
-            var newItem = Instantiate(itemDropPrefab, transform.position, Quaternion.identity);
-            var pickUps = newItem.GetComponent<PickUps>();
-            if (pickUps != null)
-            {
-                pickUps.player = player;
-                pickUps.UpdateItem(droppedItem, quantityDropped);
-            }
-            else
-            {
-                Debug.LogWarning($"Instantiated prefab '{itemDropPrefab.name}' does not contain a PickUps component.");
-            }
-        }
-
+        pickupSpawner.player = player;
+        pickupSpawner.DropItems();
         Destroy(gameObject);
     }
 

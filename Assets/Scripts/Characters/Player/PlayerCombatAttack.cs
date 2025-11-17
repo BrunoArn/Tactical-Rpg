@@ -15,8 +15,10 @@ public class PlayerCombatAttack : MonoBehaviour, IUnitAction
         if (targetTile.OccupyingUnit != null)
         {
             Debug.Log($"Ataquei o [{targetTile.OccupyingUnit.name}]");
-            targetTile.OccupyingUnit.health.TakeDamage(totalDamage);
-            return;
+            if (targetTile.OccupyingUnit.health != null)
+            {
+                targetTile.OccupyingUnit.health.TakeDamage(totalDamage);
+            }
         }
 
         if (targetTile.OccupyingObstacle != null)

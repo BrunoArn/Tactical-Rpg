@@ -206,6 +206,8 @@ public class CombatManager : MonoBehaviour
 
         foreach (GridObstacle obstacle in allObstacles)
         {
+            obstacle.GetComponent<PickUpSpawner>().player = hero.transform.root.gameObject;
+
             if (obstacle == null) continue;
             // find closest tile to obstacle's root position
             Vector3 obsPos = obstacle.transform.root.position;
