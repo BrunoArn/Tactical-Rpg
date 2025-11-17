@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "name": "CombatControls",
     "maps": [
         {
@@ -18,6 +19,15 @@
                     "name": "Confirm",
                     "type": "Button",
                     "id": "c34051ba-6d63-419b-95c5-5c9834ce2569",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RangedStance",
+                    "type": "Button",
+                    "id": "26d5317a-6adf-48c4-bf22-20abdac5620a",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -88,6 +98,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Confirm",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "59ebf1b2-0166-4a5c-829d-493447b5d1e0",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RangedStance",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

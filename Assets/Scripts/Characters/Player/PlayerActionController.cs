@@ -26,6 +26,8 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
     [Header("Action")]
     [SerializeField] MonoBehaviour MoveAction;
     [SerializeField] MonoBehaviour AttackAction;
+    [SerializeField] MonoBehaviour RangedAttackAction;
+    private bool isRanged = false;
 
     // callback to manager
     private Action onTurnEnd;
@@ -48,6 +50,10 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
     {
         controls.Combat.Direction.performed += OnDirectionPerformed;
         controls.Combat.Direction.canceled += OnDirectionCanceled;
+
+        controls.Combat.RangedStance.performed += OnRangedStancePerformed;
+        controls.Combat.RangedStance.canceled += OnRangedStanceCanceled;
+
         controls.Combat.Confirm.performed += OnConfirmPerformed;
         controls.Combat.Enable();
     }
@@ -56,7 +62,12 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
     {
         controls.Combat.Direction.performed -= OnDirectionPerformed;
         controls.Combat.Direction.canceled -= OnDirectionCanceled;
+
+        controls.Combat.RangedStance.performed -= OnRangedStancePerformed;
+        controls.Combat.RangedStance.canceled -= OnRangedStanceCanceled;
+       
         controls.Combat.Confirm.performed -= OnConfirmPerformed;
+        DestroyPreview();
         controls.Combat.Disable();
     }
 
@@ -81,6 +92,16 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
     {
         direction = Vector2Int.zero;
         DestroyPreview();
+    }
+
+    private void OnRangedStancePerformed(InputAction.CallbackContext ctx)
+    {
+        isRanged = true;
+    }
+
+    private void OnRangedStanceCanceled(InputAction.CallbackContext ctx)
+    {
+        isRanged = false;
     }
 
     private void OnConfirmPerformed(InputAction.CallbackContext ctx)
