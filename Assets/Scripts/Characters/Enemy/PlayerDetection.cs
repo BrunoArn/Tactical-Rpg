@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 /// <summary>
 /// Detects the player within a circular radius and issues a combat request.
@@ -74,7 +75,7 @@ public class PlayerDetection : MonoBehaviour
     
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("Player") && collision.GetComponent<BoxCollider2D>() != null)
         {
             Vector3 position = transform.position;
             Vector2Int positionInt = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y));

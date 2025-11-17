@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,10 +15,18 @@ public class PlayerInteraction : MonoBehaviour
 {
     private IInteractable currentInteraction;
     private CombatControls controls;
-
+    [Header("Collider & Contact Filter")]
     [SerializeField] private Collider2D myCollider;
     [SerializeField] private ContactFilter2D filterContact;
     private Collider2D[] results = new Collider2D[10];
+    // currently overlapping interactables (deduped by component instance)
+    private readonly HashSet<IInteractable> interactablesInRange = new HashSet<IInteractable>();
+    [Header("Movement Recompute")]
+    [Tooltip("When the player moves more than this distance, recompute the nearest interactable.")]
+    [SerializeField] private float movementRecomputeDistance = 0.1f;
+    private Vector3 lastPosition;
+    [SerializeField]
+    private bool recomputeWhileMoving = true;
 
     void Awake()
     {
@@ -25,6 +34,19 @@ public class PlayerInteraction : MonoBehaviour
 
         if (myCollider == null)
             myCollider = GetComponent<Collider2D>();
+        lastPosition = transform.position;
+    }
+
+    void Update()
+    {
+        if (!recomputeWhileMoving) return;
+
+        // recompute the nearest interactable when the player has moved beyond the threshold
+        if ((transform.position - lastPosition).sqrMagnitude > movementRecomputeDistance)
+        {
+            lastPosition = transform.position;
+            RecomputeNearest();
+        }
     }
 
     /// <summary>
@@ -56,7 +78,8 @@ public class PlayerInteraction : MonoBehaviour
     {
         currentInteraction?.Interact(transform.root.gameObject);
         currentInteraction = null;
-        RefreshTrigger();
+        //RefreshTrigger();
+        RecomputeNearest();
     }
 
     /// <summary>
@@ -64,51 +87,55 @@ public class PlayerInteraction : MonoBehaviour
     /// current interaction and toggles highlighting accordingly.
     /// </summary>
     /// <param name="collision">Collider to inspect for an <c>IInteractable</c>.</param>
-    private void TrySetInteractable(Collider2D collision)
+    // Adds an interactable candidate and recomputes the nearest
+    private void AddCandidate(IInteractable interactable)
     {
-        if (collision == null) return;
-
-        var interactable = collision.GetComponent<IInteractable>();
         if (interactable == null) return;
-
-        if (interactable == currentInteraction) return;
-
-        currentInteraction?.ToggleHighlight(false);
-        currentInteraction = interactable;
-        currentInteraction.ToggleHighlight(true);
+        if (interactablesInRange.Add(interactable))
+            RecomputeNearest();
     }
 
-    /// <summary>
-    /// Scans overlapping colliders using <see cref="filterContact"/>,
-    /// finds the nearest <c>IInteractable</c>, and selects it.
-    /// </summary>
-    private void RefreshTrigger()
+    // Removes a candidate and recomputes nearest (clears highlight if it was current)
+    private void RemoveCandidate(IInteractable interactable)
     {
-        int count = myCollider.Overlap(filterContact, results);
-
-        Collider2D nearest = null;
-        float nearestSqr = float.MaxValue;
-
-        for (int i = 0; i < count; i++)
+        if (interactable == null) return;
+        if (interactablesInRange.Remove(interactable))
         {
-            var col = results[i];
-            if (col == null || col.gameObject == null) continue;
+            if (interactable == currentInteraction)
+            {
+                currentInteraction.ToggleHighlight(false);
+                currentInteraction = null;
+            }
+            RecomputeNearest();
+        }
+    }
 
-            var interactable = col.GetComponent<IInteractable>();
-            if (interactable == null) continue;
+    // Choose the nearest interactable from the candidate set and toggle highlights
+    private void RecomputeNearest()
+    {
+        IInteractable nearest = null;
+        float nearestSqr = float.MaxValue;
+        Vector3 myPos = transform.position;
 
-            var dir = col.transform.position - transform.position;
-            float sqr = dir.sqrMagnitude;
+        foreach (var it in interactablesInRange)
+        {
+            if (it == null) continue;
+            var comp = it as Component;
+            if (comp == null) continue;
+
+            float sqr = (comp.transform.position - myPos).sqrMagnitude;
             if (sqr < nearestSqr)
             {
                 nearestSqr = sqr;
-                nearest = col;
+                nearest = it;
             }
         }
 
-        if (nearest != null)
+        if (nearest != currentInteraction)
         {
-            TrySetInteractable(nearest);
+            currentInteraction?.ToggleHighlight(false);
+            currentInteraction = nearest;
+            currentInteraction?.ToggleHighlight(true);
         }
     }
 
@@ -118,7 +145,8 @@ public class PlayerInteraction : MonoBehaviour
     /// </summary>
     void OnTriggerEnter2D(Collider2D collision)
     {
-        TrySetInteractable(collision);
+        var interactable = collision.GetComponentInParent<IInteractable>();
+        AddCandidate(interactable);
     }
 
     /// <summary>
@@ -128,14 +156,7 @@ public class PlayerInteraction : MonoBehaviour
     /// </summary>
     private void OnTriggerExit2D(Collider2D other)
     {
-        var interactable = other.GetComponent<IInteractable>();
-        if (interactable != null && interactable == currentInteraction)
-        {
-            currentInteraction.ToggleHighlight(false);
-            currentInteraction = null;
-            RefreshTrigger();
-        }
+        var interactable = other.GetComponentInParent<IInteractable>();
+        RemoveCandidate(interactable);
     }
-
-
 }

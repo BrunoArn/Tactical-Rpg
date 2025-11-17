@@ -36,8 +36,6 @@ public class TacticalGridBuilder : MonoBehaviour
 
     public void StartGrid()
     {
-        DestroyPathDistanceNumber();
-
         GenerateTacticalGrid();
         AssignTilesNeighors();
         FindGridBorders();
@@ -231,16 +229,5 @@ public class TacticalGridBuilder : MonoBehaviour
             Destroy(go);
         _distLabels.Clear();
     }
-
-    private void OnDisable()
-    {
-        DestroyPathDistanceNumber();
-    }
-
-    private void OnDestroy()
-    {
-        DestroyPathDistanceNumber();
-    }
-
     #endregion
 }
