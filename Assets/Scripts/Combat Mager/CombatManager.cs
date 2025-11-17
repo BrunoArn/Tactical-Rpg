@@ -88,7 +88,15 @@ public class CombatManager : MonoBehaviour
     {
         turnIndex++;
         UpdatePathFinding();
-        StartNextTurn();
+
+        //check se acabou
+        if (allUnits.Count == 1 && allUnits[0] == hero)
+        {
+            EndCombat();
+        }
+        else
+            StartNextTurn();
+
     }
 
     private void RemoveUnit(GridUnit deadUnit)
@@ -100,16 +108,12 @@ public class CombatManager : MonoBehaviour
         if (deadUnit == hero)
         {
             Debug.Log("Game over otario");
+            EndCombat();
             return;
         }
 
         Destroy(deadUnit.gameObject);
-        //check se acabou
-        if (allUnits.Count == 1 && allUnits[0] == hero)
-        {
-            gridBuilder.DestroyPathDistanceNumber();
-            explorationRequest.Raise();
-        }
+
     }
 
     private void RemoveObstacle(GridObstacle destroyedObstacle)
@@ -128,6 +132,21 @@ public class CombatManager : MonoBehaviour
     private void UpdatePathFinding()
     {
         gridBuilder.BuildFlowField(hero.currentTile.gridPos);
+    }
+
+    private void EndCombat()
+    {
+        if (hero != null)
+        {
+            hero.OnUnitMove -= UpdatePathFinding;
+        }
+
+        if (gridBuilder != null)
+        {
+            gridBuilder.DestroyPathDistanceNumber();
+        }
+
+        explorationRequest.Raise();
     }
 
     #endregion
