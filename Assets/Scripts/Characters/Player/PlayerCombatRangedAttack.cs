@@ -21,21 +21,6 @@ public class PlayerCombatRangedAttack : MonoBehaviour, IUnitAction, IRangedActio
         return null;
     }
 
-    public IEnumerable<TileData> GetPreviewTiles(GridUnit origin, Vector2Int dir)
-    {
-        var list = new List<TileData>();
-        if (origin == null || origin.currentTile == null) return list;
-
-        TileData t = origin.currentTile;
-        for (int i = 0; i < maxRange; i++)
-        {
-            t = t.GetNeighbors(dir);
-            if (t == null) break;
-            list.Add(t);
-            if (t.IsOccupied) break; // stop at first hit
-        }
-        return list;
-    }
 
     public void ExecuteAction(TileData targetTile, GridUnit actor)
     {

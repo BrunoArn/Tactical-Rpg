@@ -65,7 +65,7 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
 
         controls.Combat.RangedStance.performed -= OnRangedStancePerformed;
         controls.Combat.RangedStance.canceled -= OnRangedStanceCanceled;
-       
+
         controls.Combat.Confirm.performed -= OnConfirmPerformed;
         DestroyPreview();
         controls.Combat.Disable();
@@ -113,23 +113,49 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
                 targetTile = gridUnit.currentTile.GetNeighbors(direction);
 
             IUnitAction candidate = null;
-
-            if (targetTile != null && targetTile.isWalkable && !targetTile.IsOccupied)
-                candidate = MoveAction as IUnitAction;
-            else if (targetTile != null && targetTile.IsOccupied)
-                candidate = AttackAction as IUnitAction;
-            else if (gridUnit != null && gridUnit.currentTile != null && gridUnit.currentTile.isBorder && targetTile == null)
+            if (!isRanged)
             {
-                Vector2 dir = new Vector2(direction.x, direction.y);
-                RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, 1f, gridLayer);
-                if (hit.collider == null)
-                    explorationRequest?.Raise();
+                //move
+                if (targetTile != null && targetTile.isWalkable && !targetTile.IsOccupied)
+                    candidate = MoveAction as IUnitAction;
+                //attack
+                else if (targetTile != null && targetTile.IsOccupied)
+                    candidate = AttackAction as IUnitAction;
+                //flee
+                else if (gridUnit != null && gridUnit.currentTile != null && gridUnit.currentTile.isBorder && targetTile == null)
+                {
+                    Vector2 dir = new Vector2(direction.x, direction.y);
+                    RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, 1f, gridLayer);
+                    if (hit.collider == null)
+                        explorationRequest?.Raise();
+                }
+            }
+            else if (isRanged)
+            {
+                var ranged = RangedAttackAction as IRangedAction;
+                // fallback: if no dedicated ranged action assigned, try AttackAction
+                if (ranged == null)
+                    ranged = AttackAction as IRangedAction;
+
+                if (ranged != null)
+                {
+                    targetTile = ranged.FindTarget(gridUnit, direction);
+                    if (targetTile != null)
+                    {
+                        Debug.Log("Ranged Attack Attempt");
+                        // prefer the concrete ranged action if available, else use the generic AttackAction
+                        candidate = (RangedAttackAction as IUnitAction) ?? (AttackAction as IUnitAction);
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("Ranged stance active but no IRangedAction found on assigned actions.");
+                }
             }
 
             if (candidate != null)
             {
                 candidate.ExecuteAction(targetTile, gridUnit);
-                candidate = null;
                 BeforeEndTurn();
             }
         }
@@ -209,6 +235,7 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
             var sr = highlightInstance.GetComponent<SpriteRenderer>();
             if (sr != null) sr.sprite = hasPlayed ? tileOff : tileOn;
         }
+        //nao tem highlast Instance
         else if (HighlightPrefab != null)
         {
             var sr = HighlightPrefab.GetComponent<SpriteRenderer>();
