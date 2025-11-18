@@ -103,9 +103,20 @@
                 },
                 {
                     "name": "",
+                    "id": "eb0c3dd7-c1eb-4d49-846c-6fa8aaae48b1",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Confirm",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "59ebf1b2-0166-4a5c-829d-493447b5d1e0",
                     "path": "<Keyboard>/shift",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "",
                     "action": "RangedStance",

@@ -68,6 +68,7 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
 
         controls.Combat.Confirm.performed -= OnConfirmPerformed;
         DestroyPreview();
+        isRanged = false;
         controls.Combat.Disable();
     }
 
@@ -84,8 +85,7 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
         else
             direction = new Vector2Int(0, (int)Mathf.Sign(input.y));
 
-        if (direction != Vector2Int.zero)
-            ShowPreview();
+        ShowPreview();
     }
 
     private void OnDirectionCanceled(InputAction.CallbackContext ctx)
@@ -97,67 +97,65 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
     private void OnRangedStancePerformed(InputAction.CallbackContext ctx)
     {
         isRanged = true;
+        ShowPreview();
     }
 
     private void OnRangedStanceCanceled(InputAction.CallbackContext ctx)
     {
         isRanged = false;
+        ShowPreview();
     }
 
     private void OnConfirmPerformed(InputAction.CallbackContext ctx)
     {
-        if (!hasPlayed && direction != Vector2Int.zero)
+        if (hasPlayed) return;
+        if (direction == Vector2Int.zero) return;
+
+        TileData targetTile = null;
+        if (gridUnit != null && gridUnit.currentTile != null)
+            targetTile = gridUnit.currentTile.GetNeighbors(direction);
+
+        IUnitAction candidate = null;
+        if (!isRanged)
         {
-            TileData targetTile = null;
-            if (gridUnit != null && gridUnit.currentTile != null)
-                targetTile = gridUnit.currentTile.GetNeighbors(direction);
-
-            IUnitAction candidate = null;
-            if (!isRanged)
+            //move
+            if (targetTile != null && targetTile.isWalkable && !targetTile.IsOccupied)
+                candidate = MoveAction as IUnitAction;
+            //attack
+            else if (targetTile != null && targetTile.IsOccupied)
+                candidate = AttackAction as IUnitAction;
+            //flee
+            else if (gridUnit != null && gridUnit.currentTile != null && gridUnit.currentTile.isBorder && targetTile == null)
             {
-                //move
-                if (targetTile != null && targetTile.isWalkable && !targetTile.IsOccupied)
-                    candidate = MoveAction as IUnitAction;
-                //attack
-                else if (targetTile != null && targetTile.IsOccupied)
-                    candidate = AttackAction as IUnitAction;
-                //flee
-                else if (gridUnit != null && gridUnit.currentTile != null && gridUnit.currentTile.isBorder && targetTile == null)
+                Vector2 dir = new Vector2(direction.x, direction.y);
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, 1f, gridLayer);
+                if (hit.collider == null)
+                    explorationRequest?.Raise();
+            }
+        }
+        else if (isRanged)
+        {
+            Debug.Log("Ranged Attack Attempt");
+            var ranged = RangedAttackAction as IRangedAction;
+
+            if (ranged != null)
+            {
+                targetTile = ranged.FindTarget(gridUnit, direction);
+                if (targetTile != null)
                 {
-                    Vector2 dir = new Vector2(direction.x, direction.y);
-                    RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, 1f, gridLayer);
-                    if (hit.collider == null)
-                        explorationRequest?.Raise();
+                    candidate = RangedAttackAction as IUnitAction;
                 }
             }
-            else if (isRanged)
+            else
             {
-                var ranged = RangedAttackAction as IRangedAction;
-                // fallback: if no dedicated ranged action assigned, try AttackAction
-                if (ranged == null)
-                    ranged = AttackAction as IRangedAction;
-
-                if (ranged != null)
-                {
-                    targetTile = ranged.FindTarget(gridUnit, direction);
-                    if (targetTile != null)
-                    {
-                        Debug.Log("Ranged Attack Attempt");
-                        // prefer the concrete ranged action if available, else use the generic AttackAction
-                        candidate = (RangedAttackAction as IUnitAction) ?? (AttackAction as IUnitAction);
-                    }
-                }
-                else
-                {
-                    Debug.LogWarning("Ranged stance active but no IRangedAction found on assigned actions.");
-                }
+                Debug.LogWarning("Ranged stance active but no IRangedAction found on assigned actions.");
             }
+        }
 
-            if (candidate != null)
-            {
-                candidate.ExecuteAction(targetTile, gridUnit);
-                BeforeEndTurn();
-            }
+        if (candidate != null)
+        {
+            candidate.ExecuteAction(targetTile, gridUnit);
+            BeforeEndTurn();
         }
     }
 
@@ -207,9 +205,21 @@ public class PlayerActionController : MonoBehaviour, ICombatUnit
     #region Preview
     void ShowPreview()
     {
+        if (direction == Vector2Int.zero) { DestroyPreview(); return; }
         TileData targetTile = null;
         if (gridUnit != null && gridUnit.currentTile != null)
-            targetTile = gridUnit.currentTile.GetNeighbors(direction);
+        {
+            if (isRanged)
+            {
+                var ranged = RangedAttackAction as IRangedAction;
+                if (ranged != null)
+                    targetTile = ranged.FindTarget(gridUnit, direction);
+            }
+            else
+            {
+                targetTile = gridUnit.currentTile.GetNeighbors(direction);
+            }
+        }
 
         if (targetTile != null)
         {
