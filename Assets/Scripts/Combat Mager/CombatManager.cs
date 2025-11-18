@@ -48,8 +48,13 @@ public class CombatManager : MonoBehaviour
         PositionUnitsInGrid();
         //create o pathfinding la Flow-field
         gridBuilder.BuildFlowField(hero.currentTile.gridPos);
-        //teste caraaai
-        hero.OnUnitMove += UpdatePathFinding;
+
+        // ensure single subscription for hero movement TESTE CARALHOOOO
+        if (hero != null)
+        {
+            hero.OnUnitMove -= UpdatePathFinding;
+            hero.OnUnitMove += UpdatePathFinding;
+        }
 
         //gera o round e turnos
         GenerateRound();
@@ -134,7 +139,7 @@ public class CombatManager : MonoBehaviour
         gridBuilder.BuildFlowField(hero.currentTile.gridPos);
     }
 
-    private void EndCombat()
+    public void EndCombat()
     {
         if (hero != null)
         {
@@ -146,6 +151,23 @@ public class CombatManager : MonoBehaviour
             gridBuilder.DestroyPathDistanceNumber();
         }
 
+        // unsubscribe all unit/obstacle events to avoid duplicate subscriptions on re-detect
+        foreach (var u in allUnits)
+        {
+            if (u != null)
+                u.OnUnitDeath -= RemoveUnit;
+        }
+
+        foreach (var o in allObstacles)
+        {
+            if (o != null)
+                o.OnObstacleDestruction -= RemoveObstacle;
+        }
+
+        allUnits.Clear();
+        allObstacles.Clear();
+        // reset hero reference so next encounter starts clean
+        hero = null;
         explorationRequest.Raise();
     }
 
@@ -155,35 +177,78 @@ public class CombatManager : MonoBehaviour
     //detecta as unidades dentro do grid para adicionar a lista de unidades.
     void DetectUnitsInGrid()
     {
-        //limpa a lista
-        allUnits.Clear();
-        // also clear obstacles list to avoid duplicates when re-detecting
-        allObstacles.Clear();
-        //pegar o tamanho do grid la na classe
+        // get grid bounds and overlaps
         Bounds gridBounds = gridBuilder.GetGridBounds();
         //usa physics 2D para detectar collisao com as unidades no grid
         Collider2D[] hits = Physics2D.OverlapBoxAll(gridBounds.center, gridBounds.size, 0f, unitLayer);
-        //verifica dentro deste array de hits cada coisa que pegou e se tem a classe GridUnit, se tiver, vai jogar
+
+        // collect unique results first (OverlapBoxAll may return multiple colliders per unit)
+        var foundUnits = new List<GridUnit>();
+        var foundObstacles = new List<GridObstacle>();
+
         foreach (var hit in hits)
         {
-            if (hit.transform.root.GetComponentInChildren<GridUnit>() is GridUnit unit)
+            var unit = hit.transform.root.GetComponentInChildren<GridUnit>();
+            if (unit is GridUnit gUnit && !foundUnits.Contains(gUnit))
             {
-                //Procurando por Tag o hero, meio dark
-                if (unit.CompareTag("Player")) hero = unit;
-
-                allUnits.Add(unit);
-                unit.OnUnitDeath += RemoveUnit;
+                foundUnits.Add(gUnit);
             }
 
-            if (hit.transform.root.GetComponentInChildren<GridObstacle>() is GridObstacle obstacle)
+            var obstacle = hit.transform.root.GetComponentInChildren<GridObstacle>();
+            if (obstacle is GridObstacle gObs && !foundObstacles.Contains(gObs))
             {
-                // avoid adding the same obstacle multiple times
-                if (!allObstacles.Contains(obstacle))
-                {
-                    allObstacles.Add(obstacle);
-                    obstacle.OnObstacleDestruction += RemoveObstacle;
-                }
+                foundObstacles.Add(gObs);
             }
+        }
+
+        // Unsubscribe old handlers from current lists to avoid duplicates
+        foreach (var u in allUnits)
+        {
+            if (u != null)
+                u.OnUnitDeath -= RemoveUnit;
+        }
+        foreach (var o in allObstacles)
+        {
+            if (o != null)
+                o.OnObstacleDestruction -= RemoveObstacle;
+        }
+
+        // replace lists with the deduplicated found lists
+        allUnits.Clear();
+        allObstacles.Clear();
+        hero = null;
+
+        // assign found units and subscribe handlers once
+        foreach (var gUnit in foundUnits)
+        {
+            if (gUnit == null) continue;
+
+            if (gUnit.CompareTag("Player"))
+                hero = gUnit;
+
+            // ensure single subscription
+            gUnit.OnUnitDeath -= RemoveUnit;
+            gUnit.OnUnitDeath += RemoveUnit;
+
+            allUnits.Add(gUnit);
+        }
+
+        // assign found obstacles and subscribe handlers once
+        foreach (var gObs in foundObstacles)
+        {
+            if (gObs == null) continue;
+
+            gObs.OnObstacleDestruction -= RemoveObstacle;
+            gObs.OnObstacleDestruction += RemoveObstacle;
+
+            allObstacles.Add(gObs);
+        }
+
+        // ensure hero movement handler is only subscribed once
+        if (hero != null)
+        {
+            hero.OnUnitMove -= UpdatePathFinding;
+            hero.OnUnitMove += UpdatePathFinding;
         }
     }
 

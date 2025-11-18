@@ -818,6 +818,7 @@ GameObject:
   - component: {fileID: 303324137}
   - component: {fileID: 303324139}
   - component: {fileID: 303324138}
+  - component: {fileID: 303324140}
   m_Layer: 3
   m_Name: Combat
   m_TagString: Player
@@ -876,6 +877,7 @@ MonoBehaviour:
   tileOff: {fileID: 3081079791555589152, guid: 1ec1990d122f82b4f86effaa25379e12, type: 3}
   MoveAction: {fileID: 303324139}
   AttackAction: {fileID: 303324138}
+  RangedAttackAction: {fileID: 303324140}
   explorationRequest: {fileID: 11400000, guid: 10ac21febb5a51b44bf257a178f7c827, type: 2}
 --- !u!114 &303324138
 MonoBehaviour:
@@ -901,6 +903,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d216e134a38be841852af507f7fa764, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &303324140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 303324134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 828be28a60e7eac4f8f1c5cb565801a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCombatRangedAttack
+  maxRange: 3
 --- !u!1 &314894939
 GameObject:
   m_ObjectHideFlags: 0
@@ -6079,7 +6094,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4811111843156259392, guid: 5f195fbb04ed1184e8b2da00e1c1f009, type: 3}
       propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4811111843156259392, guid: 5f195fbb04ed1184e8b2da00e1c1f009, type: 3}
       propertyPath: responses.Array.data[1].onEnter.m_PersistentCalls.m_Calls.Array.size
@@ -6087,23 +6102,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4811111843156259392, guid: 5f195fbb04ed1184e8b2da00e1c1f009, type: 3}
       propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4811111843156259392, guid: 5f195fbb04ed1184e8b2da00e1c1f009, type: 3}
-      propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4811111843156259392, guid: 5f195fbb04ed1184e8b2da00e1c1f009, type: 3}
-      propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4811111843156259392, guid: 5f195fbb04ed1184e8b2da00e1c1f009, type: 3}
+      propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4811111843156259392, guid: 5f195fbb04ed1184e8b2da00e1c1f009, type: 3}
+      propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1337252596}
     - target: {fileID: 4811111843156259392, guid: 5f195fbb04ed1184e8b2da00e1c1f009, type: 3}
-      propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 1337252594}
     - target: {fileID: 4811111843156259392, guid: 5f195fbb04ed1184e8b2da00e1c1f009, type: 3}
+      propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 1337252596}
+    - target: {fileID: 4811111843156259392, guid: 5f195fbb04ed1184e8b2da00e1c1f009, type: 3}
       propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: DestroyPathDistanceNumber
+      value: set_enabled
       objectReference: {fileID: 0}
     - target: {fileID: 4811111843156259392, guid: 5f195fbb04ed1184e8b2da00e1c1f009, type: 3}
       propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
@@ -6111,19 +6134,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4811111843156259392, guid: 5f195fbb04ed1184e8b2da00e1c1f009, type: 3}
       propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
-      value: set_enabled
+      value: EndCombat
       objectReference: {fileID: 0}
     - target: {fileID: 4811111843156259392, guid: 5f195fbb04ed1184e8b2da00e1c1f009, type: 3}
       propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: TacticalGridBuilder, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 4811111843156259392, guid: 5f195fbb04ed1184e8b2da00e1c1f009, type: 3}
-      propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
       value: UnityEngine.Behaviour, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 4811111843156259392, guid: 5f195fbb04ed1184e8b2da00e1c1f009, type: 3}
-      propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
+      propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
       value: TacticalGridBuilder, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4811111843156259392, guid: 5f195fbb04ed1184e8b2da00e1c1f009, type: 3}
+      propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
+      value: CombatManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 4811111843156259392, guid: 5f195fbb04ed1184e8b2da00e1c1f009, type: 3}
       propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_BoolArgument
@@ -6131,7 +6154,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4811111843156259392, guid: 5f195fbb04ed1184e8b2da00e1c1f009, type: 3}
       propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_BoolArgument
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7743511848295070241, guid: 5f195fbb04ed1184e8b2da00e1c1f009, type: 3}
       propertyPath: m_LocalPosition.x

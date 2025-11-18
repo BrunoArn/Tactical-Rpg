@@ -18,7 +18,7 @@ public class GameStateManager : MonoBehaviour
         gameState.SetValue(GameState.Pause);
     }
 
-    void Awake()
+    void Start()
     {
         //starta de caozada, para teste somente
         gameState.SetValue(GameState.Exploration);
