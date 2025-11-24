@@ -151,23 +151,7 @@ public class CombatManager : MonoBehaviour
             gridBuilder.DestroyPathDistanceNumber();
         }
 
-        // unsubscribe all unit/obstacle events to avoid duplicate subscriptions on re-detect
-        foreach (var u in allUnits)
-        {
-            if (u != null)
-                u.OnUnitDeath -= RemoveUnit;
-        }
-
-        foreach (var o in allObstacles)
-        {
-            if (o != null)
-                o.OnObstacleDestruction -= RemoveObstacle;
-        }
-
-        allUnits.Clear();
-        allObstacles.Clear();
-        // reset hero reference so next encounter starts clean
-        hero = null;
+        ResetLists();
         explorationRequest.Raise();
     }
 
@@ -186,9 +170,6 @@ public class CombatManager : MonoBehaviour
         var foundUnits = new List<GridUnit>();
         var foundObstacles = new List<GridObstacle>();
 
-        // When colliders are on child objects, use GetComponentInParent to find the
-        // logical unit/obstacle component. Also deduplicate by instance id because
-        // a single unit/obstacle may produce multiple collider hits.
         var foundUnitIds = new HashSet<int>();
         var foundObstacleIds = new HashSet<int>();
 
@@ -196,7 +177,7 @@ public class CombatManager : MonoBehaviour
         {
             if (hit == null) continue;
 
-            var unit = hit.transform.GetComponentInParent<GridUnit>();
+            var unit = hit.transform.root.GetComponentInChildren<GridUnit>();
             if (unit != null)
             {
                 var id = unit.GetInstanceID();
@@ -212,24 +193,7 @@ public class CombatManager : MonoBehaviour
                     foundObstacles.Add(obstacle);
             }
         }
-
-        // Unsubscribe old handlers from current lists to avoid duplicates
-        foreach (var u in allUnits)
-        {
-            if (u != null)
-                u.OnUnitDeath -= RemoveUnit;
-        }
-        foreach (var o in allObstacles)
-        {
-            if (o != null)
-                o.OnObstacleDestruction -= RemoveObstacle;
-        }
-
-        // replace lists with the deduplicated found lists
-        allUnits.Clear();
-        allObstacles.Clear();
-        hero = null;
-
+        ResetLists();
         // assign found units and subscribe handlers once
         foreach (var gUnit in foundUnits)
         {
@@ -329,6 +293,25 @@ public class CombatManager : MonoBehaviour
                 obstacle.transform.root.position = tileData.worldPos;
             }
         }
+    }
+
+    private void ResetLists() {
+        // Unsubscribe old handlers from current lists to avoid duplicates
+        foreach (var u in allUnits)
+        {
+            if (u != null)
+                u.OnUnitDeath -= RemoveUnit;
+        }
+        foreach (var o in allObstacles)
+        {
+            if (o != null)
+                o.OnObstacleDestruction -= RemoveObstacle;
+        }
+
+        // replace lists with the deduplicated found lists
+        allUnits.Clear();
+        allObstacles.Clear();
+        hero = null;
     }
 
 
