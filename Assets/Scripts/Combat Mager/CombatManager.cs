@@ -186,18 +186,30 @@ public class CombatManager : MonoBehaviour
         var foundUnits = new List<GridUnit>();
         var foundObstacles = new List<GridObstacle>();
 
+        // When colliders are on child objects, use GetComponentInParent to find the
+        // logical unit/obstacle component. Also deduplicate by instance id because
+        // a single unit/obstacle may produce multiple collider hits.
+        var foundUnitIds = new HashSet<int>();
+        var foundObstacleIds = new HashSet<int>();
+
         foreach (var hit in hits)
         {
-            var unit = hit.transform.root.GetComponentInChildren<GridUnit>();
-            if (unit is GridUnit gUnit && !foundUnits.Contains(gUnit))
+            if (hit == null) continue;
+
+            var unit = hit.transform.GetComponentInParent<GridUnit>();
+            if (unit != null)
             {
-                foundUnits.Add(gUnit);
+                var id = unit.GetInstanceID();
+                if (foundUnitIds.Add(id))
+                    foundUnits.Add(unit);
             }
 
-            var obstacle = hit.transform.root.GetComponentInChildren<GridObstacle>();
-            if (obstacle is GridObstacle gObs && !foundObstacles.Contains(gObs))
+            var obstacle = hit.transform.GetComponentInParent<GridObstacle>();
+            if (obstacle != null)
             {
-                foundObstacles.Add(gObs);
+                var id = obstacle.GetInstanceID();
+                if (foundObstacleIds.Add(id))
+                    foundObstacles.Add(obstacle);
             }
         }
 
