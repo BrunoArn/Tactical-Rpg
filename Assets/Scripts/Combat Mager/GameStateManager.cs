@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum GameState {Exploration, Combat, Pause }
+public enum GameState {Exploration, Combat, Pause, Null }
 
 public class GameStateManager : MonoBehaviour
 {
@@ -15,7 +15,7 @@ public class GameStateManager : MonoBehaviour
     {
         gameState.OnValueChanged.RemoveListener(OnGameStateChanged);
         //teste absurdo de noia, so pra nao bugat muito
-        gameState.SetValue(GameState.Pause);
+        gameState.SetValue(GameState.Null);
     }
 
     void Start()

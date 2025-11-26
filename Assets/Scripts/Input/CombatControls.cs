@@ -208,6 +208,17 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
                     ""action"": ""RangedStance"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1401255c-33be-43d0-9b47-33ac7be6574e"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RangedStance"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
