@@ -302,6 +302,34 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Ui"",
+            ""id"": ""c10325f9-ea12-4b86-85bd-673e0c7e4adf"",
+            ""actions"": [
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""512fbdd4-68e7-40b8-9a10-2b5a35feee39"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""97921953-a281-41ce-b788-5e6ccf8f36f3"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -315,12 +343,16 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
         m_Exploration = asset.FindActionMap("Exploration", throwIfNotFound: true);
         m_Exploration_Move = m_Exploration.FindAction("Move", throwIfNotFound: true);
         m_Exploration_Interact = m_Exploration.FindAction("Interact", throwIfNotFound: true);
+        // Ui
+        m_Ui = asset.FindActionMap("Ui", throwIfNotFound: true);
+        m_Ui_Pause = m_Ui.FindAction("Pause", throwIfNotFound: true);
     }
 
     ~@CombatControls()
     {
         UnityEngine.Debug.Assert(!m_Combat.enabled, "This will cause a leak and performance issues, CombatControls.Combat.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Exploration.enabled, "This will cause a leak and performance issues, CombatControls.Exploration.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Ui.enabled, "This will cause a leak and performance issues, CombatControls.Ui.Disable() has not been called.");
     }
 
     /// <summary>
@@ -617,6 +649,102 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="ExplorationActions" /> instance referencing this action map.
     /// </summary>
     public ExplorationActions @Exploration => new ExplorationActions(this);
+
+    // Ui
+    private readonly InputActionMap m_Ui;
+    private List<IUiActions> m_UiActionsCallbackInterfaces = new List<IUiActions>();
+    private readonly InputAction m_Ui_Pause;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "Ui".
+    /// </summary>
+    public struct UiActions
+    {
+        private @CombatControls m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public UiActions(@CombatControls wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "Ui/Pause".
+        /// </summary>
+        public InputAction @Pause => m_Wrapper.m_Ui_Pause;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_Ui; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="UiActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(UiActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="UiActions" />
+        public void AddCallbacks(IUiActions instance)
+        {
+            if (instance == null || m_Wrapper.m_UiActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_UiActionsCallbackInterfaces.Add(instance);
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="UiActions" />
+        private void UnregisterCallbacks(IUiActions instance)
+        {
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="UiActions.UnregisterCallbacks(IUiActions)" />.
+        /// </summary>
+        /// <seealso cref="UiActions.UnregisterCallbacks(IUiActions)" />
+        public void RemoveCallbacks(IUiActions instance)
+        {
+            if (m_Wrapper.m_UiActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="UiActions.AddCallbacks(IUiActions)" />
+        /// <seealso cref="UiActions.RemoveCallbacks(IUiActions)" />
+        /// <seealso cref="UiActions.UnregisterCallbacks(IUiActions)" />
+        public void SetCallbacks(IUiActions instance)
+        {
+            foreach (var item in m_Wrapper.m_UiActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_UiActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="UiActions" /> instance referencing this action map.
+    /// </summary>
+    public UiActions @Ui => new UiActions(this);
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Combat" which allows adding and removing callbacks.
     /// </summary>
@@ -667,5 +795,20 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnInteract(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Ui" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="UiActions.AddCallbacks(IUiActions)" />
+    /// <seealso cref="UiActions.RemoveCallbacks(IUiActions)" />
+    public interface IUiActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Pause" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPause(InputAction.CallbackContext context);
     }
 }

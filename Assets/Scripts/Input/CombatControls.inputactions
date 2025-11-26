@@ -216,6 +216,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Ui",
+            "id": "c10325f9-ea12-4b86-85bd-673e0c7e4adf",
+            "actions": [
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "512fbdd4-68e7-40b8-9a10-2b5a35feee39",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "97921953-a281-41ce-b788-5e6ccf8f36f3",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
