@@ -22,7 +22,7 @@ public class PickUps : MonoBehaviour
 
 
     [Header("Super teste somente")]
-    private Inventory inventory;
+    private InventoryManager inventory;
     [SerializeField] GameEvent inventoryUIUpdate;
 
 
@@ -61,7 +61,7 @@ public class PickUps : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player") && collision.GetComponent<BoxCollider2D>() != null)
         {
-            inventory = collision.transform.root.GetComponentInChildren<Inventory>();
+            inventory = collision.transform.root.GetComponentInChildren<InventoryManager>();
             bool added = inventory.AddItem(item, quantityDropped);
             if (added)
             {

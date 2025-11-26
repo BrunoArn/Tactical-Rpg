@@ -4,14 +4,16 @@ using UnityEngine;
 
 public class InventoryUi : MonoBehaviour
 {
-    [SerializeField] Inventory inventory;
+    [SerializeField] InventoryContainer inventory;
     private List<InventorySlotUi> slotsUI;
-    [SerializeField] private IntVariable maxInventorySlots;
 
     void Awake()
     {
         slotsUI = GetAllSlotsUI();
-        maxInventorySlots.SetValue(slotsUI.Count);
+    }
+
+    private void OnEnable() {
+        Redraw();
     }
 
     List<InventorySlotUi> GetAllSlotsUI()
@@ -32,8 +34,8 @@ public class InventoryUi : MonoBehaviour
     {
         for (int i = 0; i < slotsUI.Count; i++)
         {
-            if (i < inventory.items.Count)
-                slotsUI[i].Set(inventory.items[i]);
+            if (i < inventory.slots.Count)
+                slotsUI[i].Set(inventory.slots[i]);
             else
                 slotsUI[i].Clear();
         }
