@@ -59,10 +59,38 @@ public class RecipeDatabase : MonoBehaviour
         }
         return true;
     }
+
     /// <summary>
-    /// Returns the subset of recipes available at <paramref name="station"/> that
-    /// the provided <paramref name="inventory"/> currently has the ingredients to craft.
+    /// Version of CanCraft that accepts an <see cref="InventoryManager"/>,
+    /// which aggregates both the quick bar and the backpack. The method checks
+    /// the total quantity across both containers.
+    /// </summary>
+    public bool CanCraft(InventoryManager manager, Recipe recipe, StationType station)
+    {
+        if (manager == null) return false;
+
+        // station check first
+        if (recipe.stationType != StationType.Null && recipe.stationType != station)
+            return false;
+
+        // check aggregated ingredients
+        foreach (var ingredient in recipe.ingredients)
+        {
+            if (manager.GetItemQuantity(ingredient.item) < ingredient.quantity)
+                return false;
+        }
+        return true;
+    }
+    /// <summary>
+    /// Returns craftable recipes using an individual <see cref="InventoryContainer"/>.
     /// </summary>
     public IEnumerable<Recipe> GetCraftableRecipes(InventoryContainer inventory, StationType station) =>
         ForStation(station).Where(r => CanCraft(inventory, r, station));
+
+    /// <summary>
+    /// Returns craftable recipes when using an <see cref="InventoryManager"/>
+    /// (aggregation of quick bar + backpack).
+    /// </summary>
+    public IEnumerable<Recipe> GetCraftableRecipes(InventoryManager manager, StationType station) =>
+        ForStation(station).Where(r => CanCraft(manager, r, station));
 }
