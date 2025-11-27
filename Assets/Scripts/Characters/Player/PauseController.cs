@@ -5,10 +5,10 @@ public class PauseController : MonoBehaviour
 {
 
     [SerializeField] GameStateVariable gameState;
+    //referencia pro ultimo state do jogo
     private GameState previousGameState;
 
     private CombatControls controls;
-    //referencia pro ultimo state do jogo
 
     void Awake()
     {

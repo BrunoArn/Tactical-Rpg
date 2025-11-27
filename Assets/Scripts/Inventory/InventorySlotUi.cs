@@ -7,6 +7,7 @@ public class InventorySlotUi : MonoBehaviour
 {
     [SerializeField] private Image icon;
     [SerializeField] private TextMeshProUGUI quantityText;
+    [SerializeField] private GameObject highLight;
 
     public void Set(InventorySlot slot)
     {
@@ -21,5 +22,10 @@ public class InventorySlotUi : MonoBehaviour
         icon.sprite = null;
         icon.enabled = false;
         quantityText.text = "";
+    }
+
+    public void SetHighlight(bool value)
+    {
+        highLight.SetActive(value);
     }
 }
