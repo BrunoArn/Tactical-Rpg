@@ -32,4 +32,22 @@ public class InventoryContainer : MonoBehaviour
             if (slot.quantity <= 0) slots.Remove(slot);
         }
     }
+
+    public int GetItemQuantity(ItemData item)
+    {
+        var slot = slots.Find(s => s.item == item);
+        return slot?.quantity ?? 0;
+    }
+
+    public bool CanRemove(ItemData item, int quantity)
+    {
+        return GetItemQuantity(item) >= quantity;
+    }
+
+    public bool TryConsume(ItemData item, int quantity)
+    {
+        if(!CanRemove(item, quantity)) return false;
+        RemoveItem(item, quantity);
+        return true;
+    }
 }
