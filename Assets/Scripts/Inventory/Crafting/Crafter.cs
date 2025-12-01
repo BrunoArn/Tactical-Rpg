@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class Crafter : MonoBehaviour
 {
-    [SerializeField] private RecipeDatabase recipeDatabase;
-    [SerializeField] private InventoryManager inventoryManager; //backpack + quickbar
-    [SerializeField] private StationType currentStationType = StationType.Null;
+    [SerializeField] public RecipeDatabase recipeDatabase;
+    [SerializeField] public InventoryManager inventoryManager; //backpack + quickbar
+    [SerializeField] public StationType currentStationType = StationType.Null;
 
     [SerializeField] private GameEvent redrawUIEvent;
 
@@ -22,7 +22,7 @@ public class Crafter : MonoBehaviour
 
         if(!inventoryManager.AddItem(recipe.resultItem, recipe.resultQuantity)) return false;
 
-        
+        redrawUIEvent.Raise();
         return true;
     }
 
@@ -30,6 +30,5 @@ public class Crafter : MonoBehaviour
     public void EquipWeapon()
     {
         TryCraft(recipeDatabase.All[0]);
-        redrawUIEvent.Raise();
     }
 }
