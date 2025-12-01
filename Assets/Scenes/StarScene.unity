@@ -313,6 +313,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RecipeDatabase
   recipes:
   - {fileID: 11400000, guid: 6344536eceab0da41aaef82344e87fa0, type: 2}
+  - {fileID: 11400000, guid: 703ec05229588104e9038bb46b9bbb5e, type: 2}
 --- !u!1 &288226214
 GameObject:
   m_ObjectHideFlags: 0

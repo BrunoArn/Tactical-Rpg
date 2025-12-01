@@ -14,35 +14,19 @@ using UnityEngine.UI;
 /// </summary>
 public class CraftingButtonUi : MonoBehaviour
 {
-    /// <summary>
-    /// Title text used to show the result item's name.
-    /// </summary>
     [SerializeField] private TextMeshProUGUI titleText;
-
+    [SerializeField] private Image iconImage;
     // TODO: Consider showing the recipe's ingredients text using this field
     // [SerializeField] private TextMeshProUGUI ingredientsText;
-
-    /// <summary>
-    /// The actual button the player clicks to perform crafting.
-    /// </summary>
     [SerializeField] private Button craftButton;
 
-    /// <summary>
-    /// Configure the UI for a specific <paramref name="recipe"/>.
-    /// The supplied <paramref name="onCLick"/> callback will be invoked when the
-    /// player presses the configured button.
-    /// </summary>
-    /// <remarks>
-    /// This method clears any existing listeners on the button before adding the
-    /// new one. If <paramref name="recipe"/> is null the method returns early
-    /// and does not modify the button.
-    /// </remarks>
     public void Configure(Recipe recipe, Action onCLick)
     {
         if (recipe == null) return;
 
         // show the resulting item's name for clarity
         titleText.text = recipe.resultItem.itemName;
+        iconImage.sprite = recipe.resultItem.icon;
 
         // make sure only the fresh click handler is attached
         craftButton.onClick.RemoveAllListeners();

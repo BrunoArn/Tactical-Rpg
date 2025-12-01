@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: stick
   m_EditorClassIdentifier: 
   itemName: Stick Sword
+  itemType: 0
+  icon: {fileID: 21300000, guid: c94613b00c8dc014fabfd654df549367, type: 3}
   slotType: 0
-  icon: {fileID: 0}
   damage: 4
   range: 1
   attackSpeed: 10

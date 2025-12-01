@@ -347,4 +347,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CraftingButtonUi
   titleText: {fileID: 4855970159583245637}
+  iconImage: {fileID: 354066028271400022}
   craftButton: {fileID: 8891339840311793475}
