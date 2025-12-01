@@ -3,10 +3,15 @@ using UnityEngine.InputSystem;
 
 public class InventoryInteractionController : MonoBehaviour
 {
+    //rever essas referencias
+    //rever se é o inpout que precisa ter o highlight, ou o inventoryUi?
     [SerializeField] private BackpackInputUi backpackInputUi;
     [SerializeField] private QuickbarInputUi quickbarInputUi;
     [SerializeField] private InventoryManager InventoryManager;
+    //esse cara é pra dar redraw só. mandado
+    [SerializeField] private InventoryUi inventoryUi;
     [SerializeField] private Equipment equipment;
+    //esse ta absurdo. tem que ter uam forma melhor de saber quando ta ou nao
     [SerializeField] private bool isQuickbar;
 
     private CombatControls controls;
@@ -68,6 +73,7 @@ public class InventoryInteractionController : MonoBehaviour
                 {
                     equipment.Equip(slot.item as EquipmentItem);
                     InventoryManager.RemoveItem(slot.item, 1);
+                    inventoryUi.Redraw();
                 }
                 break;
             default:
