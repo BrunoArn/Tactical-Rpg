@@ -5,9 +5,6 @@ public class Equipment : MonoBehaviour
 {
     private Dictionary<EquipmentSlotType, EquipmentItem> equippedGear = new();
 
-    [Header("Só para testes, taca arma manualmente")]
-    [SerializeField] EquipmentItem weapon;
-
     public void Equip(EquipmentItem item)
     {
         equippedGear[item.slotType] = item;
@@ -23,10 +20,4 @@ public class Equipment : MonoBehaviour
         return 0;
     }
 
-    /////testeee
-    [ContextMenu("Equip WEapon")]
-    public void EquipWeapon()
-    {
-        equippedGear[weapon.slotType] = weapon;
-    }
 }

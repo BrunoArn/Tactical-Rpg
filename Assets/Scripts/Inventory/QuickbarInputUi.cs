@@ -1,12 +1,28 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(InventoryUi))]
-public class QuickbarInputUi : MonoBehaviour
+public class QuickbarInputUi : MonoBehaviour, IInventorySelectionUi
 {
    [SerializeField] private InventoryUi quickbarUi;
     private CombatControls controls;
     private int selectedIndex;
+
+    public InventorySlotUi CurrentSlotUi
+    {
+        get
+        {
+            if (quickbarUi?.slotsUI == null) return null;
+            if (selectedIndex < 0 || selectedIndex >= quickbarUi.slotsUI.Count) return null;
+            return quickbarUi.slotsUI[selectedIndex];
+        }
+    }
+
+    public IReadOnlyList<InventorySlotUi> Slots => throw new System.NotImplementedException();
+
+
+    
 
     private void Awake() {
         controls = new CombatControls();
@@ -60,5 +76,12 @@ public class QuickbarInputUi : MonoBehaviour
         {
             quickbarUi.slotsUI[i].SetHighlight(false);
         }
+    }
+
+    public void Redraw()
+    {
+        quickbarUi?.Redraw();
+        // keep selection in range and re-apply highlight
+        TryInitHighlight();
     }
 }

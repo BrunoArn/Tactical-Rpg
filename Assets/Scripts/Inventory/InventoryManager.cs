@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
-    [SerializeField] InventoryContainer quickBar;
-    [SerializeField] InventoryContainer backpack;
+    [SerializeField] public InventoryContainer quickBar;
+    [SerializeField] public InventoryContainer backpack;
 
     public bool AddItem(ItemData item, int quantity)
     {

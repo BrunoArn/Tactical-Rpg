@@ -9,10 +9,14 @@ public class InventorySlotUi : MonoBehaviour
     [SerializeField] private TextMeshProUGUI quantityText;
     [SerializeField] private GameObject highLight;
 
+    public InventorySlot slotData { get; private set; }
+
+
     public void Set(InventorySlot slot)
     {
         icon.sprite = slot.item.icon;
         icon.enabled = true;
+        slotData = slot;
 
         quantityText.text = slot.quantity > 1 ? slot.quantity.ToString() : "";
     }
@@ -21,6 +25,7 @@ public class InventorySlotUi : MonoBehaviour
     {
         icon.sprite = null;
         icon.enabled = false;
+        slotData = null;
         quantityText.text = "";
     }
 

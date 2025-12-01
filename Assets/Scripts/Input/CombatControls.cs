@@ -344,6 +344,15 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""ef44b22f-4092-4f27-916d-32285d9cfe99"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -467,6 +476,17 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
                     ""action"": ""QuickBarNavigate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2bc9e6f2-211c-4ece-b3cc-61f1de454e4a"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -487,6 +507,7 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
         m_Ui_Pause = m_Ui.FindAction("Pause", throwIfNotFound: true);
         m_Ui_Navigate = m_Ui.FindAction("Navigate", throwIfNotFound: true);
         m_Ui_QuickBarNavigate = m_Ui.FindAction("QuickBarNavigate", throwIfNotFound: true);
+        m_Ui_Interact = m_Ui.FindAction("Interact", throwIfNotFound: true);
     }
 
     ~@CombatControls()
@@ -797,6 +818,7 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Ui_Pause;
     private readonly InputAction m_Ui_Navigate;
     private readonly InputAction m_Ui_QuickBarNavigate;
+    private readonly InputAction m_Ui_Interact;
     /// <summary>
     /// Provides access to input actions defined in input action map "Ui".
     /// </summary>
@@ -820,6 +842,10 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Ui/QuickBarNavigate".
         /// </summary>
         public InputAction @QuickBarNavigate => m_Wrapper.m_Ui_QuickBarNavigate;
+        /// <summary>
+        /// Provides access to the underlying input action "Ui/Interact".
+        /// </summary>
+        public InputAction @Interact => m_Wrapper.m_Ui_Interact;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -855,6 +881,9 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
             @QuickBarNavigate.started += instance.OnQuickBarNavigate;
             @QuickBarNavigate.performed += instance.OnQuickBarNavigate;
             @QuickBarNavigate.canceled += instance.OnQuickBarNavigate;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
         }
 
         /// <summary>
@@ -875,6 +904,9 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
             @QuickBarNavigate.started -= instance.OnQuickBarNavigate;
             @QuickBarNavigate.performed -= instance.OnQuickBarNavigate;
             @QuickBarNavigate.canceled -= instance.OnQuickBarNavigate;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
         }
 
         /// <summary>
@@ -987,5 +1019,12 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnQuickBarNavigate(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Interact" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnInteract(InputAction.CallbackContext context);
     }
 }

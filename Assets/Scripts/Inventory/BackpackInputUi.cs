@@ -1,15 +1,28 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 [RequireComponent(typeof(InventoryUi))]
-public class BackpackInputUi : MonoBehaviour
+public class BackpackInputUi : MonoBehaviour, IInventorySelectionUi
 {
     [SerializeField] private InventoryUi inventoryUi;
     [SerializeField] private int columns = 6;
 
     private CombatControls controls;
     private int selectedIndex = 0;
+
+    public InventorySlotUi CurrentSlotUi
+    {
+        get
+        {
+            if (inventoryUi?.slotsUI == null) return null;
+            if (selectedIndex < 0 || selectedIndex >= inventoryUi.slotsUI.Count) return null;
+            return inventoryUi.slotsUI[selectedIndex];
+        }
+    }
+
+    public IReadOnlyList<InventorySlotUi> Slots => throw new System.NotImplementedException();
 
     private void Awake()
     {
@@ -63,5 +76,10 @@ public class BackpackInputUi : MonoBehaviour
         {
             inventoryUi.slotsUI[i].SetHighlight(false);
         }
+    }
+
+    public void Redraw()
+    {
+        inventoryUi?.Redraw();
     }
 }
