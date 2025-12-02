@@ -2,48 +2,44 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Simple inventory container that holds a list of <see cref="InventorySlot"/> entries.
-///
-/// Responsibilities:
-/// - Maintain the list of items and their quantities
-/// - Provide helper APIs for adding, removing and consuming items
-/// - Enforce a capacity limit for how many distinct slots can be stored
+/// Inventory container for managing item slots and quantities.
 /// </summary>
 public class InventoryContainer : MonoBehaviour
 {
     /// <summary>
-    /// The list of active inventory slots. Each slot maps an <see cref="ItemData"/>
-    /// to a quantity.
+    /// List of item slots in the inventory.
     /// </summary>
     public List<InventorySlot> slots = new();
 
     /// <summary>
-    /// Maximum number of distinct item slots the container can hold.
-    /// This limits how many different item types can be present simultaneously.
+    /// Max number of distinct item slots.
     /// </summary>
     [SerializeField] int capacity = 10;
 
     /// <summary>
-    /// Returns true when the container has reached its maximum number of distinct
-    /// item slots (capacity).
+    /// True if inventory is at max capacity.
     /// </summary>
     public bool IsFull => slots.Count >= capacity;
 
     /// <summary>
-    /// Attempt to add <paramref name="quantity"/> of <paramref name="item"/> to
-    /// the container.
-    ///
-    /// Behavior:
-    /// - If the item already exists in an existing slot, the quantity of that slot
-    ///   is increased and the method returns true.
-    /// - If the item does not exist and the container is not full, a new
-    ///   <see cref="InventorySlot"/> is created and the method returns true.
-    /// - If the container is full and the item does not already exist, the method
-    ///   returns false and the item is not added.
+    /// Adds quantity of item. Stacks if possible, or adds new slot if space.
+    /// Returns true if added.
     /// </summary>
     /// <returns>True when the items were added (or merged into an existing slot); false otherwise.</returns>
     public bool TryAdd(ItemData item, int quantity)
     {
+        if (item == null || quantity <= 0) return false;
+
+        if (!item.isStackable)
+        {
+            for (int i = 0; i < quantity; i++)
+            {
+                if (IsFull) return false;
+                slots.Add(new InventorySlot(item, 1));
+            }
+            return true;
+        }
+
         var slot = slots.Find(s => s.item == item);
         if (slot != null)
         {
@@ -51,7 +47,7 @@ public class InventoryContainer : MonoBehaviour
             slot.quantity += quantity;
             return true;
         }
-        if(IsFull) return false;
+        if (IsFull) return false;
         //adiciona novo item no slots
         slots.Add(new InventorySlot(item, quantity));
         return true;
@@ -63,28 +59,53 @@ public class InventoryContainer : MonoBehaviour
     /// </summary>
     public void RemoveItem(ItemData item, int quantity = 1)
     {
-        var slot = slots.Find(s => s.item == item);
-        if (slot != null)
+        if (item == null || quantity <= 0) return;
+
+        if (item.isStackable)
         {
+            var slot = slots.Find(s => s.item == item);
+            if (slot == null) return;
+
             slot.quantity -= quantity;
             if (slot.quantity <= 0) slots.Remove(slot);
+            return;
+        }
+
+        for (int i = slots.Count - 1; i >= 0 && quantity > 0; i--)
+        {
+            var slot = slots[i];
+            if (slot.item != item) continue;
+
+            int remove = Mathf.Min(slot.quantity, quantity);
+            slot.quantity -= remove;
+            quantity -= remove;
+
+            if (slot.quantity <= 0) slots.RemoveAt(i);
         }
     }
 
     /// <summary>
-    /// Returns the current quantity of <paramref name="item"/> in the container
-    /// (0 when no slot for this item exists).
+    /// Gets current quantity of item in inventory.
     /// </summary>
     public int GetItemQuantity(ItemData item)
     {
-        var slot = slots.Find(s => s.item == item);
-        return slot?.quantity ?? 0;
+        if (item == null) return 0;
+
+        if (item.isStackable)
+        {
+            return slots.Find(s => s.item == item)?.quantity ?? 0;
+        }
+
+        int total = 0;
+        foreach (var slot in slots)
+        {
+            if (slot.item == item) total += slot.quantity;
+        }
+        return total;
     }
 
     /// <summary>
-    /// Returns true if the container currently contains at least
-    /// <paramref name="quantity"/> of <paramref name="item"/> and the items
-    /// can be removed.
+    /// True if at least quantity of item can be removed.
     /// </summary>
     public bool CanRemove(ItemData item, int quantity)
     {
@@ -92,14 +113,12 @@ public class InventoryContainer : MonoBehaviour
     }
 
     /// <summary>
-    /// Convenience method to attempt to consume <paramref name="quantity"/>
-    /// of <paramref name="item"/>. Uses <see cref="CanRemove"/> to check
-    /// availability and then removes the items if possible.
+    /// Tries to consume quantity of item. Returns true if successful.
     /// </summary>
     /// <returns>True when the items were successfully consumed, false otherwise.</returns>
     public bool TryConsume(ItemData item, int quantity)
     {
-        if(!CanRemove(item, quantity)) return false;
+        if (!CanRemove(item, quantity)) return false;
         RemoveItem(item, quantity);
         return true;
     }
