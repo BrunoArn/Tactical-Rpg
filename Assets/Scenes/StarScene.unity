@@ -498,6 +498,7 @@ MonoBehaviour:
   backpackInputUi: {fileID: 375084670}
   quickbarInputUi: {fileID: 408485817}
   InventoryManager: {fileID: 236428761}
+  redrawEvent: {fileID: 11400000, guid: 437880f7b712d1e42ae85b2b54cbbe8f, type: 2}
   equipment: {fileID: 955823356}
   isQuickbar: 1
 --- !u!1 &303324134

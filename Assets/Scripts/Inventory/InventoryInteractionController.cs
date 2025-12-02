@@ -8,9 +8,11 @@ public class InventoryInteractionController : MonoBehaviour
     [SerializeField] private BackpackInputUi backpackInputUi;
     [SerializeField] private QuickbarInputUi quickbarInputUi;
     [SerializeField] private InventoryManager InventoryManager;
-    //esse cara é pra dar redraw só. mandado
-    [SerializeField] private InventoryUi inventoryUi;
+    [Header("Events")]
+    [SerializeField] private GameEvent redrawEvent;
+    [Header("Interaction References")]
     [SerializeField] private Equipment equipment;
+
     //esse ta absurdo. tem que ter uam forma melhor de saber quando ta ou nao
     [SerializeField] private bool isQuickbar;
 
@@ -71,9 +73,13 @@ public class InventoryInteractionController : MonoBehaviour
                 Debug.Log($"Equipping item: {slot.item.itemName}");
                 if (equipment != null || InventoryManager != null)
                 {
-                    equipment.Equip(slot.item as EquipmentItem);
+                    var previousItem = equipment.Equip(slot.item as EquipmentItem);
                     InventoryManager.RemoveItem(slot.item, 1);
-                    inventoryUi.Redraw();
+                    if (previousItem != null)
+                    {
+                        InventoryManager.AddItem(previousItem, 1);
+                    }
+                    redrawEvent.Raise();
                 }
                 break;
             default:

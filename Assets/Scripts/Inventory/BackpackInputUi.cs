@@ -33,8 +33,7 @@ public class BackpackInputUi : MonoBehaviour, IInventorySelectionUi
     private void OnEnable()
     {
         //test
-        selectedIndex = 0;
-        inventoryUi.slotsUI[selectedIndex].SetHighlight(true);
+        TryInitHighlight();
 
         controls.Ui.Navigate.performed += OnNavigate;
         controls.Ui.Enable();
@@ -68,6 +67,14 @@ public class BackpackInputUi : MonoBehaviour, IInventorySelectionUi
             inventoryUi.slotsUI[selectedIndex].SetHighlight(true);
         }
               
+    }
+
+        private void TryInitHighlight()
+    {
+        if(inventoryUi == null || inventoryUi.slotsUI == null || inventoryUi.slotsUI.Count == 0) return;
+        selectedIndex = Mathf.Clamp(selectedIndex, 0, inventoryUi.slotsUI.Count -1);
+        ClearAllHighlights();
+        inventoryUi.slotsUI[selectedIndex].SetHighlight(true);
     }
 
     private void ClearAllHighlights()

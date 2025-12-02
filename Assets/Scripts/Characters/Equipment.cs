@@ -5,9 +5,15 @@ public class Equipment : MonoBehaviour
 {
     private Dictionary<EquipmentSlotType, EquipmentItem> equippedGear = new();
 
-    public void Equip(EquipmentItem item)
+    public EquipmentItem Equip(EquipmentItem item)
     {
+        if(equippedGear.TryGetValue(item.slotType, out var previousItem))
+        {
+            equippedGear[item.slotType] = item;
+            return previousItem;
+        }
         equippedGear[item.slotType] = item;
+        return null;
     }
 
     //ta pegando somente a arma
