@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8d5cd555059b2db4a87ed5f5e93fce7c, type: 3}
-  m_Name: stick
+  m_Name: Stick Sword
   m_EditorClassIdentifier: 
   itemName: Stick Sword
   itemType: 0

@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 182de8372ab3d794098b49e68cf2b937, type: 3}
-  m_Name: Wooden Sword Recipe
+  m_Name: Wooden Armor Recipe
   m_EditorClassIdentifier: Assembly-CSharp::Recipe
   ingredients:
   - item: {fileID: 11400000, guid: 1fcc81a84a745964caa7210577b80a69, type: 2}
-    quantity: 3
-  resultItem: {fileID: 11400000, guid: ec9837f3bd399e542a900c8c225462e1, type: 2}
+    quantity: 5
+  resultItem: {fileID: 11400000, guid: c8f1f2a9eee174341baa30cde3ae5b9f, type: 2}
   resultQuantity: 1
   stationType: 0

@@ -7,13 +7,29 @@ public class Equipment : MonoBehaviour
 
     public EquipmentItem Equip(EquipmentItem item)
     {
-        if(equippedGear.TryGetValue(item.slotType, out var previousItem))
+        if (equippedGear.TryGetValue(item.slotType, out var previousItem))
         {
             equippedGear[item.slotType] = item;
             return previousItem;
         }
         equippedGear[item.slotType] = item;
         return null;
+    }
+
+    public EquipmentItem Unequip(EquipmentSlotType slotType)
+    {
+        if (equippedGear.TryGetValue(slotType, out var item))
+        {
+            equippedGear.Remove(slotType);
+            return item;
+        }
+        return null;
+    }
+
+    public EquipmentItem GetEquippedItem(EquipmentSlotType slotType)
+    {
+        equippedGear.TryGetValue(slotType, out var equipped);
+        return equipped;
     }
 
     //ta pegando somente a arma
