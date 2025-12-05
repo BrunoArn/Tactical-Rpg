@@ -4465,7 +4465,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 90fb11161dd5f164b89773fc15121e10, type: 2}
     - target: {fileID: 1396777923067032289, guid: 93720ea3885c11c4e8689809c9848f67, type: 3}
       propertyPath: responses.Array.size
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1396777923067032289, guid: 93720ea3885c11c4e8689809c9848f67, type: 3}
       propertyPath: responses.Array.data[1].state
@@ -4517,7 +4517,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1396777923067032289, guid: 93720ea3885c11c4e8689809c9848f67, type: 3}
       propertyPath: responses.Array.data[0].onExit.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ChangeState
+      value: SetActiveNavigator
       objectReference: {fileID: 0}
     - target: {fileID: 1396777923067032289, guid: 93720ea3885c11c4e8689809c9848f67, type: 3}
       propertyPath: responses.Array.data[1].onEnter.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -4526,6 +4526,10 @@ PrefabInstance:
     - target: {fileID: 1396777923067032289, guid: 93720ea3885c11c4e8689809c9848f67, type: 3}
       propertyPath: responses.Array.data[2].onEnter.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1396777923067032289, guid: 93720ea3885c11c4e8689809c9848f67, type: 3}
+      propertyPath: responses.Array.data[0].onEnter.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetActiveNavigator
       objectReference: {fileID: 0}
     - target: {fileID: 1396777923067032289, guid: 93720ea3885c11c4e8689809c9848f67, type: 3}
       propertyPath: responses.Array.data[1].onEnter.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName

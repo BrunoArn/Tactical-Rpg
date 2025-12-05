@@ -10,25 +10,33 @@ public class InventoryInteractionController : MonoBehaviour
     [Space]
     [SerializeField] private InventoryUi quickbarUi;
     [SerializeField] private InventoryManager InventoryManager;
+
     [Header("Events and states")]
     [SerializeField] private GameEvent redrawEvent;
     [SerializeField] private GameStateVariable gameStateVariable;
+
     [Header("Interaction References")]
     [SerializeField] private Equipment equipment;
 
+    private NavigationUI backpackNavigator;
+    private NavigationUI quickbarNavigator;
+    private NavigationUI currentNavigator;
 
     private InputAction currentNavigateAction;
-    private System.Action<InputAction.CallbackContext> currentHandler;
-    private int selectedIndex;
-    private InventorySlotUi highlightedSlotUi; // para usar o item selecionado
 
     private CombatControls controls;
 
     void OnEnable()
     {
         controls = new CombatControls();
+        backpackUi.EnsureSlotsCached();
+        quickbarUi.EnsureSlotsCached();
+        backpackNavigator = new NavigationUI(backpackUi.slotsUI, backpackColumns, 0);
+        quickbarNavigator = new NavigationUI(quickbarUi.slotsUI, quickbarUi.slotsUI.Count, 0);
+
         controls.Ui.Interact.performed += UseSelectedItem;
-        SetNavigatorTarget();
+        SetActiveNavigator();
+
         controls.Ui.Enable();
     }
 
@@ -36,124 +44,46 @@ public class InventoryInteractionController : MonoBehaviour
     {
         controls.Ui.Interact.performed -= UseSelectedItem;
         UnsubscribeNavigate();
+
         controls.Ui.Disable();
         controls.Dispose();
     }
 
-    void OnDestroy()
-    {
-        controls?.Dispose();
-    }
-
-    void Start()
-    {
-        TryInitHighlight();
-    }
-
-    public void ChangeState()
-    {
-        SetNavigatorTarget();
-        TryInitHighlight();
-    }
-
-    private void SetNavigatorTarget()
+    public void SetActiveNavigator()
     {
         UnsubscribeNavigate();
+        currentNavigator?.ClearHighlights();
         switch (gameStateVariable.CurrentState)
         {
             case GameState.Pause:
+                currentNavigator = backpackNavigator;
                 currentNavigateAction = controls.Ui.Navigate;
-                currentHandler = OnNavigatePause;
                 break;
+
             default:
+                currentNavigator = quickbarNavigator;
                 currentNavigateAction = controls.Ui.QuickBarNavigate;
-                currentHandler = OnNavigateQuickBarOnly;
                 break;
         }
 
-        if (currentNavigateAction != null && currentHandler != null)
-            currentNavigateAction.performed += currentHandler;
+        currentNavigator.SetIndex(currentNavigator.CurrentHighlightedSlot != null ? currentNavigator.selectedIndex : 0);
+        if (currentNavigateAction != null)
+            currentNavigateAction.performed += OnNavigate;
     }
 
     private void UnsubscribeNavigate()
     {
-        if (currentNavigateAction != null && currentHandler != null)
-            currentNavigateAction.performed -= currentHandler;
+        if (currentNavigateAction != null)
+            currentNavigateAction.performed -= OnNavigate;
     }
 
-
-    private void OnNavigatePause(InputAction.CallbackContext context)
+    private void OnNavigate(InputAction.CallbackContext context)
     {
+        if (currentNavigator == null) return;
         var input = context.ReadValue<Vector2>();
-        var col = selectedIndex % backpackColumns;
-        var row = selectedIndex / backpackColumns;
-        var newIndex = selectedIndex;
-
-        if(input.x > 0.5f && col < backpackColumns -1) newIndex = selectedIndex + 1;
-        else if (input.x < -0.5f && col > 0) newIndex = selectedIndex - 1;
-        else if (input.y > 0.5f &&  selectedIndex - backpackColumns >= 0) newIndex = selectedIndex - backpackColumns;
-        else if (input.y < -0.5f && selectedIndex + backpackColumns < backpackUi.slotsUI.Count) newIndex = selectedIndex + backpackColumns;
-
-        if(newIndex != selectedIndex)
-        {
-            backpackUi.slotsUI[selectedIndex].SetHighlight(false);
-            selectedIndex = newIndex;
-            backpackUi.slotsUI[selectedIndex].SetHighlight(true);
-            highlightedSlotUi = backpackUi.slotsUI[selectedIndex];
-        }
+        currentNavigator.Navigate(input);
     }
 
-    private void OnNavigateQuickBarOnly(InputAction.CallbackContext context)
-    {
-        var input = context.ReadValue<Vector2>();
-        var newIndex = selectedIndex;
-
-        if(input.x > 0.5f && selectedIndex < quickbarUi.slotsUI.Count - 1) newIndex = selectedIndex + 1;
-        else if (input.x < -0.5f && selectedIndex > 0) newIndex = selectedIndex - 1;
-
-        if(newIndex != selectedIndex)
-        {
-            quickbarUi.slotsUI[selectedIndex].SetHighlight(false);
-            selectedIndex = newIndex;
-            quickbarUi.slotsUI[selectedIndex].SetHighlight(true);
-            highlightedSlotUi = quickbarUi.slotsUI[selectedIndex];
-        }
-    }
-
-    private void TryInitHighlight()
-    {
-        switch (gameStateVariable.CurrentState)
-        {
-            //force start on backpack
-            case GameState.Pause:
-                if (backpackUi == null || backpackUi.slotsUI == null || backpackUi.slotsUI.Count == 0) return;
-                selectedIndex = Mathf.Clamp(selectedIndex, 0, backpackUi.slotsUI.Count - 1);
-                ClearAllHighlights();
-                backpackUi.slotsUI[selectedIndex].SetHighlight(true);
-                highlightedSlotUi = backpackUi.slotsUI[selectedIndex];
-                break;
-            // force start on quickbar, in this case only quickbar
-            default:
-                if (quickbarUi == null || quickbarUi.slotsUI == null || quickbarUi.slotsUI.Count == 0) return;
-                selectedIndex = Mathf.Clamp(selectedIndex, 0, quickbarUi.slotsUI.Count - 1);
-                ClearAllHighlights();
-                quickbarUi.slotsUI[selectedIndex].SetHighlight(true);
-                highlightedSlotUi = quickbarUi.slotsUI[selectedIndex];
-                break;
-        }
-    }
-    // clear all highlights from both UIs
-    private void ClearAllHighlights()
-    {
-        for (int i = 0; i < backpackUi.slotsUI.Count; i++)
-        {
-            backpackUi.slotsUI[i].SetHighlight(false);
-        }
-        for (int i = 0; i < quickbarUi.slotsUI.Count; i++)
-        {
-            quickbarUi.slotsUI[i].SetHighlight(false);
-        }
-    }
 
     private void UseSelectedItem(InputAction.CallbackContext context)
     {
@@ -162,9 +92,9 @@ public class InventoryInteractionController : MonoBehaviour
 
     public void UseSelectedItemInternal()
     {
-        if (highlightedSlotUi == null) return;
+        if (currentNavigator.CurrentHighlightedSlot == null) return;
 
-        var slot = highlightedSlotUi.slotData;
+        var slot = currentNavigator.CurrentHighlightedSlot.slotData;
         if (slot == null || slot.item == null) return;
 
         switch (slot.item.itemType)
@@ -175,13 +105,14 @@ public class InventoryInteractionController : MonoBehaviour
                 slot.quantity--;
                 if (slot.quantity <= 0)
                 {
-                    highlightedSlotUi.Clear();
+                    currentNavigator.CurrentHighlightedSlot.Clear();
+                    redrawEvent.Raise();
                 }
                 break;
             case ItemType.Equipment:
                 // Equip item here
                 Debug.Log($"Equipping item: {slot.item.itemName}");
-                if (equipment != null || InventoryManager != null)
+                if (equipment != null && InventoryManager != null)
                 {
                     var previousItem = equipment.Equip(slot.item as EquipmentItem);
                     InventoryManager.RemoveItem(slot.item, 1);

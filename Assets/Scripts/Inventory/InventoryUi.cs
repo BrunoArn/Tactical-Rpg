@@ -30,6 +30,12 @@ public class InventoryUi : MonoBehaviour
         return allSlots;
     }
 
+    public void EnsureSlotsCached()
+{
+    if (slotsUI == null || slotsUI.Count == 0)
+        slotsUI = new List<InventorySlotUi>(GetComponentsInChildren<InventorySlotUi>(true));
+}
+
     public void Redraw()
     {
         for (int i = 0; i < slotsUI.Count; i++)
