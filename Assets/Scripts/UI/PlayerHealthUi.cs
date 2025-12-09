@@ -1,9 +1,11 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerHealthUi : MonoBehaviour
 {
-    [SerializeField] private Slider healthSlider;
+    [SerializeField] private TextMeshProUGUI currentHealth;
+    [SerializeField] private TextMeshProUGUI maxHealth;
     [SerializeField] private Health health;
 
     private void Awake()
@@ -29,6 +31,8 @@ public class PlayerHealthUi : MonoBehaviour
 
     private void UpdateUI(int current, int max)
     {
-        healthSlider.value = (float)current / max;
+        if (health.CurrentHealth >= 10) currentHealth.text = health.CurrentHealth.ToString();
+        else currentHealth.text = $"0{health.CurrentHealth.ToString()}";
+        maxHealth.text = health.MaxHealth.ToString();
     }
 }
