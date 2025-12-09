@@ -193,7 +193,7 @@ Transform:
   m_GameObject: {fileID: 6653507233665691870}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.35288975, y: -1.8730687, z: 0.042374395}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -295,18 +295,22 @@ MonoBehaviour:
           m_CallState: 2
     onExit:
       m_PersistentCalls:
+        m_Calls: []
+  - state: 0
+    onEnter:
+      m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1789510061021650042}
-          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-          m_MethodName: set_enabled
-          m_Mode: 6
+          m_TargetAssemblyTypeName: CombatManager, Assembly-CSharp
+          m_MethodName: EndCombat
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
-            m_BoolArgument: 0
+            m_BoolArgument: 1
           m_CallState: 2
         - m_Target: {fileID: 676617258689574525}
           m_TargetAssemblyTypeName: TacticalGridBuilder, Assembly-CSharp
@@ -322,8 +326,8 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 1789510061021650042}
           m_TargetAssemblyTypeName: CombatManager, Assembly-CSharp
-          m_MethodName: EndCombat
-          m_Mode: 1
+          m_MethodName: set_enabled
+          m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -332,3 +336,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    onExit:
+      m_PersistentCalls:
+        m_Calls: []

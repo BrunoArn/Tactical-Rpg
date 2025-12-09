@@ -7,10 +7,7 @@ public class PlayerCombatAttack : MonoBehaviour, IUnitAction
     {
         // target could be a unit or an obstacle
         if (targetTile == null) return;
-
-        int baseAttack = actor.stats.attack;
-        int weaponDamage = actor.equips.GearBonusDamage();
-        int totalDamage = baseAttack + weaponDamage;
+        int totalDamage = actor.stats.TotalDamage();
 
         if (targetTile.OccupyingUnit != null)
         {

@@ -26,9 +26,7 @@ public class PlayerCombatRangedAttack : MonoBehaviour, IUnitAction, IRangedActio
     {
         if (targetTile == null || actor == null) return;
 
-        int baseAttack = actor.stats.attack;
-        int weaponDamage = actor.equips.GearBonusDamage();
-        int totalDamage = baseAttack + weaponDamage;
+        int totalDamage = actor.stats.TotalDamage();
 
         if (targetTile.OccupyingUnit != null)
         {

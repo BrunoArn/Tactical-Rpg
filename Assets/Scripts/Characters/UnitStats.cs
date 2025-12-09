@@ -9,6 +9,7 @@ public class UnitStats : MonoBehaviour
     public int attack = 1;
     public int range = 1;
     public int defense = 1;
+    [SerializeField] Equipment equips;
 
     private int meter = 0;
     private int meterMax = 100;
@@ -25,5 +26,10 @@ public class UnitStats : MonoBehaviour
 //read onlyy
     public int Meter => meter;
     public int MeterMax => meterMax;
+
+    public int TotalDamage()
+    {
+        return attack + equips.GearBonusDamage();
+    }
 
 }
