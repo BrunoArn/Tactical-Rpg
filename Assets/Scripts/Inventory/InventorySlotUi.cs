@@ -1,22 +1,26 @@
 
+using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class InventorySlotUi : MonoBehaviour
+public class InventorySlotUi : MonoBehaviour, IPointerEnterHandler
 {
     [SerializeField] private Image icon;
     [SerializeField] private TextMeshProUGUI quantityText;
     [SerializeField] private GameObject highLight;
 
-    public InventorySlot slotData { get; private set; }
+    public event Action<InventorySlotUi> Hovered;
+
+    public InventorySlot SlotData { get; private set; }
 
 
     public void Set(InventorySlot slot)
     {
         icon.sprite = slot.item.icon;
         icon.enabled = true;
-        slotData = slot;
+        SlotData = slot;
 
         quantityText.text = slot.quantity > 1 ? slot.quantity.ToString() : "";
     }
@@ -25,12 +29,17 @@ public class InventorySlotUi : MonoBehaviour
     {
         icon.sprite = null;
         icon.enabled = false;
-        slotData = null;
+        SlotData = null;
         quantityText.text = "";
     }
 
     public void SetHighlight(bool value)
     {
         highLight.SetActive(value);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        Hovered?.Invoke(this);
     }
 }

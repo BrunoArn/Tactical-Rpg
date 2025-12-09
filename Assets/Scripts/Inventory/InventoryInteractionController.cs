@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -26,11 +27,19 @@ public class InventoryInteractionController : MonoBehaviour
 
     private CombatControls controls;
 
+    private void Awake()
+    {
+        backpackUi.EnsureSlotsCached();
+        foreach (var slot in backpackUi.slotsUI) slot.Hovered += SetHoverSlot;
+
+        quickbarUi.EnsureSlotsCached();
+        //foreach (var slot in quickbarUi.slotsUI) slot.Hovered += SetHoverSlot;
+    }
+
     void OnEnable()
     {
         controls = new CombatControls();
-        backpackUi.EnsureSlotsCached();
-        quickbarUi.EnsureSlotsCached();
+
         backpackNavigator = new NavigationUI(backpackUi.slotsUI, backpackColumns, 0);
         quickbarNavigator = new NavigationUI(quickbarUi.slotsUI, quickbarUi.slotsUI.Count, 0);
 
@@ -84,6 +93,16 @@ public class InventoryInteractionController : MonoBehaviour
         currentNavigator.Navigate(input);
     }
 
+    private void SetHoverSlot(InventorySlotUi slot)
+    {
+        if (slot == null || currentNavigator == null) return;
+
+        //find index
+        var navigatorList = currentNavigator == backpackNavigator ? backpackUi.slotsUI : quickbarUi.slotsUI;
+        var index = navigatorList.IndexOf(slot);
+        if (index >= 0) currentNavigator.SetIndex(index);
+    }
+
 
     private void UseSelectedItem(InputAction.CallbackContext context)
     {
@@ -94,7 +113,7 @@ public class InventoryInteractionController : MonoBehaviour
     {
         if (currentNavigator.CurrentHighlightedSlot == null) return;
 
-        var slot = currentNavigator.CurrentHighlightedSlot.slotData;
+        var slot = currentNavigator.CurrentHighlightedSlot.SlotData;
         if (slot == null || slot.item == null) return;
 
         switch (slot.item.itemType)
