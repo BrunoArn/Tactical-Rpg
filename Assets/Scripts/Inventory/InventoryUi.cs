@@ -8,13 +8,11 @@ public class InventoryUi : MonoBehaviour
     [SerializeField] InventoryContainer inventory;
     public List<InventorySlotUi> slotsUI;
 
-    [SerializeField] InventoryInteractionController controller;
     [SerializeField] GameObject slotUiPrefab;
 
     void Awake()
     {
-        //slotsUI = GetAllSlotsUI();
-        CreateSlotsUI();
+        EnsureSlotsCached();
     }
 
     private void OnEnable()
@@ -27,20 +25,15 @@ public class InventoryUi : MonoBehaviour
         if (inventory == null || slotUiPrefab == null) return;
 
         slotsUI ??= new List<InventorySlotUi>();
-        int cap = inventory.capacity;
 
-        for (int i = slotsUI.Count; i < cap; i++)
+        for (int i = slotsUI.Count; i < inventory.capacity; i++)
         {
             var gameObject = Instantiate(slotUiPrefab, transform);
             gameObject.transform.localScale = Vector3.one;
+
             var slotUI = gameObject.GetComponent<InventorySlotUi>();
-            if (slotsUI == null) return;
-
-            if(controller != null) slotUI.Clicked += controller.OnSlotCliked;
-            
+            if (slotUI == null) continue;            
             slotsUI.Add(slotUI);
-
-
         }
 
     }
@@ -48,7 +41,7 @@ public class InventoryUi : MonoBehaviour
     public void EnsureSlotsCached()
     {
         if (slotsUI == null || slotsUI.Count == 0)
-            slotsUI = new List<InventorySlotUi>(GetComponentsInChildren<InventorySlotUi>(true));
+            CreateSlotsUI();
     }
 
     public void Redraw()

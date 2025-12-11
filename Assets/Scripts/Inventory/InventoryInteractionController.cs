@@ -30,11 +30,16 @@ public class InventoryInteractionController : MonoBehaviour
     private void Awake()
     {
         backpackUi.EnsureSlotsCached();
-        foreach (var slot in backpackUi.slotsUI) slot.Hovered += SetHoverSlot;
+        foreach (var slot in backpackUi.slotsUI)
+        {
+            slot.Hovered += SetHoverSlot;
+            slot.Clicked += OnSlotCliked;
+        } 
 
         quickbarUi.EnsureSlotsCached();
         //foreach (var slot in quickbarUi.slotsUI) slot.Hovered += SetHoverSlot;
     }
+    
 
     void OnEnable()
     {
@@ -103,12 +108,13 @@ public class InventoryInteractionController : MonoBehaviour
         if (index >= 0) currentNavigator.SetIndex(index);
     }
 
-
+    //input manager
     private void UseSelectedItem(InputAction.CallbackContext context)
     {
         UseSelectedItemInternal();
     }
 
+    //clicked
     public void OnSlotCliked(InventorySlotUi slot)
     {
         currentNavigator.SetIndex(backpackUi.slotsUI.IndexOf(slot));

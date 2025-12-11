@@ -151,6 +151,7 @@ MonoBehaviour:
   icon: {fileID: 670707465858765011}
   quantityText: {fileID: 1607633464812777004}
   highLight: {fileID: 6229679652480177025}
+  button: {fileID: 7017381658848996820}
 --- !u!1 &3486925513479846488
 GameObject:
   m_ObjectHideFlags: 0
