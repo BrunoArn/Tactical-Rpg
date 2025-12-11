@@ -12,7 +12,9 @@ public class EquipmentUi : MonoBehaviour
     }
 
     [SerializeField] Equipment equipment;
+    [SerializeField] InventoryManager inventory;
     [SerializeField] EquipmentUiSlot[] uiSlots;
+    [SerializeField] GameEvent uiRefresh;
 
     private void OnEnable()
     {
@@ -38,5 +40,17 @@ public class EquipmentUi : MonoBehaviour
                 uiSlot.icon.enabled = false;
             }
         }
+    }
+
+    public void RemoveEquipment(EquipmentSlotType equipmentType)
+    {
+        if (equipment == null || inventory == null) return;
+
+        var removedItem = equipment.Unequip(equipmentType);
+        if(removedItem == null) return;
+
+        if (!inventory.AddItem(removedItem, 1)) equipment.Equip(removedItem);
+        
+        uiRefresh.Raise();
     }
 }

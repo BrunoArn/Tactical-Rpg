@@ -11,9 +11,16 @@ public class InventorySlotUi : MonoBehaviour, IPointerEnterHandler
     [SerializeField] private TextMeshProUGUI quantityText;
     [SerializeField] private GameObject highLight;
 
+    [SerializeField] private Button button;
+
     public event Action<InventorySlotUi> Hovered;
+    public event Action<InventorySlotUi> Clicked;
 
     public InventorySlot SlotData { get; private set; }
+
+    private void Awake() {
+        if(button != null) button.onClick.AddListener(() => Clicked?.Invoke(this));
+    }
 
 
     public void Set(InventorySlot slot)

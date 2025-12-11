@@ -109,7 +109,13 @@ public class InventoryInteractionController : MonoBehaviour
         UseSelectedItemInternal();
     }
 
-    public void UseSelectedItemInternal()
+    public void OnSlotCliked(InventorySlotUi slot)
+    {
+        currentNavigator.SetIndex(backpackUi.slotsUI.IndexOf(slot));
+        UseSelectedItemInternal();
+    }
+
+    private void UseSelectedItemInternal()
     {
         if (currentNavigator.CurrentHighlightedSlot == null) return;
 

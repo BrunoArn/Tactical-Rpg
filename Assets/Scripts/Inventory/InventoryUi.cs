@@ -1,40 +1,55 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventoryUi : MonoBehaviour
 {
     [SerializeField] InventoryContainer inventory;
     public List<InventorySlotUi> slotsUI;
 
+    [SerializeField] InventoryInteractionController controller;
+    [SerializeField] GameObject slotUiPrefab;
+
     void Awake()
     {
-        slotsUI = GetAllSlotsUI();
+        //slotsUI = GetAllSlotsUI();
+        CreateSlotsUI();
     }
 
-    private void OnEnable() {
+    private void OnEnable()
+    {
         Redraw();
     }
 
-    List<InventorySlotUi> GetAllSlotsUI()
+    private void CreateSlotsUI()
     {
-        List<InventorySlotUi> allSlots = new List<InventorySlotUi>();
-        foreach (Transform child in transform)
+        if (inventory == null || slotUiPrefab == null) return;
+
+        slotsUI ??= new List<InventorySlotUi>();
+        int cap = inventory.capacity;
+
+        for (int i = slotsUI.Count; i < cap; i++)
         {
-            InventorySlotUi slot = child.GetComponent<InventorySlotUi>();
-            if (slot != null)
-            {
-                allSlots.Add(slot);
-            }
+            var gameObject = Instantiate(slotUiPrefab, transform);
+            gameObject.transform.localScale = Vector3.one;
+            var slotUI = gameObject.GetComponent<InventorySlotUi>();
+            if (slotsUI == null) return;
+
+            if(controller != null) slotUI.Clicked += controller.OnSlotCliked;
+            
+            slotsUI.Add(slotUI);
+
+
         }
-        return allSlots;
+
     }
 
     public void EnsureSlotsCached()
-{
-    if (slotsUI == null || slotsUI.Count == 0)
-        slotsUI = new List<InventorySlotUi>(GetComponentsInChildren<InventorySlotUi>(true));
-}
+    {
+        if (slotsUI == null || slotsUI.Count == 0)
+            slotsUI = new List<InventorySlotUi>(GetComponentsInChildren<InventorySlotUi>(true));
+    }
 
     public void Redraw()
     {

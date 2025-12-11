@@ -14,7 +14,7 @@ public class InventoryContainer : MonoBehaviour
     /// <summary>
     /// Max number of distinct item slots.
     /// </summary>
-    [SerializeField] int capacity = 10;
+    public int capacity = 10;
 
     /// <summary>
     /// True if inventory is at max capacity.
