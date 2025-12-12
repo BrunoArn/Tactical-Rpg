@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
-    [SerializeField] public InventoryContainer quickBar;
-    [SerializeField] public InventoryContainer backpack;
+    public enum MoveResult { Failed, Moved, Swapped, Merged }
+
+    public InventoryContainer quickBar;
+    public InventoryContainer backpack;
 
     public bool AddItem(ItemData item, int quantity)
     {
@@ -75,13 +77,54 @@ public class InventoryManager : MonoBehaviour
         return true;
     }
 
-    private void TryMove(InventorySlot from, InventorySlot to)
+    public bool TryMove(InventoryContainer from, int fromIndex, InventoryContainer to, int toIndex, int quantity, out MoveResult result)
     {
-        
+        result = MoveResult.Failed;
+        if (!IsValidIndex(from, fromIndex) || !IsValidIndex(to, toIndex)) return false;
+
+        var fromSlot = from.slots[fromIndex];
+        if(fromSlot == null || quantity <= 0) return false;
+        var toSlot = to.slots[toIndex];
+
+        //merge stack
+        if(toSlot != null && toSlot.item == fromSlot.item && toSlot.item.isStackable)
+        {
+            int moveQuantity = Mathf.Min(quantity, fromSlot.quantity);
+            toSlot.quantity += moveQuantity;
+            fromSlot.quantity -= moveQuantity;
+            if(fromSlot.quantity <= 0) from.slots[fromIndex] = null;
+            result = MoveResult.Merged;
+            return true;
+        }
+
+        //move to empty
+        if (toSlot == null)
+        {
+            int moveQuantity = Mathf.Min(quantity, fromSlot.quantity);
+            to.slots[toIndex] = new InventorySlot(fromSlot.item, moveQuantity);
+            fromSlot.quantity -= moveQuantity;
+            if(fromSlot.quantity <= 0) from.slots[fromIndex] = null;
+            result = MoveResult.Moved;
+            return true;
+        }
+
+        // swap
+        from.slots[fromIndex] = toSlot;
+        to.slots[toIndex] = fromSlot;
+        result = MoveResult.Swapped;
+        return true;
     }
 
-    private void TrySwap()
+    //move full stack
+    public bool TryMove(InventoryContainer from, int fromIndex, InventoryContainer to, int toIndex, out MoveResult result)
     {
-        
+        var slot = IsValidIndex(from, fromIndex) ? from.slots[fromIndex] : null;
+        int quantity = slot?.quantity ?? 0;
+        return TryMove(from, fromIndex, to, toIndex, quantity, out result);
+    }
+
+    private bool IsValidIndex(InventoryContainer container, int index)
+    {
+        return container != null && index >= 0 && index < container.capacity && container.slots.Count > index;
     }
 }
