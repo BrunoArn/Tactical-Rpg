@@ -372,7 +372,7 @@
                 {
                     "name": "left",
                     "id": "b55f96fb-9b22-4361-8531-49d104ae1fb4",
-                    "path": "<Keyboard>/q",
+                    "path": "<Mouse>/scroll/up",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -383,7 +383,7 @@
                 {
                     "name": "right",
                     "id": "3664321c-0732-4fee-a26a-acdda7fd5e75",
-                    "path": "<Keyboard>/e",
+                    "path": "<Mouse>/scroll/down",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

@@ -10,7 +10,7 @@ public class InventoryInteractionController : MonoBehaviour
     [SerializeField] private int backpackColumns = 6;
     [Space]
     [SerializeField] private InventoryUi quickbarUi;
-    [SerializeField] private InventoryManager InventoryManager;
+    [SerializeField] private InventoryManager inventoryManager;
 
     [Header("Events and states")]
     [SerializeField] private GameEvent redrawEvent;
@@ -24,7 +24,6 @@ public class InventoryInteractionController : MonoBehaviour
     private NavigationUI currentNavigator;
 
     private InputAction currentNavigateAction;
-
     private CombatControls controls;
 
     private void Awake()
@@ -34,12 +33,16 @@ public class InventoryInteractionController : MonoBehaviour
         {
             slot.Hovered += SetHoverSlot;
             slot.Clicked += OnSlotCliked;
-        } 
+        }
 
         quickbarUi.EnsureSlotsCached();
-        //foreach (var slot in quickbarUi.slotsUI) slot.Hovered += SetHoverSlot;
+        foreach (var slot in quickbarUi.slotsUI)
+        {
+            slot.Hovered += SetHoverSlot;
+            slot.Clicked += OnSlotCliked;
+        }
     }
-    
+
 
     void OnEnable()
     {
@@ -56,12 +59,16 @@ public class InventoryInteractionController : MonoBehaviour
 
     void OnDisable()
     {
+        if (controls == null) return;
+
         controls.Ui.Interact.performed -= UseSelectedItem;
         UnsubscribeNavigate();
 
         controls.Ui.Disable();
         controls.Dispose();
     }
+
+    #region Navigation
 
     public void SetActiveNavigator()
     {
@@ -95,12 +102,75 @@ public class InventoryInteractionController : MonoBehaviour
     {
         if (currentNavigator == null) return;
         var input = context.ReadValue<Vector2>();
+
+        if (gameStateVariable.CurrentState == GameState.Pause)
+        {
+            if (input.y < -0.5f && currentNavigator == backpackNavigator && IsOnLastBackpackRow())
+            {
+                JumpToQuickbar();
+                return;
+            }
+            if (input.y > 0.5f && currentNavigator == quickbarNavigator)
+            {
+                JumpToBackpackLastRow();
+                return;
+            }
+        }
+
         currentNavigator.Navigate(input);
     }
+
+    private NavigationUI GetNavigatorForSlot(InventorySlotUi slot)
+    {
+        if (backpackUi.slotsUI.Contains(slot)) return backpackNavigator;
+        if (quickbarUi.slotsUI.Contains(slot)) return quickbarNavigator;
+        return null;
+    }
+
+    private void SwitchNavigator(NavigationUI next)
+    {
+        if (currentNavigator == next) return;
+        currentNavigator?.ClearHighlights();
+        currentNavigator = next;
+    }
+    #endregion
+
+    #region Pause navigation Helper
+
+    private bool IsOnLastBackpackRow()
+    {
+        if (backpackUi.slotsUI.Count == 0) return true;
+        var rows = Mathf.CeilToInt(backpackUi.slotsUI.Count / (float)backpackColumns);
+        var lastRowStart = (rows - 1) * backpackColumns;
+        return backpackNavigator.selectedIndex >= lastRowStart;
+    }
+
+    private void JumpToQuickbar()
+    {
+        if (quickbarUi.slotsUI.Count == 0) return;
+    SwitchNavigator(quickbarNavigator);
+    quickbarNavigator.SetIndex(0);
+    }
+
+    private void JumpToBackpackLastRow()
+    {
+        if (backpackUi.slotsUI.Count == 0) return;
+    var rows = Mathf.CeilToInt(backpackUi.slotsUI.Count / (float)backpackColumns);
+    var lastRowStart = Mathf.Max(0, (rows - 1) * backpackColumns);
+    SwitchNavigator(backpackNavigator);
+    backpackNavigator.SetIndex(lastRowStart);
+    }
+    #endregion
+
+    #region Interaction
 
     private void SetHoverSlot(InventorySlotUi slot)
     {
         if (slot == null || currentNavigator == null) return;
+
+        var navigator = GetNavigatorForSlot(slot);
+        if (navigator == null) return;
+        SwitchNavigator(navigator);
 
         //find index
         var navigatorList = currentNavigator == backpackNavigator ? backpackUi.slotsUI : quickbarUi.slotsUI;
@@ -117,7 +187,14 @@ public class InventoryInteractionController : MonoBehaviour
     //clicked
     public void OnSlotCliked(InventorySlotUi slot)
     {
-        currentNavigator.SetIndex(backpackUi.slotsUI.IndexOf(slot));
+        var navigator = GetNavigatorForSlot(slot);
+        if (navigator == null) return;
+        SwitchNavigator(navigator);
+
+        var navigatorList = currentNavigator == backpackNavigator ? backpackUi.slotsUI : quickbarUi.slotsUI;
+        var index = navigatorList.IndexOf(slot);
+        if (index >= 0) currentNavigator.SetIndex(index);
+
         UseSelectedItemInternal();
     }
 
@@ -143,13 +220,13 @@ public class InventoryInteractionController : MonoBehaviour
             case ItemType.Equipment:
                 // Equip item here
                 Debug.Log($"Equipping item: {slot.item.itemName}");
-                if (equipment != null && InventoryManager != null)
+                if (equipment != null && inventoryManager != null)
                 {
                     var previousItem = equipment.Equip(slot.item as EquipmentItem);
-                    InventoryManager.RemoveItem(slot.item, 1);
+                    inventoryManager.RemoveItem(slot.item, 1);
                     if (previousItem != null)
                     {
-                        InventoryManager.AddItem(previousItem, 1);
+                        inventoryManager.AddItem(previousItem, 1);
                     }
                     redrawEvent.Raise();
                 }
@@ -159,5 +236,5 @@ public class InventoryInteractionController : MonoBehaviour
                 break;
         }
     }
-
+    #endregion
 }
