@@ -32,8 +32,8 @@ public class InventoryUi : MonoBehaviour
             gameObject.transform.localScale = Vector3.one;
 
             var slotUI = gameObject.GetComponent<InventorySlotUi>();
-            if (slotUI == null) continue;            
-            slotsUI.Add(slotUI);
+            if (slotUI != null) slotsUI.Add(slotUI);
+
         }
 
     }
@@ -48,8 +48,9 @@ public class InventoryUi : MonoBehaviour
     {
         for (int i = 0; i < slotsUI.Count; i++)
         {
-            if (i < inventory.slots.Count)
-                slotsUI[i].Set(inventory.slots[i]);
+            var slot = i < inventory.slots.Count ? inventory.slots[i] : null;
+            if (slot != null)
+                slotsUI[i].Set(slot);
             else
                 slotsUI[i].Clear();
         }

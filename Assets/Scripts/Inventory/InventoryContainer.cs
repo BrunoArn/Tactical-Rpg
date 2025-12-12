@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using NUnit.Framework;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -6,20 +8,15 @@ using UnityEngine;
 /// </summary>
 public class InventoryContainer : MonoBehaviour
 {
-    /// <summary>
-    /// List of item slots in the inventory.
-    /// </summary>
     public List<InventorySlot> slots = new();
-
-    /// <summary>
-    /// Max number of distinct item slots.
-    /// </summary>
     public int capacity = 10;
 
-    /// <summary>
-    /// True if inventory is at max capacity.
-    /// </summary>
-    public bool IsFull => slots.Count >= capacity;
+    //public bool IsFull => slots.Count >= capacity;
+
+    private void Start()
+    {
+        EnsureSize();
+    }
 
     /// <summary>
     /// Adds quantity of item. Stacks if possible, or adds new slot if space.
@@ -28,28 +25,31 @@ public class InventoryContainer : MonoBehaviour
     /// <returns>True when the items were added (or merged into an existing slot); false otherwise.</returns>
     public bool TryAdd(ItemData item, int quantity)
     {
+        EnsureSize();
         if (item == null || quantity <= 0) return false;
 
         if (!item.isStackable)
         {
             for (int i = 0; i < quantity; i++)
             {
-                if (IsFull) return false;
-                slots.Add(new InventorySlot(item, 1));
+                int index = slots.FindIndex(s => s == null);
+                if (index < 0) return false;
+                slots[index] = new InventorySlot(item, 1);
             }
             return true;
         }
 
-        var slot = slots.Find(s => s.item == item);
+        var slot = slots.Find(s => s != null && s.item == item);
         if (slot != null)
         {
             //soma o item na slot existente
             slot.quantity += quantity;
             return true;
         }
-        if (IsFull) return false;
+        int empty = slots.FindIndex(s => s == null);
+        if (empty < 0) return false;
         //adiciona novo item no slots
-        slots.Add(new InventorySlot(item, quantity));
+        slots[empty] = new InventorySlot(item, quantity);
         return true;
     }
 
@@ -59,28 +59,28 @@ public class InventoryContainer : MonoBehaviour
     /// </summary>
     public void RemoveItem(ItemData item, int quantity = 1)
     {
+        EnsureSize();
         if (item == null || quantity <= 0) return;
 
         if (item.isStackable)
         {
-            var slot = slots.Find(s => s.item == item);
-            if (slot == null) return;
-
-            slot.quantity -= quantity;
-            if (slot.quantity <= 0) slots.Remove(slot);
+            var index = slots.FindIndex(s => s != null && s.item == item);
+            if (index < 0) return;
+            slots[index].quantity -= quantity;
+            if (slots[index].quantity <= 0) slots[index] = null;
             return;
         }
 
         for (int i = slots.Count - 1; i >= 0 && quantity > 0; i--)
         {
             var slot = slots[i];
-            if (slot.item != item) continue;
+            if (slot == null || slot.item != item) continue;
 
             int remove = Mathf.Min(slot.quantity, quantity);
             slot.quantity -= remove;
             quantity -= remove;
 
-            if (slot.quantity <= 0) slots.RemoveAt(i);
+            if (slot.quantity <= 0) slots[i] = null;
         }
     }
 
@@ -93,7 +93,7 @@ public class InventoryContainer : MonoBehaviour
 
         if (item.isStackable)
         {
-            return slots.Find(s => s.item == item)?.quantity ?? 0;
+            return slots.Find(s => s != null && s.item == item)?.quantity ?? 0;
         }
 
         int total = 0;
@@ -121,5 +121,11 @@ public class InventoryContainer : MonoBehaviour
         if (!CanRemove(item, quantity)) return false;
         RemoveItem(item, quantity);
         return true;
+    }
+
+    private void EnsureSize()
+    {
+        slots ??= new List<InventorySlot>(capacity);
+        while (slots.Count < capacity) slots.Add(null);
     }
 }

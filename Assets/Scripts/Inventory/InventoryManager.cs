@@ -14,14 +14,14 @@ public class InventoryManager : MonoBehaviour
 
     public bool RemoveItem(ItemData item, int quantity = 1)
     {
-        var slot = quickBar.slots.Find(s => s.item == item);
+        var slot = quickBar.slots.Find(s => s != null && s.item == item);
         if (slot != null)
         {
             quickBar.RemoveItem(item, quantity);
             return true;
         }
 
-        slot = backpack.slots.Find(s => s.item == item);
+        slot = backpack.slots.Find(s => s != null && s.item == item);
         if (slot != null)
         {
             backpack.RemoveItem(item, quantity);
@@ -73,5 +73,15 @@ public class InventoryManager : MonoBehaviour
         }
 
         return true;
+    }
+
+    private void TryMove(InventorySlot from, InventorySlot to)
+    {
+        
+    }
+
+    private void TrySwap()
+    {
+        
     }
 }
