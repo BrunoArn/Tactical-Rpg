@@ -9,8 +9,16 @@ public class InventoryManager : MonoBehaviour
 
     public bool AddItem(ItemData item, int quantity)
     {
-        if (quickBar.TryAdd(item, quantity))
-            return true;
+        if (item == null || quantity <= 0) return false;
+        bool hasInQuick = quickBar?.slots.Exists(s => s?.item == item) == true;
+        bool hasInBack = backpack?.slots.Exists(s => s?.item == item) == true;
+
+        //prefer stacking into the container that has the item
+        if (hasInQuick && quickBar.TryAdd(item, quantity)) return true;
+        if (hasInBack && backpack.TryAdd(item, quantity)) return true;
+
+        //try adding to quickbar first if fails
+        if (quickBar.TryAdd(item, quantity)) return true;
         return backpack.TryAdd(item, quantity);
     }
 
@@ -83,16 +91,16 @@ public class InventoryManager : MonoBehaviour
         if (!IsValidIndex(from, fromIndex) || !IsValidIndex(to, toIndex)) return false;
 
         var fromSlot = from.slots[fromIndex];
-        if(fromSlot == null || quantity <= 0) return false;
+        if (fromSlot == null || quantity <= 0) return false;
         var toSlot = to.slots[toIndex];
 
         //merge stack
-        if(toSlot != null && toSlot.item == fromSlot.item && toSlot.item.isStackable)
+        if (toSlot != null && toSlot.item == fromSlot.item && toSlot.item.isStackable)
         {
             int moveQuantity = Mathf.Min(quantity, fromSlot.quantity);
             toSlot.quantity += moveQuantity;
             fromSlot.quantity -= moveQuantity;
-            if(fromSlot.quantity <= 0) from.slots[fromIndex] = null;
+            if (fromSlot.quantity <= 0) from.slots[fromIndex] = null;
             result = MoveResult.Merged;
             return true;
         }
@@ -103,7 +111,7 @@ public class InventoryManager : MonoBehaviour
             int moveQuantity = Mathf.Min(quantity, fromSlot.quantity);
             to.slots[toIndex] = new InventorySlot(fromSlot.item, moveQuantity);
             fromSlot.quantity -= moveQuantity;
-            if(fromSlot.quantity <= 0) from.slots[fromIndex] = null;
+            if (fromSlot.quantity <= 0) from.slots[fromIndex] = null;
             result = MoveResult.Moved;
             return true;
         }
