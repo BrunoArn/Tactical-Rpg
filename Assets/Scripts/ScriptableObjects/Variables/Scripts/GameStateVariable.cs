@@ -5,15 +5,16 @@ using UnityEngine.Events;
 public class GameStateVariable : ScriptableObject
 {
     public GameState CurrentState;
+    public GameState PreviousState;
     public UnityEvent<GameState, GameState> OnValueChanged;
 
     public void SetValue(GameState newState)
     {
         if (newState == CurrentState) return;
 
-        var oldState = CurrentState;
+        PreviousState = CurrentState;
         CurrentState = newState;
-        OnValueChanged.Invoke(oldState, newState);
+        OnValueChanged.Invoke(PreviousState, newState);
     }
     
 }

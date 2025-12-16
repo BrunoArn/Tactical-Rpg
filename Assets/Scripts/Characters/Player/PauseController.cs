@@ -46,16 +46,15 @@ public class PauseController : MonoBehaviour
     {
         if (gameState == null) return;
 
-        if(gameState.CurrentState != GameState.Pause)
+        if (gameState.CurrentState != GameState.Pause)
         {
-            previousGameState = gameState.CurrentState;
             gameState.SetValue(GameState.Pause);
         }
         else
         {
-            gameState.SetValue(previousGameState);
+            gameState.SetValue(gameState.PreviousState);
         }
-        
+
     }
     //Lister if someone else changes to pause state
     private void OnGameStateChanged(GameState oldState, GameState newState)
