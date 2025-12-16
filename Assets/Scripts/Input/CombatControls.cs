@@ -353,13 +353,31 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GrabItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""8ac8ea31-e772-41c6-aac6-5c404d84ff81"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CancelGrab"",
+                    ""type"": ""Button"",
+                    ""id"": ""f64754a9-301f-45ad-b45a-de138151c26c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": """",
                     ""id"": ""97921953-a281-41ce-b788-5e6ccf8f36f3"",
-                    ""path"": ""<Keyboard>/escape"",
+                    ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -487,6 +505,28 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4bacc71e-c626-4340-8902-ec5689b397b6"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GrabItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a8792d7a-ec16-4afa-a1fe-2955ce0b5281"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CancelGrab"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -508,6 +548,8 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
         m_Ui_Navigate = m_Ui.FindAction("Navigate", throwIfNotFound: true);
         m_Ui_QuickBarNavigate = m_Ui.FindAction("QuickBarNavigate", throwIfNotFound: true);
         m_Ui_Interact = m_Ui.FindAction("Interact", throwIfNotFound: true);
+        m_Ui_GrabItem = m_Ui.FindAction("GrabItem", throwIfNotFound: true);
+        m_Ui_CancelGrab = m_Ui.FindAction("CancelGrab", throwIfNotFound: true);
     }
 
     ~@CombatControls()
@@ -819,6 +861,8 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Ui_Navigate;
     private readonly InputAction m_Ui_QuickBarNavigate;
     private readonly InputAction m_Ui_Interact;
+    private readonly InputAction m_Ui_GrabItem;
+    private readonly InputAction m_Ui_CancelGrab;
     /// <summary>
     /// Provides access to input actions defined in input action map "Ui".
     /// </summary>
@@ -846,6 +890,14 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Ui/Interact".
         /// </summary>
         public InputAction @Interact => m_Wrapper.m_Ui_Interact;
+        /// <summary>
+        /// Provides access to the underlying input action "Ui/GrabItem".
+        /// </summary>
+        public InputAction @GrabItem => m_Wrapper.m_Ui_GrabItem;
+        /// <summary>
+        /// Provides access to the underlying input action "Ui/CancelGrab".
+        /// </summary>
+        public InputAction @CancelGrab => m_Wrapper.m_Ui_CancelGrab;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -884,6 +936,12 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @GrabItem.started += instance.OnGrabItem;
+            @GrabItem.performed += instance.OnGrabItem;
+            @GrabItem.canceled += instance.OnGrabItem;
+            @CancelGrab.started += instance.OnCancelGrab;
+            @CancelGrab.performed += instance.OnCancelGrab;
+            @CancelGrab.canceled += instance.OnCancelGrab;
         }
 
         /// <summary>
@@ -907,6 +965,12 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @GrabItem.started -= instance.OnGrabItem;
+            @GrabItem.performed -= instance.OnGrabItem;
+            @GrabItem.canceled -= instance.OnGrabItem;
+            @CancelGrab.started -= instance.OnCancelGrab;
+            @CancelGrab.performed -= instance.OnCancelGrab;
+            @CancelGrab.canceled -= instance.OnCancelGrab;
         }
 
         /// <summary>
@@ -1026,5 +1090,19 @@ public partial class @CombatControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnInteract(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "GrabItem" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnGrabItem(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "CancelGrab" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCancelGrab(InputAction.CallbackContext context);
     }
 }

@@ -9,6 +9,7 @@ public class InventoryDragController : MonoBehaviour
     [SerializeField] private InventoryUi backpackUi;
     [SerializeField] private InventoryUi quickbarUi;
     [SerializeField] private Image dragGhost;
+    [SerializeField] private Vector2 ghostOffset = new Vector2(10f, -10f);
 
     private InventorySlotUi dragSource;
     private InventoryContainer dragSourceContainer;
@@ -18,8 +19,8 @@ public class InventoryDragController : MonoBehaviour
     {
         backpackUi.EnsureSlotsCached();
         quickbarUi.EnsureSlotsCached();
-        SubscribeSlots(backpackUi, true);
-        SubscribeSlots(quickbarUi, false);
+        SubscribeSlots(backpackUi);
+        SubscribeSlots(quickbarUi);
         HideGhost();
     }
 
@@ -28,8 +29,34 @@ public class InventoryDragController : MonoBehaviour
         UnsubscribeSlots(backpackUi);
         UnsubscribeSlots(quickbarUi);
     }
+    #region API
+    public void BeginDrag(InventorySlotUi slot)
+    {
+        if (slot == null) return;
+        SetSource(slot);
+        ShowGhost(slot);
+        UpdateGhostPosition(slot);
+    }
+    public void DropOn(InventorySlotUi target)
+    {
+        if (dragSource == null || target == null) { ClearDrag(); return; }
+        
+        TryMoveTo(target);
+    }
 
-    private void SubscribeSlots(InventoryUi ui, bool isBackpack)
+    public void CancelDrag()
+    {
+        ClearDrag();
+    }
+
+    public void UpdateGhostToSlot(InventorySlotUi slot)
+    {
+        UpdateGhostPosition(slot);
+    }
+    #endregion
+    #region Mouse paths
+
+    private void SubscribeSlots(InventoryUi ui)
     {
         if (ui?.slotsUI == null) return;
         for (int i = 0; i < ui.slotsUI.Count; i++)
@@ -56,36 +83,33 @@ public class InventoryDragController : MonoBehaviour
 
     private void OnDragStarted(InventorySlotUi slot, PointerEventData data)
     {
-        SetSource(slot);
-        ShowGhost(slot);
+        BeginDrag(slot);
     }
 
     private void OnDragging(InventorySlotUi slot, PointerEventData data)
     {
-        if (dragGhost != null) dragGhost.rectTransform.position = data.position;
+        if (dragGhost != null) dragGhost.rectTransform.position = data.position + ghostOffset;
     }
 
     private void OnDroppedOn(InventorySlotUi target, PointerEventData data)
     {
-        if (dragSource == null || target == null) { ClearDrag(); return; }
-
-        var (targetContainer, targetIndex) = Resolve(target);
-        Debug.Log($"Drop: src={dragSourceContainer?.name} idx={dragSourceIndex} -> dst={targetContainer?.name} idx={targetIndex}");
-
-        if (targetContainer == null) { ClearDrag(); return; }
-
-        //inventoryManager.TryMove(dragSourceContainer, dragSourceIndex, targetContainer, targetIndex, out var _);
-        //RedrawAll();
-        //ClearDrag();
-
-        var ok = inventoryManager.TryMove(dragSourceContainer, dragSourceIndex, targetContainer, targetIndex, out var result);
-        Debug.Log($"TryMove ok={ok} result={result}");
-        if (ok) RedrawAll();
-        ClearDrag();
+        DropOn(target);
     }
 
     private void OnDragEnded(InventorySlotUi slot, PointerEventData data)
     {
+        ClearDrag();
+    }
+    #endregion
+    #region Core Logic
+    
+    private void TryMoveTo(InventorySlotUi target)
+    {
+        var (targetContainer, targetIndex) = Resolve(target);
+        if (targetContainer == null) { ClearDrag(); return; }
+
+        inventoryManager.TryMove(dragSourceContainer, dragSourceIndex, targetContainer, targetIndex, out var _);
+        RedrawAll();
         ClearDrag();
     }
 
@@ -116,6 +140,18 @@ public class InventoryDragController : MonoBehaviour
         if (dragGhost != null) dragGhost.enabled = false;
     }
 
+    private void UpdateGhostPosition(InventorySlotUi slot)
+{
+    if (dragGhost == null || slot == null) return;
+    var rt = slot.transform as RectTransform;
+    if (rt == null) return;
+
+    // Works for Screen Space - Overlay; for Screen Space - Camera, use the canvas camera
+    Vector3 screenPos = RectTransformUtility.WorldToScreenPoint(null, rt.position);
+    dragGhost.rectTransform.position = screenPos + (Vector3)ghostOffset;
+}
+
+
     private void ClearDrag()
     {
         dragSource = null;
@@ -129,4 +165,5 @@ public class InventoryDragController : MonoBehaviour
         backpackUi?.Redraw();
         quickbarUi?.Redraw();
     }
+    #endregion
 }

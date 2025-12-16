@@ -18,6 +18,8 @@ public class InventoryInteractionController : MonoBehaviour
 
     [Header("Interaction References")]
     [SerializeField] private Equipment equipment;
+    [SerializeField] private InventoryDragController dragController;
+    private bool isDragging = false;
 
     private NavigationUI backpackNavigator;
     private NavigationUI quickbarNavigator;
@@ -52,6 +54,9 @@ public class InventoryInteractionController : MonoBehaviour
         quickbarNavigator = new NavigationUI(quickbarUi.slotsUI, quickbarUi.slotsUI.Count, 0);
 
         controls.Ui.Interact.performed += UseSelectedItem;
+
+        controls.Ui.GrabItem.performed += GrabHandler;
+        controls.Ui.CancelGrab.performed += OnCancel;
         SetActiveNavigator();
 
         controls.Ui.Enable();
@@ -62,6 +67,9 @@ public class InventoryInteractionController : MonoBehaviour
         if (controls == null) return;
 
         controls.Ui.Interact.performed -= UseSelectedItem;
+
+        controls.Ui.GrabItem.performed -= GrabHandler;
+        controls.Ui.CancelGrab.performed -= OnCancel;
         UnsubscribeNavigate();
 
         controls.Ui.Disable();
@@ -108,16 +116,20 @@ public class InventoryInteractionController : MonoBehaviour
             if (input.y < -0.5f && currentNavigator == backpackNavigator && IsOnLastBackpackRow())
             {
                 JumpToQuickbar();
+                if (isDragging) dragController.UpdateGhostToSlot(currentNavigator.CurrentHighlightedSlot);
                 return;
             }
             if (input.y > 0.5f && currentNavigator == quickbarNavigator)
             {
                 JumpToBackpackLastRow();
+                if (isDragging) dragController.UpdateGhostToSlot(currentNavigator.CurrentHighlightedSlot);
                 return;
             }
         }
 
         currentNavigator.Navigate(input);
+        
+        if (isDragging) dragController.UpdateGhostToSlot(currentNavigator.CurrentHighlightedSlot);
     }
 
     private NavigationUI GetNavigatorForSlot(InventorySlotUi slot)
@@ -148,21 +160,21 @@ public class InventoryInteractionController : MonoBehaviour
     private void JumpToQuickbar()
     {
         if (quickbarUi.slotsUI.Count == 0) return;
-    SwitchNavigator(quickbarNavigator);
-    quickbarNavigator.SetIndex(0);
+        SwitchNavigator(quickbarNavigator);
+        quickbarNavigator.SetIndex(0);
     }
 
     private void JumpToBackpackLastRow()
     {
         if (backpackUi.slotsUI.Count == 0) return;
-    var rows = Mathf.CeilToInt(backpackUi.slotsUI.Count / (float)backpackColumns);
-    var lastRowStart = Mathf.Max(0, (rows - 1) * backpackColumns);
-    SwitchNavigator(backpackNavigator);
-    backpackNavigator.SetIndex(lastRowStart);
+        var rows = Mathf.CeilToInt(backpackUi.slotsUI.Count / (float)backpackColumns);
+        var lastRowStart = Mathf.Max(0, (rows - 1) * backpackColumns);
+        SwitchNavigator(backpackNavigator);
+        backpackNavigator.SetIndex(lastRowStart);
     }
     #endregion
 
-    #region Interaction
+    #region Interactions
 
     private void SetHoverSlot(InventorySlotUi slot)
     {
@@ -187,14 +199,6 @@ public class InventoryInteractionController : MonoBehaviour
     //clicked
     public void OnSlotCliked(InventorySlotUi slot)
     {
-        var navigator = GetNavigatorForSlot(slot);
-        if (navigator == null) return;
-        SwitchNavigator(navigator);
-
-        var navigatorList = currentNavigator == backpackNavigator ? backpackUi.slotsUI : quickbarUi.slotsUI;
-        var index = navigatorList.IndexOf(slot);
-        if (index >= 0) currentNavigator.SetIndex(index);
-
         UseSelectedItemInternal();
     }
 
@@ -235,6 +239,42 @@ public class InventoryInteractionController : MonoBehaviour
                 Debug.Log("Item type not recognized.");
                 break;
         }
+    }
+
+    private void GrabHandler(InputAction.CallbackContext ctx)
+    {
+        if (gameStateVariable.CurrentState != GameState.Pause) return;
+        
+        if (isDragging)
+        {
+            OnDrop();
+            isDragging = false;
+        }
+        else
+        {
+            OnGrab();
+            isDragging = true;
+        }
+
+    }
+
+    private void OnGrab()
+    {
+        var slot = currentNavigator.CurrentHighlightedSlot;
+        if (slot == null) return;
+        dragController.BeginDrag(slot);
+    }
+
+    private void OnDrop()
+    {
+        var slot = currentNavigator.CurrentHighlightedSlot;
+        if (slot == null) { dragController.CancelDrag(); return; }
+        dragController.DropOn(slot);
+    }
+
+    private void OnCancel(InputAction.CallbackContext ctx)
+    {
+        dragController.CancelDrag();
     }
     #endregion
 }
